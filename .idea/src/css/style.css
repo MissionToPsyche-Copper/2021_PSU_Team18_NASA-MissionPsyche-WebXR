@@ -1,0 +1,13 @@
+/*-------
+----- Main CSS Stylesheet
+-----
+-----*/
+
+body {
+    margin: 0px;
+    height: 100vh; /* 100 view height */
+}
+
+canvas {
+    display: block;
+}
