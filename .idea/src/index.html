@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Three.js Web App Test</title>
-    <style>
+    <style> /*-- will be removed when link added for css --*/
         body { margin: 0; }
     </style>
 </head>
@@ -26,8 +26,8 @@
     // Parameters:
     // FOV - Field of View - number in degrees representing vertical field of view - up down
     // Aspect Ratio: ratio between width and height (width divided by height) - innerWidth/Height grabs window size
-    // Near Clipping Plane: plane closest to the camera - current val is max - anything close and nothing is rendered
-    // Far Clipping Plane: plane furthers from camera - current val is max - anything bigger and nothing will be rendered
+    // Near Clipping Plane: plane closest to the camera - current val is max - anything closer and nothing is rendered
+    // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,
         0.6, 1200);
@@ -36,13 +36,12 @@
     // -- renderer: obj renders scene using WebGL
     const renderer = new THREE.WebGLRenderer({antialias: true});
 
-    // set color of bg in hex - 0-1 can be sent for alpha - opacity
+    // set color of bg in hex - 0-1 can be set for alpha - opacity
     renderer.setClearColor("#233143");
     // sets size of app
     renderer.setSize(window.innerWidth, window.innerHeight);
     // appends renderer to html doc as canvas to draw in browser
     document.body.appendChild(renderer.domElement);
-
 
     // Responsive Design //
     // allow for window resizing //
@@ -103,10 +102,12 @@
     points.push( new THREE.Vector3( - 10, 0, 0 ) );
     points.push( new THREE.Vector3( 0, 10, 0 ) );
     points.push( new THREE.Vector3( 10, 0, 0 ) );
+    // add points to create lines
     //----- DRAWING LINE ---//
     const lineGeometry = new THREE.BufferGeometry().setFromPoints( points );
     const material = new THREE.MeshLambertMaterial(0xFFFFFF);
     const line = new THREE.Line( lineGeometry, material );
+    scene.add(line); // add line to scene
     scene.add(line);
     //----- ADDING LIGHTING EFFECTS ---//
     {
@@ -123,7 +124,7 @@
     // keep function at bottom
     // needs to reference the above definitions
     function animate() {
-        requestAnimationFrame( animate );
+        requestAnimationFrame( animate ); // recursive call to animate function
 
         // Rotate scene constantly
         scene.rotation.z -= 0.005;
