@@ -67,23 +67,55 @@
         });
     }
 
+    function beginXRSession() {
+        // requestSession must be called within a user gesture event
+        // like click or touch when requesting an immersive session.
+        navigator.xr.requestSession('immersive-vr')
+            .then(onSessionStarted)
+            .catch(err => {
+                // May fail for a variety of reasons. Probably just want to
+                // render the scene normally without any tracking at this point.
+                window.requestAnimationFrame(onDrawFrame);
+            });
+    }
 
+    function makeCube(geometry, color, x) {
+        const material = new THREE.MeshPhongMaterial({color});
+        const cube = new THREE.Mesh( geometry, material );
+        scene.add(cube); // added box at (0,0)
 
+        cube.position.x = x;
+
+        return cube;
+    }
     // --- creating box --- //
     const geometry = new THREE.BoxGeometry(); // width, height, depth
-    const material = new THREE.MeshLambertMaterial({color:0xFFFFFF}); // box material - white
-    const cube = new THREE.Mesh( geometry, material );
-    scene.add(cube); // added box at (0,0)
 
+    // create array of cubes using function makeCube above
+    const cubes = [
+        makeCube(geometry, 0x44aa88, 0),
+        makeCube(geometry, 0x8844aa, -2),
+        makeCube(geometry, 0xaa8844, 2),
+    ];
+
+    //---- CREATE LINE ----//
     const points = [];
     points.push( new THREE.Vector3( - 10, 0, 0 ) );
     points.push( new THREE.Vector3( 0, 10, 0 ) );
     points.push( new THREE.Vector3( 10, 0, 0 ) );
-
+    //----- DRAWING LINE ---//
     const lineGeometry = new THREE.BufferGeometry().setFromPoints( points );
-
+    const material = new THREE.MeshLambertMaterial(0xFFFFFF);
     const line = new THREE.Line( lineGeometry, material );
     scene.add(line);
+    //----- ADDING LIGHTING EFFECTS ---//
+    {
+        const color = 0xFFFFFF;
+        const intensity = 1;
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(-1, 2, 4);
+        scene.add(light);
+    }
 
     // render scene
     // animation loop
@@ -93,12 +125,13 @@
     function animate() {
         requestAnimationFrame( animate );
 
-        // Rotate box constantly
+        // Rotate scene constantly
         scene.rotation.z -= 0.005;
         scene.rotation.x -= 0.01;
         renderer.render( scene, camera );
     }
     animate();
+
 </script>
 </body>
 </html>
