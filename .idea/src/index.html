@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="WebXR">
+    <meta name="author" content="Mio">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Three.js Web App Test</title>
     <style>
@@ -29,7 +33,6 @@
         0.6, 1200);
     camera.position.z = 5; // change camera position from z axis
 
-
     // -- renderer: obj renders scene using WebGL
     const renderer = new THREE.WebGLRenderer({antialias: true});
 
@@ -50,6 +53,7 @@
     })
 
     // check for XR support
+    // not working..... need to debug..
     async function  checkForXRSupport() {
         navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
             if(supported) {
@@ -63,13 +67,24 @@
         });
     }
 
+
+
     // --- creating box --- //
     const geometry = new THREE.BoxGeometry(); // width, height, depth
     const material = new THREE.MeshLambertMaterial({color:0xFFFFFF}); // box material - white
     const cube = new THREE.Mesh( geometry, material );
     scene.add(cube); // added box at (0,0)
 
-    camera.position.z = 5;
+    const points = [];
+    points.push( new THREE.Vector3( - 10, 0, 0 ) );
+    points.push( new THREE.Vector3( 0, 10, 0 ) );
+    points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints( points );
+
+    const line = new THREE.Line( lineGeometry, material );
+    scene.add(line);
+
     // render scene
     // animation loop
     // redraw scene 60FPS
