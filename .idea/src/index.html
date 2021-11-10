@@ -19,6 +19,7 @@
     import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/build/three.module.js';
     import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/controls/OrbitControls.js';
     import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
+    import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 
     var mesh,
         renderer,
@@ -34,6 +35,7 @@
         gtlfLoader;
 
     let gltfLoader = new GLTFLoader();
+    let stlLoader = new STLLoader()
 
     init();
     animate();
@@ -72,11 +74,14 @@
         controls = new OrbitControls( camera, renderer.domElement );
 
         // -- gtlf: load gtlf object resource
-        loadGltf();
+        // loadGltf();
+
+        // -- stl: load spacecraft stl object resource
+        loadSpacecraft();
 
         // visible axes for x,y,z planes
         // TODO: remove later
-        scene.add( new THREE.AxesHelper( 20 ) );
+        scene.add( new THREE.AxesHelper( 150 ) );
 
         // Responsive Design //
         // allow for window resizing //
@@ -90,11 +95,11 @@
         geometry = new THREE.BoxGeometry(); // width, height, depth
 
         // create array of cubes using function makeCube above
-        cubes = [
-            //makeCube(geometry, 0x44aa88, 0),
-            makeCube(geometry, 0x8844aa, -2),
-            makeCube(geometry, 0xaa8844, 2),
-        ];
+        // cubes = [
+        //     makeCube(geometry, 0x44aa88, 0),
+        //     makeCube(geometry, 0x8844aa, -2),
+        //     makeCube(geometry, 0xaa8844, 2),
+        // ];
 
         //---- CREATE LINE ----//
         points = [];
@@ -106,8 +111,8 @@
         lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
         material = new THREE.MeshLambertMaterial(0xFFFFFF);
         line = new THREE.Line(lineGeometry, material);
-        scene.add(line); // add line to scene
-        scene.add(line);
+        //scene.add(line); // add line to scene
+        //scene.add(line);
         //----- ADDING LIGHTING EFFECTS ---//
         {
             const color = 0xFFFFFF;
@@ -161,6 +166,38 @@
                 console.log( 'An error happened' );
             }
         );
+    }
+
+    function loadSpacecraft() {
+
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0xb2ffc8,
+            //envMap: envTexture,
+            metalness: 0.25,
+            roughness: 0.1,
+            //opacity: 2,
+            transparent: false,
+            transmission: 0.99,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.25
+        })
+
+        stlLoader.load(
+            '../src/res/stl/spacecraft/spacecraft_panels_antenna_attached.stl',
+            function (geometry) {
+                const mesh = new THREE.Mesh(geometry, material)
+
+                // change these values to modify the x,y,z plane that this model sits on when it is loaded.
+                mesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
+                scene.add(mesh)
+            },
+            (xhr) => {
+                console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+            },
+            (error) => {
+                console.log(error)
+            }
+        )
     }
 
     function makeCube(geometry, color, x) {
