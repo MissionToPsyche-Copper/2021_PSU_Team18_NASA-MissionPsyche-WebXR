@@ -1,7 +1,8 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.120.1/build/three.module.js';
-import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/controls/OrbitControls.js';
+import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
+import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
 
 var mesh,
     renderer,
@@ -21,6 +22,8 @@ var mesh,
     particles = [];
 
 let gltfLoader = new GLTFLoader().setPath('./res/gltf/cube/');
+
+init();
 
 function init() {
     //=================//
@@ -85,6 +88,8 @@ function init() {
 
     // -- stl: load spacecraft stl object resource
     loadSpacecraft();
+
+    loadPsyche();
 
     // visible axes for x,y,z planes
     // TODO: remove later
@@ -175,7 +180,7 @@ function loadGltf() {
     // Load a glTF resource
     this.gltfLoader.load(
         // resource URL
-        'cube.gltf',
+        '../res/cube.gltf',
         // called when the resource is loaded
         ( gltf ) => {
             const model = gltf.scene;
@@ -197,7 +202,6 @@ function loadGltf() {
         }
     );
 }
-
 function loadSpacecraft() {
 
     const material = new THREE.MeshPhysicalMaterial({
@@ -219,6 +223,7 @@ function loadSpacecraft() {
             const mesh = new THREE.Mesh(geometry, material)
             // change these values to modify the x,y,z plane that this model sits on when it is loaded.
             mesh.rotation.set(-Math.PI / 2, 0.3,  Math.PI / 2);
+            mesh.position.set(100,100,250);
             scene.add(mesh)
         },
         (xhr) => {
@@ -257,6 +262,22 @@ function beginXRSession() {
         });
 }
 
+function loadPsyche() {
+    const objLoader = new OBJLoader();
+    objLoader.load('../res/psyche.obj',
+        function (object) {
+            object.position.set(0, 0, 100);
+            scene.add(object);
+        },
+        function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function(error) {
+            console.log('An error occurred');
+        }
+    );
+}
+
 // render scene
 // animation loop
 // redraw scene 60FPS
@@ -272,8 +293,6 @@ function animate() {
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
 }
-
-init();
 addStars();
 
 checkForXRSupport();
