@@ -201,7 +201,7 @@ function loadGltf() {
 function loadSpacecraft() {
 
     const material = new THREE.MeshPhysicalMaterial({
-        color: 0xb2ffc8,
+        color: 0x8c8c8c,
         //envMap: envTexture,
         metalness: 0.25,
         roughness: 0.1,
@@ -214,12 +214,11 @@ function loadSpacecraft() {
 
     const stlLoader = new STLLoader();
     stlLoader.load(
-        '../res/stl/spacecraft/spacecraft_panels_antenna_attached.stl',
+        '../src/res/stl/spacecraft/spacecraft_panels_antenna_attached.stl',
         function (geometry) {
             const mesh = new THREE.Mesh(geometry, material)
-
             // change these values to modify the x,y,z plane that this model sits on when it is loaded.
-            mesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
+            mesh.rotation.set(-Math.PI / 2, 0.3,  Math.PI / 2);
             scene.add(mesh)
         },
         (xhr) => {
