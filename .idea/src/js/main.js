@@ -16,11 +16,19 @@ var mesh,
     material,
     line,
     gtlfLoader,
+    raycaster,
+    // raycaster "object intersected"
+    INTERSECTED,
     // track mouse
     mouseX = 0, mouseY = 0,
     // hold particles
     particles = [];
 
+// This pointer is used for the raycaster
+const pointer = new THREE.Vector2();
+
+// used for gtlf loading (can be removed if we do not end up using any gltf resources,
+// more or less just here for example for now.
 let gltfLoader = new GLTFLoader().setPath('./res/gltf/cube/');
 
 init();
@@ -52,6 +60,10 @@ function init() {
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.shadowMap.enabled = true;
 
+    // -- raycaster: intersect object models & register events based on mouse interactions
+    raycaster = new THREE.Raycaster();
+
+    // -- lighting
     var light = new THREE.AmbientLight(0x888888);
     scene.add(light);
 
@@ -82,22 +94,29 @@ function init() {
     // -- controls: allows mouse controls such as click+drag, zoom, etc.
     // Add mouse controls
     controls = new OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 5;
+    controls.maxDistance = 200;
 
-    // -- gtlf: load gtlf object resource
-    //loadGltf();
 
-    // -- stl: load spacecraft stl object resource
+    // -- models: load object model resources
     loadSpacecraft();
-
     loadPsyche();
 
     // visible axes for x,y,z planes
     // TODO: remove later
-    scene.add(new THREE.AxesHelper(150));
+    scene.add(new THREE.AxesHelper(500));
 
     document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+
+        // for raycaster
+        // (TODO: this doesn't seem to be exact, this may need little bit of tweaking
+        // based on screen size, etc? y coordinates didn't seem 100% accurate, although
+        // changing the constant from 1 to 0.95 has helped a whole lot. Change back to 1
+        // to see original raycaster behavior.
+        pointer.x = ( (event.clientX -renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
+        pointer.y = -( (event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 0.95;
     });
 
     // Responsive Design //
@@ -175,9 +194,6 @@ function animateStars() {
 
 function loadGltf() {
     // -- gltf: Load a gltf resource file
-    // Instantiate a loader
-    //gltfLoader = new GLTFLoader();
-    // Load a glTF resource
     this.gltfLoader.load(
         // resource URL
         '../res/cube.gltf',
@@ -223,7 +239,8 @@ function loadSpacecraft() {
             const mesh = new THREE.Mesh(geometry, material)
             // change these values to modify the x,y,z plane that this model sits on when it is loaded.
             mesh.rotation.set(-Math.PI / 2, 0.3,  Math.PI / 2);
-            mesh.position.set(100,100,250);
+            mesh.scale.set(0.025,0.025,0.025);
+            mesh.position.set(0,0,0.5);
             scene.add(mesh)
         },
         (xhr) => {
@@ -264,9 +281,10 @@ function beginXRSession() {
 
 function loadPsyche() {
     const objLoader = new OBJLoader();
-    objLoader.load('../res/psyche.obj',
+    objLoader.load('../src/res/psyche.obj',
         function (object) {
-            object.position.set(0, 0, 100);
+            object.position.set(10, 10, 20);
+            object.scale.setScalar(3);
             scene.add(object);
         },
         function(xhr) {
@@ -276,6 +294,64 @@ function loadPsyche() {
             console.log('An error occurred');
         }
     );
+}
+
+function renderTestBoxes() {
+    var geom = new THREE.Geometry();
+    geom.mergeMesh(new THREE.Mesh(new THREE.BoxGeometry(2,20,2)));
+    geom.mergeMesh(new THREE.Mesh(new THREE.BoxGeometry(5,5,5)));
+    geom.mergeVertices(); // optional
+    scene.add(new THREE.Mesh(geom, material));
+}
+
+function renderRaycaster() {
+
+    raycaster.setFromCamera( pointer, camera );
+    const intersects = raycaster.intersectObjects( scene.children, true );
+
+    if (intersects.length > 0) {
+
+        // TODO: remove this when done, just printing intersections to log
+        // for testing purpuses.
+        for (var i = 0; i < intersects.length; i++) {
+            console.log(intersects[i].face)
+        }
+
+        if (INTERSECTED != intersects[0].object) {
+            if (INTERSECTED){
+                material = INTERSECTED.material;
+                if(material.emissive){
+                    material.emissive.setHex(INTERSECTED.currentHex);
+                }
+                else{
+                    material.color.setHex(INTERSECTED.currentHex);
+                }
+            }
+            INTERSECTED = intersects[0].object;
+            material = INTERSECTED.material;
+            if(material.emissive){
+                INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+                material.emissive.setHex(0xff0000);
+            }
+            else{
+                INTERSECTED.currentHex = material.color.getHex();
+                material.color.setHex(0xff0000);
+            }
+            console.log(INTERSECTED.position);
+        }
+    } else {
+        if (INTERSECTED){
+            material = INTERSECTED.material;
+            if(material.emissive){
+                material.emissive.setHex(INTERSECTED.currentHex);
+            }
+            else
+            {
+                material.color.setHex(INTERSECTED.currentHex);
+            }
+        }
+        INTERSECTED = null;
+    }
 }
 
 // render scene
@@ -289,11 +365,11 @@ function animate() {
     // uncomment these lines to see rotation in action.
     //scene.rotation.z -= 0.005;
     //scene.rotation.x -= 0.01;
+    renderRaycaster();
     renderer.render(scene, camera);
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
 }
 addStars();
-
 checkForXRSupport();
 animate();
