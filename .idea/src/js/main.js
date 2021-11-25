@@ -183,7 +183,7 @@ function animateStars() {
     for(var i = 0; i<particles.length; i++) {
         var particle = particles[i];
         // move particle forward based on mouse y position
-        particle.position.z += mouseY * 0.1;
+        particle.position.z += mouseY * 0.001;
 
         // if particle is too close move it backwards
         if(particle.position.z > 1000) particle.position.z -=2000;
