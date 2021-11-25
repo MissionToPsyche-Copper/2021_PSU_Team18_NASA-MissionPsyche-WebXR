@@ -283,8 +283,11 @@ function loadPsyche() {
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/psyche.obj',
         function (object) {
-            object.position.set(10, 10, 20);
-            object.scale.setScalar(3);
+            //original size and position
+            //object.position.set(10, 10, 20);
+            //object.scale.setScalar(3);
+            object.position.set(40, 40, 60);
+            object.scale.setScalar(20);
             scene.add(object);
         },
         function(xhr) {
