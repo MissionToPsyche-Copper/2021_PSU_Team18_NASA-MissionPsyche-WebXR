@@ -11,3 +11,26 @@ body {
 canvas {
     display: block;
 }
+
+#labelDiv {
+    color: #FFFFFF;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#hovered>div {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: large;
+    user-select: none;
+    text-shadow:
+        -1px -1px 0 #FFF,
+         0 -1px 0 #FFF,
+        1px -1px 0 #FFF;
+}
+
+#hovered>div:hover {
+    color:blue;
+}

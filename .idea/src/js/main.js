@@ -64,8 +64,8 @@ function init() {
     raycaster = new THREE.Raycaster();
 
     // -- lighting
-    var light = new THREE.AmbientLight(0x888888);
-    scene.add(light);
+
+    scene.add(new THREE.AmbientLight(0x888888));
 
     var light = new THREE.DirectionalLight(0xcccccc, 1);
     light.position.set(5, 5, 5);
@@ -85,7 +85,7 @@ function init() {
     light.shadow.mapSize.width = 1024 * 2;
 
     // set color of bg in hex - 0-1 can be set for alpha - opacity
-    renderer.setClearColor("#1c1624");
+    renderer.setClearColor("#02020A");
     // sets size of app
     renderer.setSize(window.innerWidth, window.innerHeight);
     // appends renderer to html doc as canvas to draw in browser
@@ -95,7 +95,7 @@ function init() {
     // Add mouse controls
     controls = new OrbitControls(camera, renderer.domElement);
     controls.minDistance = 5;
-    controls.maxDistance = 200;
+    controls.maxDistance = 400;
 
 
     // -- models: load object model resources
@@ -128,6 +128,40 @@ function init() {
     });
 }
 
+var rgbToHex = function (rgb) {
+    var hex = Number(rgb).toString(16);
+    if (hex.length < 2) {
+        hex = "0" + hex;
+    }
+    return hex;
+};
+
+var fullColorHex = function(r,g,b) {
+    var red = rgbToHex(r);
+    var green = rgbToHex(g);
+    var blue = rgbToHex(b);
+    return red+green+blue;
+};
+
+function generateRandomColor()
+{
+    var randomColor = randomRange(0,6);
+
+    switch(randomColor) {
+        case 0: return '#'+fullColorHex(175,201,255);
+        case 1: return '#'+fullColorHex(199,216,255);
+        case 2: return '#'+fullColorHex(255,244,243);
+        case 3: return '#'+fullColorHex(255,229,207);
+        case 4: return '#'+fullColorHex(255,217,178);
+        case 5: return '#'+fullColorHex(255,199,142);
+        case 6: return '#'+fullColorHex(255,166,81);
+
+        default: break;
+    }
+
+    //random color will be freshly served
+}
+
 function addStars() {
 
     // set interval val is in milliseconds - so convert frames per sec
@@ -141,20 +175,20 @@ function addStars() {
     // move from -1000 super far to closer which is 1000 where the cam is
     // and this will add random particles
     // at every z position
-    for (var zpos = -1000; zpos < 1000; zpos += 6) {
+    for (var zpos = -5000; zpos < 5000; zpos += 1) {
         // dynamic object initialisation method
-        var geometry = new THREE.SphereGeometry(0.2, 10, 10);
+        var geometry = new THREE.SphereGeometry(0.2, 5, 5);
 
         let material = new THREE.MeshBasicMaterial({
-            color: 0xffffff
+            color: generateRandomColor()
         });
 
         //make particle
         var particle = new THREE.Mesh(geometry, material);
 
         // give random (x,y) coords between -500 to 500
-        particle.position.x = Math.random() * 1000 - 300;
-        particle.position.y = Math.random() * 1000 - 500;
+        particle.position.x = randomRange(-500,600);
+        particle.position.y = randomRange(-500,500);
         // math.random returns 0 - 1 but not 1 inclusive
         // we multiply that by 1000 giving us 1000 or 0
         // and subtracting 500 from this value
@@ -176,48 +210,22 @@ function addStars() {
 
 /// create a random between any two values
 function randomRange(min, max) {
-    return Math.random() * (max-min) + min;
+    return Math.floor(Math.random() * (max-min + 1) + min);
 }
 
 function animateStars() {
     for(var i = 0; i<particles.length; i++) {
         var particle = particles[i];
         // move particle forward based on mouse y position
-        particle.position.z += mouseY * 0.001;
+        particle.position.z += mouseY * 0.0002;
 
         // if particle is too close move it backwards
         if(particle.position.z > 1000) particle.position.z -=2000;
     }
 
-    particle.rotation.y += 0.002;
+    particle.rotation.y += 0.00001;
 }
 
-function loadGltf() {
-    // -- gltf: Load a gltf resource file
-    this.gltfLoader.load(
-        // resource URL
-        '../res/cube.gltf',
-        // called when the resource is loaded
-        ( gltf ) => {
-            const model = gltf.scene;
-            this.scene.add( model );
-
-            gltf.animations; // Array<THREE.AnimationClip>
-            gltf.scene; // THREE.Group
-            gltf.scenes; // Array<THREE.Group>
-            gltf.cameras; // Array<THREE.Camera>
-            gltf.asset; // Object
-        },
-        // called while loading is progressing
-        ( xhr ) => {
-            console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
-        },
-        // called when loading has errors
-        ( error ) => {
-            console.log( 'An error happened' );
-        }
-    );
-}
 function loadSpacecraft() {
 
     const material = new THREE.MeshPhysicalMaterial({
@@ -299,14 +307,6 @@ function loadPsyche() {
     );
 }
 
-function renderTestBoxes() {
-    var geom = new THREE.Geometry();
-    geom.mergeMesh(new THREE.Mesh(new THREE.BoxGeometry(2,20,2)));
-    geom.mergeMesh(new THREE.Mesh(new THREE.BoxGeometry(5,5,5)));
-    geom.mergeVertices(); // optional
-    scene.add(new THREE.Mesh(geom, material));
-}
-
 function renderRaycaster() {
 
     raycaster.setFromCamera( pointer, camera );
@@ -363,16 +363,17 @@ function renderRaycaster() {
 // keep function at bottom
 // needs to reference the above definitions
 function animate() {
-
     // Rotate scene constantly
-    // uncomment these lines to see rotation in action.
-    //scene.rotation.z -= 0.005;
-    //scene.rotation.x -= 0.01;
+    // would like to get orbiter to rotate around psyche
+    // and make psyche the center of the scene
+    scene.rotation.z -= 0.0001;
+    scene.rotation.x -= 0.00001;
     renderRaycaster();
     renderer.render(scene, camera);
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
 }
+
 addStars();
 checkForXRSupport();
 animate();
