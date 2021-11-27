@@ -106,6 +106,8 @@ function init() {
     // TODO: remove later
     scene.add(new THREE.AxesHelper(500));
 
+    scene.fog = new THREE.FogExp2(0x141414, 0.0030);
+
     document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
