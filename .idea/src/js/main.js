@@ -100,7 +100,7 @@ function init() {
 
     // -- models: load object model resources
     loadSpacecraft();
-    loadPsyche();
+    loadPsyche("D");
 
     // visible axes for x,y,z planes
     // TODO: remove later
@@ -289,14 +289,33 @@ function beginXRSession() {
         });
 }
 
-function loadPsyche() {
+function loadPsyche(orbit=char) {
+    var x, y, z;
+    switch(orbit)
+    {
+        case "A":
+            x = 100; y = 100; z = 120;
+            break;
+        case "B":
+            x = 80; y = 80; z = 100;
+            break;
+        case "C":
+            x = 60; y = 60; z = 80;
+            break;
+        case "D":
+            x = 40; y = 40; z = 60;
+            break;
+        default:
+            x = 100; y = 100; z = 120;
+            break;
+    }
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/psyche.obj',
         function (object) {
             //original size and position
             //object.position.set(10, 10, 20);
             //object.scale.setScalar(3);
-            object.position.set(40, 40, 60);
+            object.position.set(x, y, z);
             object.scale.setScalar(20);
             scene.add(object);
         },
