@@ -3,7 +3,7 @@ import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
-
+import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/MTLLoader.js';
 var mesh,
     renderer,
     scene,
@@ -54,7 +54,7 @@ function init() {
     // move came towards the back so we can see
     // default 0,0,0
     // z increases as it comes out of the screen 'towards' you
-    camera.position.z = -800;
+    camera.position.z = 2500;
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
