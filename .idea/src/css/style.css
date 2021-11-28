@@ -4,12 +4,27 @@
 -----*/
 
 body {
-    margin: 0px;
+    margin: 0;
     height: 100vh; /* 100 view height */
+    width: 100vw;
+    overflow: hidden;
 }
 
 canvas {
     display: block;
+}
+
+#controlstrip {
+    /* bg color as white just for visiblity will change later */
+    background: #FFFFFF;
+    z-index: 100;
+    margin: 0;
+    opacity: 0.9;
+    position: absolute;
+    height: 100vh;
+    width: 20vw;
+    top: 0;
+    left: 0;
 }
 
 #labelDiv {

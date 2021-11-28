@@ -100,7 +100,7 @@ function init() {
 
     // -- models: load object model resources
     loadSpacecraft();
-    loadPsyche("D");
+    loadPsyche("A");
 
     // visible axes for x,y,z planes
     // TODO: remove later
