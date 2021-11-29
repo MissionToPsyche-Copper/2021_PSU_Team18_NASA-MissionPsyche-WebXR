@@ -4,8 +4,11 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/MTLLoader.js';
+import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
+
 var mesh,
     renderer,
+    cssrenderer,
     scene,
     camera,
     controls,
@@ -49,12 +52,15 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 1, 1000);
+        45, window.innerWidth / window.innerHeight, 0.1, 5000);
 
     // move came towards the back so we can see
     // default 0,0,0
     // z increases as it comes out of the screen 'towards' you
-    camera.position.z = 2500;
+    camera.position.x = 500;
+    camera.position.y = 500;
+    camera.position.z = 500;
+    camera.lookAt(scene.position);
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -64,11 +70,10 @@ function init() {
     raycaster = new THREE.Raycaster();
 
     // -- lighting
-
     scene.add(new THREE.AmbientLight(0x888888));
 
     var light = new THREE.DirectionalLight(0xcccccc, 1);
-    light.position.set(5, 5, 5);
+    light.position.set(2, 3, 2);
     scene.add(light);
 
     light.caseShadow = true;
@@ -97,16 +102,42 @@ function init() {
     controls.minDistance = 5;
     controls.maxDistance = 400;
 
-
     // -- models: load object model resources
     loadSpacecraft();
     loadPsyche("A");
 
+    //cssrenderer = new CSS3DRenderer();
+   // cssrenderer.setSize(window.innerWidth, window.innerHeight);
+   // document.getElementById('controlstrip').appendChild(cssrenderer.domElement);
+    // Button listeners for the orbits
+    const buttonOrbitA = document.getElementById('orbitA');
+    buttonOrbitA.addEventListener('click', function(){
+        renderer.setClearColor("#FFFFFF");
+        //loadPsyche("A");
+    });
+
+    const buttonOrbitB = document.getElementById('orbitB');
+    buttonOrbitB.addEventListener('click', function(){
+        renderer.setClearColor("#c6c6c6");
+        //loadPsyche("B");
+    });
+
+    const buttonOrbitC = document.getElementById('orbitC');
+    buttonOrbitC.addEventListener('click', function(){
+        renderer.setClearColor("#000000");
+        //loadPsyche("C");
+    });
+
+    const buttonOrbitD = document.getElementById('orbitD');
+    buttonOrbitD.addEventListener('click', function(){
+        renderer.setClearColor("#c6c6c6");
+        ///loadPsyche("D");
+    });
+
     // visible axes for x,y,z planes
     // TODO: remove later
     scene.add(new THREE.AxesHelper(500));
-
-    scene.fog = new THREE.FogExp2(0x141414, 0.0030);
+    scene.fog = new THREE.FogExp2(0x141414, 0.002);
 
     document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
@@ -177,9 +208,9 @@ function addStars() {
     // move from -1000 super far to closer which is 1000 where the cam is
     // and this will add random particles
     // at every z position
-    for (var zpos = -5000; zpos < 5000; zpos += 1) {
+    for (var zpos = -5000; zpos < 5000; zpos += 0.5) {
         // dynamic object initialisation method
-        var geometry = new THREE.SphereGeometry(0.2, 5, 5);
+        var geometry = new THREE.SphereGeometry(0.3, 5, 5);
 
         let material = new THREE.MeshBasicMaterial({
             color: generateRandomColor()
@@ -189,7 +220,7 @@ function addStars() {
         var particle = new THREE.Mesh(geometry, material);
 
         // give random (x,y) coords between -500 to 500
-        particle.position.x = randomRange(-500,600);
+        particle.position.x = randomRange(-500,500);
         particle.position.y = randomRange(-500,500);
         // math.random returns 0 - 1 but not 1 inclusive
         // we multiply that by 1000 giving us 1000 or 0
@@ -201,13 +232,27 @@ function addStars() {
         particle.position.z = zpos;
 
         // make it bigger
-        particle.scale.x = particle.scale.y = 2;
+        particle.scale.x = particle.scale.y = 1;
         // add to scene
         scene.add(particle);
         /// add particle to particle array
         particles.push(particle);
 
     }
+    // need more stars to fill space
+    const geo = new THREE.BufferGeometry();
+    const vertices = [];
+
+    for ( let i = 0; i < 10000; i++ ) {
+        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // x
+        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // y
+        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // z
+    }
+
+    geo.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+    const BGparticles = new THREE.Points( geo,
+        new THREE.PointsMaterial( { color: 0xFFFFFF } ) );
+    scene.add( BGparticles );
 }
 
 /// create a random between any two values
@@ -277,6 +322,12 @@ async function checkForXRSupport() {
     });
 }
 
+function removeEntity(object) {
+    var selectedObject = scene.getObjectByName(object.name);
+    scene.remove( selectedObject );
+    animate();
+}
+
 function beginXRSession() {
     // requestSession must be called within a user gesture event
     // like click or touch when requesting an immersive session.
@@ -317,6 +368,7 @@ function loadPsyche(orbit=char) {
             //object.scale.setScalar(3);
             object.position.set(x, y, z);
             object.scale.setScalar(20);
+            object.name = "test_name";
             scene.add(object);
         },
         function(xhr) {
