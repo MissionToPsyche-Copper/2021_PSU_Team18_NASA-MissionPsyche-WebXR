@@ -19,6 +19,8 @@ var mesh,
     material,
     line,
     gtlfLoader,
+    // Mesh to load spacecraft.
+    spacecraftMesh,
     raycaster,
     // raycaster "object intersected"
     INTERSECTED,
@@ -105,7 +107,6 @@ function init() {
     // -- models: load object model resources
     loadSpacecraft();
     loadPsyche("A");
-
     //cssrenderer = new CSS3DRenderer();
    // cssrenderer.setSize(window.innerWidth, window.innerHeight);
    // document.getElementById('controlstrip').appendChild(cssrenderer.domElement);
@@ -125,6 +126,7 @@ function init() {
     const buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
         renderer.setClearColor("#000000");
+        startSpacecraftOrbit(50);
         //loadPsyche("C");
     });
 
@@ -291,12 +293,12 @@ function loadSpacecraft() {
     stlLoader.load(
         '../src/res/stl/spacecraft/spacecraft_panels_antenna_attached.stl',
         function (geometry) {
-            const mesh = new THREE.Mesh(geometry, material)
+            spacecraftMesh = new THREE.Mesh(geometry, material)
             // change these values to modify the x,y,z plane that this model sits on when it is loaded.
-            mesh.rotation.set(-Math.PI / 2, 0.3,  Math.PI / 2);
-            mesh.scale.set(0.025,0.025,0.025);
-            mesh.position.set(0,0,0.5);
-            scene.add(mesh)
+            spacecraftMesh.rotation.set(-Math.PI / 2, 0.3,  Math.PI / 2);
+            spacecraftMesh.scale.set(0.025,0.025,0.025);
+            spacecraftMesh.position.set(0,0,0.5);
+            scene.add(spacecraftMesh)
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
@@ -306,6 +308,41 @@ function loadSpacecraft() {
         }
     )
 }
+
+// radius changes the orbit distance, but this must also be modified with
+// spacecraft placement because as the radius changes, the "starting point"
+// must also change.
+function startSpacecraftOrbit(radius) {
+    var r = 0, t = -1, a = 1;
+    var p = new THREE.Vector3(0, 0, 0);
+    var ax = new THREE.Vector3(0, 1, 0);
+    var frames = 300;
+
+    setInterval(function(){
+        t ++;
+        if (t % frames == 0) {
+            a++;
+            p.x = (a == 1 ? 1 : -1) * radius;
+            r = a == 1 ? -1 : 1;
+        }
+        spacecraftMesh.rotateAroundWorldAxis(p, ax, r * Math.PI * 2 / frames);
+    }, 20);
+}
+
+THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
+
+    var q = new THREE.Quaternion();
+
+    return function rotateAroundWorldAxis(point, axis, angle) {
+        q.setFromAxisAngle(axis, angle);
+        this.applyQuaternion(q);
+        this.position.sub(point);
+        this.position.applyQuaternion(q);
+        this.position.add(point);
+
+        return this;
+    }
+}();
 
 // check for XR support
 // not working..... need to debug..
@@ -345,7 +382,7 @@ function loadPsyche(orbit=char) {
     switch(orbit)
     {
         case "A":
-            x = 100; y = 100; z = 120;
+            x = -50; y = -20; z = 0;
             break;
         case "B":
             x = 80; y = 80; z = 100;
@@ -386,12 +423,11 @@ function renderRaycaster() {
     const intersects = raycaster.intersectObjects( scene.children, true );
 
     if (intersects.length > 0) {
-
         // TODO: remove this when done, just printing intersections to log
         // for testing purpuses.
-        for (var i = 0; i < intersects.length; i++) {
-            console.log(intersects[i].face)
-        }
+        // for (var i = 0; i < intersects.length; i++) {
+        //     console.log(intersects[i].face)
+        // }
 
         if (INTERSECTED != intersects[0].object) {
             if (INTERSECTED){
