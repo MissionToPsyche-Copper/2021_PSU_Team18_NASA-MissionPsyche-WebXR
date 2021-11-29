@@ -397,7 +397,7 @@ function changeOrbit(orbit = char){
             radius = 50;
             break;
     }
-    //startSpacecraftOrbit(radius);
+    startSpacecraftOrbit(radius);
 }
 
 function beginXRSession() {
