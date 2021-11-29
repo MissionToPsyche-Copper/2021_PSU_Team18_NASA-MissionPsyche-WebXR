@@ -29,6 +29,8 @@ var mesh,
     // hold particles
     particles = [];
 
+var aOrbit = false; var bOrbit = false; var cOrbit = false; var dOrbit = false;
+
 // This pointer is used for the raycaster
 const pointer = new THREE.Vector2();
 
@@ -114,26 +116,59 @@ function init() {
     const buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
         renderer.setClearColor("#FFFFFF");
+        /*if(!aOrbit) {
+            startSpacecraftOrbit(50);
+            aOrbit = true;
+            bOrbit = false;
+            cOrbit = false;
+            dOrbit = false;
+        }
+
+         */
         //loadPsyche("A");
     });
 
     const buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
         renderer.setClearColor("#c6c6c6");
+        /*if(!bOrbit) {
+            startSpacecraftOrbit(50);
+            aOrbit = false;
+            bOrbit = true;
+            cOrbit = false;
+            dOrbit = false;
+        }
+
+         */
         //loadPsyche("B");
     });
 
     const buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
         renderer.setClearColor("#000000");
-        startSpacecraftOrbit(50);
+        if(!cOrbit) {
+            startSpacecraftOrbit(50);
+            aOrbit = false;
+            bOrbit = false;
+            cOrbit = true;
+            dOrbit = false;
+        }
         //loadPsyche("C");
     });
 
     const buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
         renderer.setClearColor("#c6c6c6");
-        ///loadPsyche("D");
+        /*if(!dOrbit) {
+            startSpacecraftOrbit(50);
+            aOrbit = false;
+            bOrbit = false;
+            cOrbit = false;
+            dOrbit = true;
+        }
+
+         */
+        //loadPsyche("D");
     });
 
     // visible axes for x,y,z planes
