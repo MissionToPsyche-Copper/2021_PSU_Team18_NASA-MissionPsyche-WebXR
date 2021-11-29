@@ -29,7 +29,7 @@ var mesh,
     // hold particles
     particles = [];
 
-var aOrbit = false; var bOrbit = false; var cOrbit = false; var dOrbit = false;
+var orbit="init";
 
 // This pointer is used for the raycaster
 const pointer = new THREE.Vector2();
@@ -108,60 +108,44 @@ function init() {
 
     // -- models: load object model resources
     loadSpacecraft();
-    loadPsyche("A");
+    loadPsyche(orbit);
     //cssrenderer = new CSS3DRenderer();
    // cssrenderer.setSize(window.innerWidth, window.innerHeight);
    // document.getElementById('controlstrip').appendChild(cssrenderer.domElement);
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
-        if(!aOrbit) {
-            renderer.setClearColor("#FFFFFF");
-            removePsyche(); loadPsyche("A");
-            startSpacecraftOrbit(125);
-            aOrbit = true;
-            bOrbit = false;
-            cOrbit = false;
-            dOrbit = false;
+        if(orbit != "A") {
+            renderer.setClearColor("#cecfcf");
+            orbit = "A";
+            changeOrbit(orbit);
         }
     });
 
     const buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
-        if(!bOrbit) {
-            renderer.setClearColor("#c6c6c6");
-            removePsyche(); loadPsyche("B");
-            startSpacecraftOrbit(100);
-            aOrbit = false;
-            bOrbit = true;
-            cOrbit = false;
-            dOrbit = false;
+        if(orbit != "B") {
+            renderer.setClearColor("#a1a1a1");
+            orbit = "B";
+            changeOrbit(orbit);
         }
     });
 
     const buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
-        if(!cOrbit) {
-            renderer.setClearColor("#000000");
-            removePsyche(); loadPsyche("C");
-            startSpacecraftOrbit(75);
-            aOrbit = false;
-            bOrbit = false;
-            cOrbit = true;
-            dOrbit = false;
+        if(orbit != "C") {
+            renderer.setClearColor("#777777");
+            orbit = "C";
+            changeOrbit(orbit);
         }
     });
 
     const buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
-        if(!dOrbit) {
-            renderer.setClearColor("#c6c6c6");
-            removePsyche(); loadPsyche("D");
-            startSpacecraftOrbit(50);
-            aOrbit = false;
-            bOrbit = false;
-            cOrbit = false;
-            dOrbit = true;
+        if(orbit != "D") {
+            renderer.setClearColor("#000000");
+            orbit = "D";
+            changeOrbit(orbit);
         }
     });
 
@@ -341,6 +325,8 @@ function loadSpacecraft() {
 // radius changes the orbit distance, but this must also be modified with
 // spacecraft placement because as the radius changes, the "starting point"
 // must also change.
+
+//not sure why calling multiple times speeds up the orbit, must investigate
 function startSpacecraftOrbit(radius) {
     var r = 0, t = -1, a = 1;
     var p = new THREE.Vector3(0, 0, 0);
@@ -394,9 +380,24 @@ function removeEntity(object) {
     animate();
 }
 
-function removePsyche() {
-    var selectedObject = scene.getObjectByName("psyche");
-    scene.remove( selectedObject );
+function changeOrbit(orbit = char){
+    loadPsyche(orbit)
+    var radius = 0;
+    switch(orbit){
+        case "A":
+            radius = 125;
+            break;
+        case "B":
+            radius = 100;
+            break;
+        case "C":
+            radius = 75;
+            break;
+        case "D":
+            radius = 50;
+            break;
+    }
+    //startSpacecraftOrbit(radius);
 }
 
 function beginXRSession() {
@@ -412,6 +413,7 @@ function beginXRSession() {
 }
 
 function loadPsyche(orbit=char) {
+    if(scene.getObjectByName("psyche") != null) scene.remove( scene.getObjectByName("psyche") );
     var x, y, z;
     switch(orbit)
     {
@@ -428,7 +430,7 @@ function loadPsyche(orbit=char) {
             x = -50; y = -25; z = 0;
             break;
         default:
-            x = 100; y = 100; z = 120;
+            x = -50; y = -25; z = 0;
             break;
     }
     const objLoader = new OBJLoader();
