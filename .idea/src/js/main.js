@@ -115,60 +115,54 @@ function init() {
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
-        renderer.setClearColor("#FFFFFF");
-        /*if(!aOrbit) {
-            startSpacecraftOrbit(50);
+        if(!aOrbit) {
+            renderer.setClearColor("#FFFFFF");
+            removePsyche(); loadPsyche("A");
+            startSpacecraftOrbit(125);
             aOrbit = true;
             bOrbit = false;
             cOrbit = false;
             dOrbit = false;
         }
-
-         */
-        //loadPsyche("A");
     });
 
     const buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
-        renderer.setClearColor("#c6c6c6");
-        /*if(!bOrbit) {
-            startSpacecraftOrbit(50);
+        if(!bOrbit) {
+            renderer.setClearColor("#c6c6c6");
+            removePsyche(); loadPsyche("B");
+            startSpacecraftOrbit(100);
             aOrbit = false;
             bOrbit = true;
             cOrbit = false;
             dOrbit = false;
         }
-
-         */
-        //loadPsyche("B");
     });
 
     const buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
-        renderer.setClearColor("#000000");
         if(!cOrbit) {
-            startSpacecraftOrbit(50);
+            renderer.setClearColor("#000000");
+            removePsyche(); loadPsyche("C");
+            startSpacecraftOrbit(75);
             aOrbit = false;
             bOrbit = false;
             cOrbit = true;
             dOrbit = false;
         }
-        //loadPsyche("C");
     });
 
     const buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
-        renderer.setClearColor("#c6c6c6");
-        /*if(!dOrbit) {
+        if(!dOrbit) {
+            renderer.setClearColor("#c6c6c6");
+            removePsyche(); loadPsyche("D");
             startSpacecraftOrbit(50);
             aOrbit = false;
             bOrbit = false;
             cOrbit = false;
             dOrbit = true;
         }
-
-         */
-        //loadPsyche("D");
     });
 
     // visible axes for x,y,z planes
@@ -351,7 +345,7 @@ function startSpacecraftOrbit(radius) {
     var r = 0, t = -1, a = 1;
     var p = new THREE.Vector3(0, 0, 0);
     var ax = new THREE.Vector3(0, 1, 0);
-    var frames = 300;
+    var frames = 1000;
 
     setInterval(function(){
         t ++;
@@ -400,6 +394,11 @@ function removeEntity(object) {
     animate();
 }
 
+function removePsyche() {
+    var selectedObject = scene.getObjectByName("psyche");
+    scene.remove( selectedObject );
+}
+
 function beginXRSession() {
     // requestSession must be called within a user gesture event
     // like click or touch when requesting an immersive session.
@@ -417,16 +416,16 @@ function loadPsyche(orbit=char) {
     switch(orbit)
     {
         case "A":
-            x = -50; y = -20; z = 0;
+            x = -125; y = -25; z = 0;
             break;
         case "B":
-            x = 80; y = 80; z = 100;
+            x = -100; y = -25; z = 0;
             break;
         case "C":
-            x = 60; y = 60; z = 80;
+            x = -75; y = -25; z = 0;
             break;
         case "D":
-            x = 40; y = 40; z = 60;
+            x = -50; y = -25; z = 0;
             break;
         default:
             x = 100; y = 100; z = 120;
@@ -434,14 +433,14 @@ function loadPsyche(orbit=char) {
     }
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/psyche.obj',
-        function (object) {
+        function (psyche) {
             //original size and position
             //object.position.set(10, 10, 20);
             //object.scale.setScalar(3);
-            object.position.set(x, y, z);
-            object.scale.setScalar(20);
-            object.name = "test_name";
-            scene.add(object);
+            psyche.position.set(x, y, z);
+            psyche.scale.setScalar(20);
+            psyche.name = "psyche";
+            scene.add(psyche);
         },
         function(xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
