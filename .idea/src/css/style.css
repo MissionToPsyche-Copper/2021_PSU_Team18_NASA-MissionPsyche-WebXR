@@ -56,25 +56,12 @@ button:active {
     left: 0;
 }
 
-#labelDiv {
-    color: #FFFFFF;
+#info {
+    width:20vw;
+    color: rgba(239,89,102);
+    text-transform: uppercase;
     position: absolute;
-    left: 0;
-    top: 0;
-}
-
-#hovered>div {
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-size: large;
-    user-select: none;
-    text-shadow:
-        -1px -1px 0 #FFF,
-         0 -1px 0 #FFF,
-        1px -1px 0 #FFF;
-}
-
-#hovered>div:hover {
-    color:blue;
+    left: 20px;
+    top: 200px;
+    align-content: center;
 }

@@ -57,9 +57,9 @@ function init() {
     // move came towards the back so we can see
     // default 0,0,0
     // z increases as it comes out of the screen 'towards' you
-    camera.position.x = 500;
-    camera.position.y = 500;
-    camera.position.z = 500;
+    camera.position.x = 700;
+    camera.position.y = 100;
+    camera.position.z = 400;
     camera.lookAt(scene.position);
 
     // -- renderer: obj renders scene using WebGL
@@ -73,21 +73,21 @@ function init() {
     scene.add(new THREE.AmbientLight(0x888888));
 
     var light = new THREE.DirectionalLight(0xcccccc, 1);
-    light.position.set(2, 3, 2);
+    light.position.set(0.5, 5, 5);
     scene.add(light);
 
     light.caseShadow = true;
     light.shadow.camera.near = 0.01;
-    light.shadow.camera.far = 15;
-    light.shadow.camera.fov = 45;
+    light.shadow.camera.far = 45;
+    light.shadow.camera.fov = 55;
 
-    light.shadow.camera.left = -1;
+    light.shadow.camera.left = -10;
     light.shadow.camera.right = 1;
     light.shadow.camera.top = 1;
-    light.shadow.camera.bottom = -1;
+    light.shadow.camera.bottom = -10;
 
     light.shadow.bias = 0.001;
-    light.shadow.mapSize.width = 1024 * 2;
+    light.shadow.mapSize.width = 1024 * 3;
 
     // set color of bg in hex - 0-1 can be set for alpha - opacity
     renderer.setClearColor("#02020A");
@@ -439,8 +439,8 @@ function animate() {
     // Rotate scene constantly
     // would like to get orbiter to rotate around psyche
     // and make psyche the center of the scene
-    scene.rotation.z -= 0.0001;
-    scene.rotation.x -= 0.00001;
+    scene.rotation.z -= 0.00002;
+    scene.rotation.x -= 0.000001;
     renderRaycaster();
     renderer.render(scene, camera);
     requestAnimationFrame(animate); // recursive call to animate function
