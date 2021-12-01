@@ -30,6 +30,7 @@ var mesh,
     particles = [];
 
 var orbit="init";
+var loaded=false;
 
 // This pointer is used for the raycaster
 const pointer = new THREE.Vector2();
@@ -290,6 +291,7 @@ function animateStars() {
 
 function loadSpacecraft() {
 
+    if(orbit != "init")  scene.remove(spacecraftMesh)
     const material = new THREE.MeshPhysicalMaterial({
         color: 0x8c8c8c,
         //envMap: envTexture,
@@ -354,7 +356,6 @@ THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
         this.position.sub(point);
         this.position.applyQuaternion(q);
         this.position.add(point);
-
         return this;
     }
 }();
@@ -382,6 +383,7 @@ function removeEntity(object) {
 
 function changeOrbit(orbit = char){
     loadPsyche(orbit)
+    loadSpacecraft();
     var radius = 0;
     switch(orbit){
         case "A":
@@ -444,9 +446,10 @@ function loadPsyche(orbit=char) {
             psyche.name = "psyche";
             scene.add(psyche);
         },
-        function(xhr) {
+        /*function(xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         },
+         */
         function(error) {
             console.log('An error occurred');
         }
