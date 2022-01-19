@@ -533,9 +533,9 @@ function animate() {
     renderRaycaster();
     renderer.render(scene, camera);
     requestAnimationFrame(animate); // recursive call to animate function
-    // animateStars();
+    animateStars();
 }
 
-// addStars();
+addStars();
 checkForXRSupport();
 animate();
