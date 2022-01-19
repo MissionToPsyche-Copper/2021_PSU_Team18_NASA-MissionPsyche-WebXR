@@ -1,5 +1,5 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.120.1/build/three.module.js';
-import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
@@ -11,7 +11,7 @@ var mesh,
     cssrenderer,
     scene,
     camera,
-    controls,
+    orbitControls,
     geometry,
     cubes,
     points,
@@ -58,13 +58,6 @@ function init() {
     camera = new THREE.PerspectiveCamera(
         45, window.innerWidth / window.innerHeight, 0.1, 5000);
 
-    // move came towards the back so we can see
-    // default 0,0,0
-    // z increases as it comes out of the screen 'towards' you
-    camera.position.x = 700;
-    camera.position.y = 100;
-    camera.position.z = 400;
-    camera.lookAt(scene.position);
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -102,9 +95,9 @@ function init() {
 
     // -- controls: allows mouse controls such as click+drag, zoom, etc.
     // Add mouse controls
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 5;
-    controls.maxDistance = 400;
+    orbitControls = new OrbitControls(camera, renderer.domElement);
+    orbitControls.minDistance = 7;
+    orbitControls.maxDistance = 60;
 
     // -- models: load object model resources
     loadSpacecraft();
@@ -149,9 +142,10 @@ function init() {
         }
     });
 
-    // visible axes for x,y,z planes
+    // visible axes for x,y,z planes (AXES HELPER)
     // TODO: remove later
-    scene.add(new THREE.AxesHelper(500));
+    // scene.add(new THREE.AxesHelper(500));
+
     scene.fog = new THREE.FogExp2(0x141414, 0.002);
 
     document.addEventListener("mousemove", (e) => {
@@ -307,11 +301,30 @@ function loadSpacecraft() {
         '../src/res/stl/spacecraft/spacecraft_panels_antenna_attached.stl',
         function (geometry) {
             spacecraftMesh = new THREE.Mesh(geometry, material)
+
             // change these values to modify the x,y,z plane that this model sits on when it is loaded.
-            spacecraftMesh.rotation.set(-Math.PI / 2, 0.3,  Math.PI / 2);
-            spacecraftMesh.scale.set(0.025,0.025,0.025);
+
+            // orbiting setup (DO NOT DELETE. Use this for final realistic orbiting view.)
+            spacecraftMesh.rotation.set(-Math.PI / 1.8, 0.3,  Math.PI / 2);
+            spacecraftMesh.rotation.z = Math.PI / 1.8;
             spacecraftMesh.position.set(0,0,0.5);
+
+            // DO NOT DELETE.
+            // flat setup is used for loading & aligning other 3d objects.
+            // spacecraftMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
+            // spacecraftMesh.rotation.z = Math.PI / 2;
+            // spacecraftMesh.position.set(0,0,0);
+
+            //todo: fix camera zoom to be closer on load.
+            spacecraftMesh.scale.set(0.025,0.025,0.025);
             scene.add(spacecraftMesh)
+            camera.lookAt(spacecraftMesh);
+            camera.position.x = 200;
+            camera.position.y = 30;
+            camera.position.z = 75;
+            // camera.zoom = 2;
+            // orbitControls.zoom = 5;
+            //camera.updateProjectionMatrix();
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
@@ -397,7 +410,10 @@ function changeOrbit(orbit = char){
             radius = 50;
             break;
     }
-    startSpacecraftOrbit(radius);
+
+    // If the spacecraft is not orbiting, we do not need this code.
+    // It could be good to keep around in case we need it for similar stuff later.
+    // startSpacecraftOrbit(radius);
 }
 
 function beginXRSession() {
@@ -430,7 +446,7 @@ function loadPsyche(orbit=char) {
             x = -50; y = -25; z = 0;
             break;
         default:
-            x = -50; y = -25; z = 0;
+            x = -35; y = -25; z = 0;
             break;
     }
     const objLoader = new OBJLoader();
@@ -454,7 +470,6 @@ function loadPsyche(orbit=char) {
 }
 
 function renderRaycaster() {
-
     raycaster.setFromCamera( pointer, camera );
     const intersects = raycaster.intersectObjects( scene.children, true );
 
@@ -511,14 +526,16 @@ function animate() {
     // Rotate scene constantly
     // would like to get orbiter to rotate around psyche
     // and make psyche the center of the scene
-    scene.rotation.z -= 0.00002;
-    scene.rotation.x -= 0.000001;
+    var psyche = scene.getObjectByName( "psyche" );
+    if(psyche != null) {
+        psyche.rotation.y -= 0.0025;
+    }
     renderRaycaster();
     renderer.render(scene, camera);
     requestAnimationFrame(animate); // recursive call to animate function
-    animateStars();
+    // animateStars();
 }
 
-addStars();
+// addStars();
 checkForXRSupport();
 animate();
