@@ -109,7 +109,7 @@ function init() {
     const buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
         if(orbit != "A") {
-            renderer.setClearColor("#cecfcf");
+            document.getElementById("tag").style.visibility = "hidden";
             orbit = "A";
             changeOrbit(orbit);
         }
@@ -118,7 +118,6 @@ function init() {
     const buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
         if(orbit != "B") {
-            renderer.setClearColor("#a1a1a1");
             orbit = "B";
             changeOrbit(orbit);
         }
@@ -127,7 +126,6 @@ function init() {
     const buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
         if(orbit != "C") {
-            renderer.setClearColor("#777777");
             orbit = "C";
             changeOrbit(orbit);
         }
@@ -136,7 +134,6 @@ function init() {
     const buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
         if(orbit != "D") {
-            renderer.setClearColor("#000000");
             orbit = "D";
             changeOrbit(orbit);
         }
