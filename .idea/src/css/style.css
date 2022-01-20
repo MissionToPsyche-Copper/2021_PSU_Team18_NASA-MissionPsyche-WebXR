@@ -17,7 +17,7 @@ canvas {
 
 #menu {
     position: absolute;
-    bottom: 20px;
+    bottom: 80vh;
     width: 100vw;
     text-align: center;
 }
