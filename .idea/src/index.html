@@ -7,24 +7,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Three.js Web App Test</title>
-    <link rel="stylesheet" href="./css/style.css">
     <script type="module" src="./js/three.js"></script>
     <script type="module" src="./js/main.js"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+
+
 </head>
 <body>
-<div id="label"></div>
-<div id="controlstrip">
-    <div id="info">
-        <section>
-            <h2>Mission Psyche</h2>
-            <br>
-        </section>
 
+<div id="label" class="label"></div>
+<div id="controlstrip">
+    <div>
+        <section>
+            <h2 id="title">Mission Psyche</h2>
+        </section>
+        <div id="info">
+            <div id="tip">
+                <p>For the first time ever, we are
+                exploring a world made not of rock or ice,
+                but of <b>metal</b>.</p>
+                <p>
+                    At the launch site the team conducts an entire re-check of the spacecraft before integrating into the launch vehicle.
+                    The spacecraft launches in August of 2022.
+                    Once in space, the spacecraft travels using solar-electric propulsion.
+                    It arrives at the asteroid, located in the main asteroid belt between Mars and Jupiter, in early January of 2026.
+                </p>
+            </div>
+        </div>
     </div>
     <div>
-        <img id="logo" src="./res/Psyche_Badge.png">
+        <img id="logo" src="./res/Psyche_Icon_Color-SVG.svg">
     </div>
+
    <div id="menu">
        <button id="orbitA">Orbit A</button>
        <button id="orbitB">Orbit B</button>
@@ -33,7 +52,6 @@
    </div>
 
 </div>
-
 </body>
 
 </html>

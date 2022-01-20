@@ -4,7 +4,8 @@ import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/MTLLoader.js';
-import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
+import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS2DRenderer.js';
+import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
 var mesh,
     renderer,
@@ -67,6 +68,9 @@ function init() {
     // -- raycaster: intersect object models & register events based on mouse interactions
     raycaster = new THREE.Raycaster();
 
+    document.body.appendChild( VRButton.createButton( renderer ) );
+    renderer.xr.enabled = true;
+
     // -- lighting
     scene.add(new THREE.AmbientLight(0x888888));
 
@@ -103,23 +107,43 @@ function init() {
     // -- models: load object model resources
     loadSpacecraft();
     loadPsyche(orbit);
-    //cssrenderer = new CSS3DRenderer();
+
+    // css renderer testing
+    const psycheDiv = document.createElement('div');
+    psycheDiv.className = 'label';
+    psycheDiv.textContent = 'Psyche';
+    psycheDiv.style.marginTop = '-1em';
+    psycheDiv.style.color = 'white';
+    psycheDiv.style.visibility = 'false';
+    const psycheLabel = new CSS2DObject(psycheDiv);
+    psycheLabel.position.set(-100,10,0);
+    scene.add(psycheLabel);
+
+    cssrenderer = new CSS2DRenderer();
+    cssrenderer.setSize(window.innerWidth/2, window.innerHeight/2);
+    cssrenderer.domElement.style.position = 'fixed';
+    cssrenderer.domElement.style.top = '0px';
+    document.body.appendChild(cssrenderer.domElement);
+
+    // var cssrenderer = createCSS3DObject(content);
+    // cssElement.position.set(100,100,100);
+    // scene.add(cssElement);
    // cssrenderer.setSize(window.innerWidth, window.innerHeight);
    // document.getElementById('controlstrip').appendChild(cssrenderer.domElement);
+
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
         if(orbit != "A") {
-            renderer.setClearColor("#cecfcf");
             orbit = "A";
             changeOrbit(orbit);
+            psycheDiv.style.visibility = 'true';
         }
     });
 
     const buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
         if(orbit != "B") {
-            renderer.setClearColor("#a1a1a1");
             orbit = "B";
             changeOrbit(orbit);
         }
@@ -128,7 +152,6 @@ function init() {
     const buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
         if(orbit != "C") {
-            renderer.setClearColor("#777777");
             orbit = "C";
             changeOrbit(orbit);
         }
@@ -137,7 +160,6 @@ function init() {
     const buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
         if(orbit != "D") {
-            renderer.setClearColor("#000000");
             orbit = "D";
             changeOrbit(orbit);
         }
@@ -230,8 +252,8 @@ function addStars() {
         var particle = new THREE.Mesh(geometry, material);
 
         // give random (x,y) coords between -500 to 500
-        particle.position.x = randomRange(-500,500);
-        particle.position.y = randomRange(-500,500);
+        particle.position.x = randomRange(-500,200);
+        particle.position.y = randomRange(-500,200);
         // math.random returns 0 - 1 but not 1 inclusive
         // we multiply that by 1000 giving us 1000 or 0
         // and subtracting 500 from this value
@@ -535,6 +557,7 @@ function animate() {
     }
     renderRaycaster();
     renderer.render(scene, camera);
+    cssrenderer.render(scene, camera);
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
 }

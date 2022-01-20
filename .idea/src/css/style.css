@@ -7,16 +7,17 @@ body {
     margin: 0;
     height: 100vh; /* 100 view height */
     width: 100vw;
-    overflow: hidden;
+    font-family: 'Raleway', sans-serif;
 }
 
 canvas {
     display: block;
+    background-color: transparent;
 }
 
 #menu {
     position: absolute;
-    bottom: 20px;
+    bottom: 80vh;
     width: 100vw;
     text-align: center;
 }
@@ -32,7 +33,8 @@ button {
 }
 
 button:hover {
-    background-color: rgba(239,89,102, 0.5);
+    background-color: rgba(239,89,102, 0.8);
+    color: white;
 }
 
 button:active {
@@ -40,10 +42,10 @@ button:active {
     background-color: rgba(0,255,255,0.75);
 }
 #logo {
-    height: 50%;
-    width: 50%;
+    height: 100px;
+    width: 100px;
     margin-top: 20px;
-    margin-left: 20px;
+    margin-left: 25px;
 }
 #controlstrip {
     /* bg color as white just for visiblity will change later */
@@ -52,17 +54,29 @@ button:active {
     margin: 0;
     position: absolute;
     height: 100vh;
-    width: 20vw;
-    top: 0;
-    left: 0;
+    width: 30vw;
 }
 
-#info {
-    width:20vw;
+#tip {
+    color: white;
+}
+
+#title {
     color: rgba(239,89,102);
     text-transform: uppercase;
     position: absolute;
-    left: 20px;
-    top: 200px;
+    left: 25px;
+    top: 15vh;
+    z-index: 2000;
+}
+
+#info {
+    width:25vw;
+    color: rgba(239,89,102);
+    text-transform: uppercase;
+    position: absolute;
+    left: 25px;
+    top: 30vh;
+    z-index: 20000;
     align-content: center;
 }
