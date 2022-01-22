@@ -104,10 +104,6 @@ function init() {
     orbitControls.minDistance = 7;
     orbitControls.maxDistance = 60;
 
-    // -- models: load object model resources
-    loadSpacecraft();
-    loadPsyche(orbit);
-
     // css renderer testing
     const psycheDiv = document.createElement('div');
     psycheDiv.className = 'label';
@@ -119,17 +115,24 @@ function init() {
     psycheLabel.position.set(-100,10,0);
     scene.add(psycheLabel);
 
+    document.getElementById("title").style.display = 'none';
+    document.getElementById("tip").style.display = 'none';
+    document.getElementById("orbit-a").style.display = 'none';
+    document.getElementById("orbit-b").style.display = 'none';
+    document.getElementById("orbit-c").style.display = 'none';
+    document.getElementById("orbit-d").style.display = 'none';
+    // document.getElementById("16psyche").style.display = 'none';
+    // document.getElementById("instrument").style.display = 'none';
+
     cssrenderer = new CSS2DRenderer();
     cssrenderer.setSize(window.innerWidth/2, window.innerHeight/2);
-    cssrenderer.domElement.style.position = 'fixed';
+    cssrenderer.domElement.style.position = 'absolute';
     cssrenderer.domElement.style.top = '0px';
     document.body.appendChild(cssrenderer.domElement);
 
-    // var cssrenderer = createCSS3DObject(content);
-    // cssElement.position.set(100,100,100);
-    // scene.add(cssElement);
-   // cssrenderer.setSize(window.innerWidth, window.innerHeight);
-   // document.getElementById('controlstrip').appendChild(cssrenderer.domElement);
+    // -- models: load object model resources
+
+    loadPsyche('A');
 
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
@@ -137,7 +140,12 @@ function init() {
         if(orbit != "A") {
             orbit = "A";
             changeOrbit(orbit);
-            psycheDiv.style.visibility = 'true';
+            document.getElementById("title").style.display = 'block';
+            document.getElementById("tip").style.display = 'block';
+            document.getElementById("orbit-a").style.display = 'none';
+            document.getElementById("orbit-b").style.display = 'none';
+            document.getElementById("orbit-c").style.display = 'none';
+            document.getElementById("orbit-d").style.display = 'none';
         }
     });
 
@@ -146,6 +154,12 @@ function init() {
         if(orbit != "B") {
             orbit = "B";
             changeOrbit(orbit);
+            document.getElementById("title").style.display = 'block';
+            document.getElementById("tip").style.display = 'none';
+            document.getElementById("orbit-a").style.display = 'none';
+            document.getElementById("orbit-b").style.display = 'block';
+            document.getElementById("orbit-c").style.display = 'none';
+            document.getElementById("orbit-d").style.display = 'none';
         }
     });
 
@@ -154,6 +168,12 @@ function init() {
         if(orbit != "C") {
             orbit = "C";
             changeOrbit(orbit);
+            document.getElementById("title").style.display = 'block';
+            document.getElementById("tip").style.display = 'none';
+            document.getElementById("orbit-a").style.display = 'none';
+            document.getElementById("orbit-b").style.display = 'none';
+            document.getElementById("orbit-c").style.display = 'block';
+            document.getElementById("orbit-d").style.display = 'none';
         }
     });
 
@@ -162,6 +182,12 @@ function init() {
         if(orbit != "D") {
             orbit = "D";
             changeOrbit(orbit);
+            document.getElementById("title").style.display = 'block';
+            document.getElementById("tip").style.display = 'none';
+            document.getElementById("orbit-a").style.display = 'none';
+            document.getElementById("orbit-b").style.display = 'none';
+            document.getElementById("orbit-c").style.display = 'none';
+            document.getElementById("orbit-d").style.display = 'block';
         }
     });
 
@@ -240,7 +266,7 @@ function addStars() {
     // move from -1000 super far to closer which is 1000 where the cam is
     // and this will add random particles
     // at every z position
-    for (var zpos = -5000; zpos < 5000; zpos += 0.5) {
+    for (var zpos = -5000; zpos < 2000; zpos += 0.4) {
         // dynamic object initialisation method
         var geometry = new THREE.SphereGeometry(0.3, 5, 5);
 
@@ -252,8 +278,8 @@ function addStars() {
         var particle = new THREE.Mesh(geometry, material);
 
         // give random (x,y) coords between -500 to 500
-        particle.position.x = randomRange(-500,200);
-        particle.position.y = randomRange(-500,200);
+        particle.position.x = randomRange(-550,200);
+        particle.position.y = randomRange(-550,200);
         // math.random returns 0 - 1 but not 1 inclusive
         // we multiply that by 1000 giving us 1000 or 0
         // and subtracting 500 from this value
@@ -275,15 +301,15 @@ function addStars() {
     const geo = new THREE.BufferGeometry();
     const vertices = [];
 
-    for ( let i = 0; i < 10000; i++ ) {
+    for ( let i = 0; i < 20000; i++ ) {
         vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // x
         vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // y
-        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // z
+        vertices.push( THREE.MathUtils.randFloatSpread( -2000 ) ); // z
     }
 
     geo.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
     const BGparticles = new THREE.Points( geo,
-        new THREE.PointsMaterial( { color: 0xFFFFFF } ) );
+        new THREE.PointsMaterial( { color: generateRandomColor() } ) );
     scene.add( BGparticles );
 }
 
@@ -307,7 +333,7 @@ function animateStars() {
 
 function loadSpacecraft() {
 
-    if(orbit != "init")  scene.remove(spacecraftMesh)
+    //if(orbit != "init")  scene.remove(spacecraftMesh)
     const material = new THREE.MeshPhysicalMaterial({
         color: 0x8c8c8c,
         //envMap: envTexture,
@@ -400,8 +426,8 @@ THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
 async function checkForXRSupport() {
     navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
         if (supported) {
-            var enterXrBtn = document.createElement("button");
-            enterXrBtn.innerHTML = "Enter Ar";
+            var enterXrBtn = document.createElement("ar");
+            enterXrBtn.innerHTML = "ENTER AR";
             enterXrBtn.addEventListener("click", beginXRSession);
             document.body.appendChild(enterXrBtn);
         } else {
@@ -418,7 +444,7 @@ function removeEntity(object) {
 
 function changeOrbit(orbit = char){
     loadPsyche(orbit)
-    loadSpacecraft();
+    //loadSpacecraft();
     var radius = 0;
     switch(orbit){
         case "A":
@@ -480,14 +506,14 @@ function loadPsyche(orbit=char) {
             //object.position.set(10, 10, 20);
             //object.scale.setScalar(3);
             psyche.position.set(x, y, z);
-            psyche.scale.setScalar(20);
+            psyche.scale.setScalar(15);
             psyche.name = "psyche";
             scene.add(psyche);
         },
-        /*function(xhr) {
+        function(xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         },
-         */
+
         function(error) {
             console.log('An error occurred');
         }
@@ -562,6 +588,7 @@ function animate() {
     animateStars();
 }
 
+loadSpacecraft();
 addStars();
 checkForXRSupport();
 animate();

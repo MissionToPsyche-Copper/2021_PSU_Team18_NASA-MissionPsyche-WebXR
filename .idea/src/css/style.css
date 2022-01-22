@@ -11,14 +11,15 @@ body {
 }
 
 canvas {
-    display: block;
-    background-color: transparent;
+    font-family: 'Raleway', sans-serif;
 }
 
 #menu {
     position: absolute;
     bottom: 80vh;
     width: 100vw;
+
+    left: calc(50% - 75px);
     text-align: center;
 }
 
@@ -29,7 +30,24 @@ button {
     border: 0px;
     padding: 5px 10px;
     margin-bottom: 100px;
+    border-radius: 4px;
     cursor: pointer;
+}
+
+ar {
+    position: absolute;
+    bottom: 20px;
+    padding: 5px 10px;
+    font-size: 13px;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    opacity: 0.5;
+    z-index: 999;
+    left: calc(50% - 75px);
+    width: 100px;
 }
 
 button:hover {
@@ -64,6 +82,7 @@ button:active {
 #title {
     color: rgba(239,89,102);
     text-transform: uppercase;
+    align-content: center;
     position: absolute;
     left: 25px;
     top: 15vh;
