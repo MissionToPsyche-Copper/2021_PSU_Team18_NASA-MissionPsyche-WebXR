@@ -60,7 +60,6 @@ function init() {
     camera = new THREE.PerspectiveCamera(
         45, window.innerWidth / window.innerHeight, 0.1, 5000);
 
-
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.shadowMap.enabled = true;
@@ -105,12 +104,12 @@ function init() {
     orbitControls.maxDistance = 60;
 
     // css renderer testing
-    const psycheDiv = document.createElement('div');
-    psycheDiv.className = 'label';
+    // displays that psyche label in the scene
+    // using this for testing
+    const psycheDiv = document.createElement('label-psyche');
     psycheDiv.textContent = 'Psyche';
     psycheDiv.style.marginTop = '-1em';
     psycheDiv.style.color = 'white';
-    psycheDiv.style.visibility = 'false';
     const psycheLabel = new CSS2DObject(psycheDiv);
     psycheLabel.position.set(-100,10,0);
     scene.add(psycheLabel);
@@ -124,6 +123,7 @@ function init() {
     // document.getElementById("16psyche").style.display = 'none';
     // document.getElementById("instrument").style.display = 'none';
 
+    // allows me to display the css elements in our scene
     cssrenderer = new CSS2DRenderer();
     cssrenderer.setSize(window.innerWidth/2, window.innerHeight/2);
     cssrenderer.domElement.style.position = 'absolute';
@@ -131,8 +131,7 @@ function init() {
     document.body.appendChild(cssrenderer.domElement);
 
     // -- models: load object model resources
-
-    loadPsyche('A');
+    loadPsyche('A'); // load psyche in orbit A can be updated later
 
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
@@ -191,16 +190,11 @@ function init() {
         }
     });
 
-    // visible axes for x,y,z planes (AXES HELPER)
-    // TODO: remove later
-    // scene.add(new THREE.AxesHelper(500));
-
     scene.fog = new THREE.FogExp2(0x141414, 0.002);
 
     document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-
         // for raycaster
         // (TODO: this doesn't seem to be exact, this may need little bit of tweaking
         // based on screen size, etc? y coordinates didn't seem 100% accurate, although
@@ -218,7 +212,7 @@ function init() {
         camera.updateProjectionMatrix(); // apply new changes to new win size
     });
 }
-
+// for stars random color generator helper
 var rgbToHex = function (rgb) {
     var hex = Number(rgb).toString(16);
     if (hex.length < 2) {
@@ -226,18 +220,17 @@ var rgbToHex = function (rgb) {
     }
     return hex;
 };
-
+// for stars random color generator
 var fullColorHex = function(r,g,b) {
     var red = rgbToHex(r);
     var green = rgbToHex(g);
     var blue = rgbToHex(b);
     return red+green+blue;
 };
-
+// for stars
 function generateRandomColor()
 {
     var randomColor = randomRange(0,6);
-
     switch(randomColor) {
         case 0: return '#'+fullColorHex(175,201,255);
         case 1: return '#'+fullColorHex(199,216,255);
@@ -249,12 +242,10 @@ function generateRandomColor()
 
         default: break;
     }
-
     //random color will be freshly served
 }
 
 function addStars() {
-
     // set interval val is in milliseconds - so convert frames per sec
     // to mils per frame
     // take 1000 which is the num of mils in one second
@@ -331,9 +322,8 @@ function animateStars() {
     particle.rotation.y += 0.00001;
 }
 
+// Spacecraft object
 function loadSpacecraft() {
-
-    //if(orbit != "init")  scene.remove(spacecraftMesh)
     const material = new THREE.MeshPhysicalMaterial({
         color: 0x8c8c8c,
         //envMap: envTexture,
@@ -346,6 +336,7 @@ function loadSpacecraft() {
         clearcoatRoughness: 0.25
     })
 
+    // Spacecraft Loader
     const stlLoader = new STLLoader();
     stlLoader.load(
         '../src/res/stl/spacecraft/spacecraft_panels_antenna_attached.stl',
@@ -388,7 +379,6 @@ function loadSpacecraft() {
 // radius changes the orbit distance, but this must also be modified with
 // spacecraft placement because as the radius changes, the "starting point"
 // must also change.
-
 //not sure why calling multiple times speeds up the orbit, must investigate
 function startSpacecraftOrbit(radius) {
     var r = 0, t = -1, a = 1;
@@ -422,7 +412,8 @@ THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
 }();
 
 // check for XR support
-// not working..... need to debug..
+// displaying enter AR if XR is supported
+// if not it will display session not supported in the web dev browser
 async function checkForXRSupport() {
     navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
         if (supported) {
@@ -435,13 +426,14 @@ async function checkForXRSupport() {
         }
     });
 }
-
+// removes objects
+// is this still working or needed?
 function removeEntity(object) {
     var selectedObject = scene.getObjectByName(object.name);
     scene.remove( selectedObject );
     animate();
 }
-
+// update radius
 function changeOrbit(orbit = char){
     loadPsyche(orbit)
     //loadSpacecraft();
@@ -465,7 +457,7 @@ function changeOrbit(orbit = char){
     // It could be good to keep around in case we need it for similar stuff later.
     // startSpacecraftOrbit(radius);
 }
-
+// not working need to debug...
 function beginXRSession() {
     // requestSession must be called within a user gesture event
     // like click or touch when requesting an immersive session.
@@ -477,7 +469,7 @@ function beginXRSession() {
             window.requestAnimationFrame(onDrawFrame);
         });
 }
-
+// Psyche object
 function loadPsyche(orbit=char) {
     if(scene.getObjectByName("psyche") != null) scene.remove( scene.getObjectByName("psyche") );
     var x, y, z;
@@ -499,12 +491,10 @@ function loadPsyche(orbit=char) {
             x = -35; y = -25; z = 0;
             break;
     }
+    // psyche loader
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/psyche.obj',
         function (psyche) {
-            //original size and position
-            //object.position.set(10, 10, 20);
-            //object.scale.setScalar(3);
             psyche.position.set(x, y, z);
             psyche.scale.setScalar(15);
             psyche.name = "psyche";
@@ -519,7 +509,7 @@ function loadPsyche(orbit=char) {
         }
     );
 }
-
+// ability to interact with obj on screen
 function renderRaycaster() {
     raycaster.setFromCamera( pointer, camera );
     const intersects = raycaster.intersectObjects( scene.children, true );
