@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- META -->
     <meta charset="UTF-8">
     <meta name="description" content="WebXR">
     <meta name="author" content="Mio">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
+
     <title>Three.js Web App Test</title>
+    <!-- JS -->
     <script type="module" src="./js/three.js"></script>
     <script type="module" src="./js/main.js"></script>
-
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;400&display=swap" rel="stylesheet">
-
+    <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css">
-
 
 </head>
 <body>
-
+<!-- Left Panel -->
 <div id="controlstrip">
     <div>
         <section>
             <h2 id="title">Mission Psyche</h2>
         </section>
+        <!-- Mission Start Basic Info -->
         <div id="info">
             <div id="tip">
                 <p>For the first time ever, we are
@@ -38,6 +41,7 @@
                 </p>
             </div>
         </div>
+        <!-- Orbit A Info -->
         <div id="info">
             <div id="orbit-a">
                 <p>Orbit A: <b>Characterization</b>.</p>
@@ -46,6 +50,7 @@
                 </p>
             </div>
         </div>
+        <!-- Orbit B Info -->
         <div id="info">
             <div id="orbit-b">
                 <p>Orbit B: <b>Topography</b>.</p>
@@ -54,6 +59,7 @@
                 </p>
             </div>
         </div>
+        <!-- Orbit C Info -->
         <div id="info">
             <div id="orbit-c">
                 <p>Orbit C: <b>Gravity Science</b>.</p>
@@ -62,6 +68,7 @@
                 </p>
             </div>
         </div>
+        <!-- Orbit D Info -->
         <div id="info">
             <div id="orbit-d">
                 <p>Orbit D: <b>Elemental Mapping</b>.</p>
@@ -71,17 +78,17 @@
             </div>
         </div>
     </div>
+    <!-- Psyche Badge -->
     <div>
         <img id="logo" src="./res/Psyche_Icon_Color-SVG.svg">
     </div>
-
+    <!-- Orbit Menu -->
    <div id="menu">
        <button id="orbitA">Orbit A</button>
        <button id="orbitB">Orbit B</button>
        <button id="orbitC">Orbit C</button>
        <button id="orbitD">Orbit D</button>
    </div>
-
 </div>
 </body>
 

@@ -105,12 +105,10 @@ function init() {
     orbitControls.maxDistance = 60;
 
     // css renderer testing
-    const psycheDiv = document.createElement('div');
-    psycheDiv.className = 'label';
+    const psycheDiv = document.createElement('label-psyche');
     psycheDiv.textContent = 'Psyche';
     psycheDiv.style.marginTop = '-1em';
     psycheDiv.style.color = 'white';
-    psycheDiv.style.visibility = 'false';
     const psycheLabel = new CSS2DObject(psycheDiv);
     psycheLabel.position.set(-100,10,0);
     scene.add(psycheLabel);
