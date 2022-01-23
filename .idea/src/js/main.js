@@ -59,7 +59,7 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 0.1, 5000);
+        45, window.innerWidth / window.innerHeight, 0.1, 4000);
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -112,15 +112,14 @@ function init() {
     psycheDiv.style.marginTop = '-1em';
     psycheDiv.style.color = 'white';
     const psycheLabel = new CSS2DObject(psycheDiv);
-    psycheLabel.position.set(-100,10,0);
+    psycheLabel.position.set(-200,10,0);
     scene.add(psycheLabel);
 
-    document.getElementById("title").style.display = 'none';
-    document.getElementById("tip").style.display = 'none';
-    document.getElementById("orbit-a").style.display = 'none';
-    document.getElementById("orbit-b").style.display = 'none';
-    document.getElementById("orbit-c").style.display = 'none';
-    document.getElementById("orbit-d").style.display = 'none';
+    document.getElementById("tip").style.visibility = 'hidden';
+    document.getElementById("orbit-a").style.visibility = 'hidden';
+    document.getElementById("orbit-b").style.visibility = 'hidden';
+    document.getElementById("orbit-c").style.visibility = 'hidden';
+    document.getElementById("orbit-d").style.visibility = 'hidden';
     // document.getElementById("16psyche").style.display = 'none';
     // document.getElementById("instrument").style.display = 'none';
 
@@ -140,12 +139,11 @@ function init() {
         if(orbit != "A") {
             orbit = "A";
             changeOrbit(orbit);
-            document.getElementById("title").style.display = 'block';
-            document.getElementById("tip").style.display = 'block';
-            document.getElementById("orbit-a").style.display = 'none';
-            document.getElementById("orbit-b").style.display = 'none';
-            document.getElementById("orbit-c").style.display = 'none';
-            document.getElementById("orbit-d").style.display = 'none';
+            document.getElementById("tip").style.visibility = 'visible';
+            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'hidden';
+            document.getElementById("orbit-c").style.visibility = 'hidden';
+            document.getElementById("orbit-d").style.visibility = 'hidden';
         }
     });
 
@@ -154,12 +152,11 @@ function init() {
         if(orbit != "B") {
             orbit = "B";
             changeOrbit(orbit);
-            document.getElementById("title").style.display = 'block';
-            document.getElementById("tip").style.display = 'none';
-            document.getElementById("orbit-a").style.display = 'none';
-            document.getElementById("orbit-b").style.display = 'block';
-            document.getElementById("orbit-c").style.display = 'none';
-            document.getElementById("orbit-d").style.display = 'none';
+            document.getElementById("tip").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'visible';
+            document.getElementById("orbit-c").style.visibility = 'hidden';
+            document.getElementById("orbit-d").style.visibility = 'hidden';
         }
     });
 
@@ -168,12 +165,11 @@ function init() {
         if(orbit != "C") {
             orbit = "C";
             changeOrbit(orbit);
-            document.getElementById("title").style.display = 'block';
-            document.getElementById("tip").style.display = 'none';
-            document.getElementById("orbit-a").style.display = 'none';
-            document.getElementById("orbit-b").style.display = 'none';
-            document.getElementById("orbit-c").style.display = 'block';
-            document.getElementById("orbit-d").style.display = 'none';
+            document.getElementById("tip").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'hidden';
+            document.getElementById("orbit-c").style.visibility = 'visible';
+            document.getElementById("orbit-d").style.visibility = 'hidden';
         }
     });
 
@@ -182,12 +178,11 @@ function init() {
         if(orbit != "D") {
             orbit = "D";
             changeOrbit(orbit);
-            document.getElementById("title").style.display = 'block';
-            document.getElementById("tip").style.display = 'none';
-            document.getElementById("orbit-a").style.display = 'none';
-            document.getElementById("orbit-b").style.display = 'none';
-            document.getElementById("orbit-c").style.display = 'none';
-            document.getElementById("orbit-d").style.display = 'block';
+            document.getElementById("tip").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'hidden';
+            document.getElementById("orbit-c").style.visibility = 'hidden';
+            document.getElementById("orbit-d").style.visibility = 'visible';
         }
     });
 
@@ -360,13 +355,10 @@ function loadSpacecraft() {
             //todo: fix camera zoom to be closer on load.
             spacecraftMesh.scale.set(0.025,0.025,0.025);
             scene.add(spacecraftMesh)
-            camera.lookAt(spacecraftMesh);
-            camera.position.x = 200;
-            camera.position.y = 30;
-            camera.position.z = 75;
-            // camera.zoom = 2;
-            // orbitControls.zoom = 5;
-            //camera.updateProjectionMatrix();
+            //camera.lookAt(spacecraftMesh);
+            camera.position.x = -80;
+            camera.position.y = -20;
+            camera.position.z = 150;
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
@@ -464,9 +456,9 @@ function renderRaycaster() {
     if (intersects.length > 0) {
         // TODO: remove this when done, just printing intersections to log
         // for testing purpuses.
-        // for (var i = 0; i < intersects.length; i++) {
-        //     console.log(intersects[i].face)
-        // }
+         for (var i = 0; i < intersects.length; i++) {
+             console.log(intersects[i].face)
+         }
 
         if (INTERSECTED != intersects[0].object) {
             if (INTERSECTED){
@@ -547,6 +539,7 @@ function animate() {
     renderRaycaster();
     renderer.render(scene, camera);
     cssrenderer.render(scene, camera);
+
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
 }
