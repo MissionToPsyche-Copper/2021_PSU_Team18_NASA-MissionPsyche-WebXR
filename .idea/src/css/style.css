@@ -91,6 +91,7 @@ button:active {
 
 #info {
     width:25vw;
+    visibility: hidden;
     color: rgba(239,89,102);
     text-transform: uppercase;
     position: absolute;
