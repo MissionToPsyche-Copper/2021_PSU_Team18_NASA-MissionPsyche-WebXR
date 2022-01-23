@@ -59,7 +59,7 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 0.1, 5000);
+        45, window.innerWidth / window.innerHeight, 0.1, 4000);
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -112,7 +112,7 @@ function init() {
     psycheDiv.style.marginTop = '-1em';
     psycheDiv.style.color = 'white';
     const psycheLabel = new CSS2DObject(psycheDiv);
-    psycheLabel.position.set(-100,10,0);
+    psycheLabel.position.set(-200,10,0);
     scene.add(psycheLabel);
 
     document.getElementById("tip").style.visibility = 'hidden';
@@ -435,7 +435,6 @@ function loadPsyche(orbit=char) {
     objLoader.load('../src/res/psyche.obj',
         function (psyche) {
             psyche.position.set(-125, -25, 0);
-            psyche.position.set(x, y, z);
             psyche.scale.setScalar(15);
             psyche.name = "psyche";
             scene.add(psyche);
