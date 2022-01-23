@@ -517,7 +517,7 @@ function animate() {
     var psyche = scene.getObjectByName( "psyche" );
     if(psyche != null) {
         //rotation
-        psyche.rotation.y -= 0.0025;
+        psyche.rotation.y += (psyche.position.x * 0.000025);
 
         if(psyche.position.x == -155) moveAway = false;
 
@@ -541,8 +541,8 @@ function animate() {
                 break;
         }
         //determine speed of ellipse
-        if(moveAway == true) psyche.position.x -= 0.025;
-        else psyche.position.x += 0.025;
+        if(moveAway == true) psyche.position.x -= 0.05;
+        else psyche.position.x += 0.05;
     }
     renderRaycaster();
     renderer.render(scene, camera);
