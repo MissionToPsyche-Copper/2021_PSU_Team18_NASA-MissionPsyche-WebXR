@@ -75,7 +75,7 @@ function init() {
     scene.add(new THREE.AmbientLight(0x888888));
 
     var light = new THREE.DirectionalLight(0xcccccc, 1);
-    light.position.set(0.5, 5, 5);
+    light.position.set(0.5, 2, 2);
     scene.add(light);
 
     light.caseShadow = true;
@@ -255,7 +255,7 @@ function addStars() {
     // at every z position
     for (var zpos = -5000; zpos < 2000; zpos += 0.4) {
         // dynamic object initialisation method
-        var geometry = new THREE.SphereGeometry(0.3, 5, 5);
+        var geometry = new THREE.SphereGeometry(0.1, 4, 4);
 
         let material = new THREE.MeshBasicMaterial({
             color: generateRandomColor()
@@ -265,8 +265,8 @@ function addStars() {
         var particle = new THREE.Mesh(geometry, material);
 
         // give random (x,y) coords between -500 to 500
-        particle.position.x = randomRange(-550,200);
-        particle.position.y = randomRange(-550,200);
+        particle.position.x = randomRange(-550,100);
+        particle.position.y = randomRange(-550,100);
         // math.random returns 0 - 1 but not 1 inclusive
         // we multiply that by 1000 giving us 1000 or 0
         // and subtracting 500 from this value
@@ -277,7 +277,7 @@ function addStars() {
         particle.position.z = zpos;
 
         // make it bigger
-        particle.scale.x = particle.scale.y = 1;
+        particle.scale.x = particle.scale.y = 3;
         // add to scene
         scene.add(particle);
         /// add particle to particle array
@@ -309,13 +309,13 @@ function animateStars() {
     for(var i = 0; i<particles.length; i++) {
         var particle = particles[i];
         // move particle forward based on mouse y position
-        particle.position.z += mouseY * 0.0002;
+        particle.position.z += mouseY * 0.00005;
 
         // if particle is too close move it backwards
         if(particle.position.z > 1000) particle.position.z -=2000;
     }
 
-    particle.rotation.y += 0.00001;
+    particle.rotation.x += 0.00001;
 }
 
 // Spacecraft object
@@ -343,7 +343,7 @@ function loadSpacecraft() {
 
             // orbiting setup (DO NOT DELETE. Use this for final realistic orbiting view.)
             spacecraftMesh.rotation.set(-Math.PI / 1.8, 0.3,  Math.PI / 2);
-            spacecraftMesh.rotation.z = Math.PI / 1.8;
+            spacecraftMesh.rotation.z = Math.PI / 1.5;
             spacecraftMesh.position.set(0,0,0.5);
 
             // DO NOT DELETE.
@@ -353,12 +353,12 @@ function loadSpacecraft() {
             // spacecraftMesh.position.set(0,0,0);
 
             //todo: fix camera zoom to be closer on load.
-            spacecraftMesh.scale.set(0.025,0.025,0.025);
+            spacecraftMesh.scale.set(0.045,0.045,0.045);
             scene.add(spacecraftMesh)
             //camera.lookAt(spacecraftMesh);
             camera.position.x = -80;
-            camera.position.y = -20;
-            camera.position.z = 150;
+            camera.position.y = -10;
+            camera.position.z = 250;
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
@@ -509,9 +509,9 @@ function animate() {
     var psyche = scene.getObjectByName( "psyche" );
     if(psyche != null) {
         //rotation
-        psyche.rotation.y -= 0.0025;
-
+        psyche.rotation.y += (psyche.position.x * 0.000025);
         if(psyche.position.x == -155) moveAway = false;
+
 
         //ellipse
         switch(orbit) {
@@ -533,8 +533,8 @@ function animate() {
                 break;
         }
         //determine speed of ellipse
-        if(moveAway == true) psyche.position.x -= 0.025;
-        else psyche.position.x += 0.025;
+        if(moveAway == true) psyche.position.x -= 0.05;
+        else psyche.position.x += 0.05;
     }
     renderRaycaster();
     renderer.render(scene, camera);
