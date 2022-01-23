@@ -31,6 +31,7 @@ var mesh,
     particles = [];
 
 var orbit="init";
+var moveAway = true;
 var loaded=false;
 
 // This pointer is used for the raycaster
@@ -199,7 +200,7 @@ function init() {
         // (TODO: this doesn't seem to be exact, this may need little bit of tweaking
         // based on screen size, etc? y coordinates didn't seem 100% accurate, although
         // changing the constant from 1 to 0.95 has helped a whole lot. Change back to 1
-        // to see original raycaster behavior.
+        // to see original raycaster behavior.)
         pointer.x = ( (event.clientX -renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
         pointer.y = -( (event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 0.95;
     });
@@ -376,41 +377,6 @@ function loadSpacecraft() {
     )
 }
 
-// radius changes the orbit distance, but this must also be modified with
-// spacecraft placement because as the radius changes, the "starting point"
-// must also change.
-//not sure why calling multiple times speeds up the orbit, must investigate
-function startSpacecraftOrbit(radius) {
-    var r = 0, t = -1, a = 1;
-    var p = new THREE.Vector3(0, 0, 0);
-    var ax = new THREE.Vector3(0, 1, 0);
-    var frames = 1000;
-
-    setInterval(function(){
-        t ++;
-        if (t % frames == 0) {
-            a++;
-            p.x = (a == 1 ? 1 : -1) * radius;
-            r = a == 1 ? -1 : 1;
-        }
-        spacecraftMesh.rotateAroundWorldAxis(p, ax, r * Math.PI * 2 / frames);
-    }, 20);
-}
-
-THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
-
-    var q = new THREE.Quaternion();
-
-    return function rotateAroundWorldAxis(point, axis, angle) {
-        q.setFromAxisAngle(axis, angle);
-        this.applyQuaternion(q);
-        this.position.sub(point);
-        this.position.applyQuaternion(q);
-        this.position.add(point);
-        return this;
-    }
-}();
-
 // check for XR support
 // displaying enter AR if XR is supported
 // if not it will display session not supported in the web dev browser
@@ -426,37 +392,37 @@ async function checkForXRSupport() {
         }
     });
 }
-// removes objects
-// is this still working or needed?
-function removeEntity(object) {
-    var selectedObject = scene.getObjectByName(object.name);
-    scene.remove( selectedObject );
-    animate();
-}
+
 // update radius
 function changeOrbit(orbit = char){
-    loadPsyche(orbit)
-    //loadSpacecraft();
-    var radius = 0;
-    switch(orbit){
+    var psyche = scene.getObjectByName( "psyche" );
+    var x, y, z;
+    switch(orbit) {
         case "A":
-            radius = 125;
+            x = -125;
+            y = -25;
+            z = 0;
             break;
         case "B":
-            radius = 100;
+            x = -100;
+            y = -25;
+            z = 0;
             break;
         case "C":
-            radius = 75;
+            x = -75;
+            y = -25;
+            z = 0;
             break;
         case "D":
-            radius = 50;
+            x = -50;
+            y = -25;
+            z = 0;
             break;
     }
-
-    // If the spacecraft is not orbiting, we do not need this code.
-    // It could be good to keep around in case we need it for similar stuff later.
-    // startSpacecraftOrbit(radius);
+    psyche.position.set(x, y, z);
 }
+
+
 // not working need to debug...
 function beginXRSession() {
     // requestSession must be called within a user gesture event
@@ -471,31 +437,12 @@ function beginXRSession() {
 }
 // Psyche object
 function loadPsyche(orbit=char) {
-    if(scene.getObjectByName("psyche") != null) scene.remove( scene.getObjectByName("psyche") );
-    var x, y, z;
-    switch(orbit)
-    {
-        case "A":
-            x = -125; y = -25; z = 0;
-            break;
-        case "B":
-            x = -100; y = -25; z = 0;
-            break;
-        case "C":
-            x = -75; y = -25; z = 0;
-            break;
-        case "D":
-            x = -50; y = -25; z = 0;
-            break;
-        default:
-            x = -35; y = -25; z = 0;
-            break;
-    }
+
     // psyche loader
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/psyche.obj',
         function (psyche) {
-            psyche.position.set(x, y, z);
+            psyche.position.set(-125, -25, 0);
             psyche.scale.setScalar(15);
             psyche.name = "psyche";
             scene.add(psyche);
@@ -563,13 +510,39 @@ function renderRaycaster() {
 // redraw scene 60FPS
 // keep function at bottom
 // needs to reference the above definitions
+
+
 function animate() {
     // Rotate scene constantly
-    // would like to get orbiter to rotate around psyche
-    // and make psyche the center of the scene
     var psyche = scene.getObjectByName( "psyche" );
     if(psyche != null) {
+        //rotation
         psyche.rotation.y -= 0.0025;
+
+        if(psyche.position.x == -155) moveAway = false;
+
+        //ellipse
+        switch(orbit) {
+            case "A":
+                if(psyche.position.x <= -150) moveAway = false;
+                if(psyche.position.x >= -100) moveAway = true;
+                break;
+            case "B":
+                if(psyche.position.x <= -125) moveAway = false;
+                if(psyche.position.x >= -75) moveAway = true;
+                break;
+            case "C":
+                if(psyche.position.x <= -100) moveAway = false;
+                if(psyche.position.x >= -50) moveAway = true;
+                break;
+            case "D":
+                if(psyche.position.x <= -75) moveAway = false;
+                if(psyche.position.x >= -25) moveAway = true;
+                break;
+        }
+        //determine speed of ellipse
+        if(moveAway == true) psyche.position.x -= 0.025;
+        else psyche.position.x += 0.025;
     }
     renderRaycaster();
     renderer.render(scene, camera);
@@ -582,3 +555,83 @@ loadSpacecraft();
 addStars();
 checkForXRSupport();
 animate();
+
+/*
+
+*****THE FOLLOWING IS LEGACY CODE FROM WHEN THE SPACECRAFT ORBITED THE ASTEROID*****
+
+// radius changes the orbit distance, but this must also be modified with
+// spacecraft placement because as the radius changes, the "starting point"
+// must also change.
+//not sure why calling multiple times speeds up the orbit, must investigate
+
+function startSpacecraftOrbit(radius) {
+    var r = 0, t = -1, a = 1;
+    var p = new THREE.Vector3(0, 0, 0);
+    var ax = new THREE.Vector3(0, 1, 0);
+    var frames = 1000;
+
+    setInterval(function(){
+        t ++;
+        if (t % frames == 0) {
+            a++;
+            p.x = (a == 1 ? 1 : -1) * radius;
+            r = a == 1 ? -1 : 1;
+        }
+        spacecraftMesh.rotateAroundWorldAxis(p, ax, r * Math.PI * 2 / frames);
+    }, 20);
+}
+
+THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
+
+    var q = new THREE.Quaternion();
+
+    return function rotateAroundWorldAxis(point, axis, angle) {
+        q.setFromAxisAngle(axis, angle);
+        this.applyQuaternion(q);
+        this.position.sub(point);
+        this.position.applyQuaternion(q);
+        this.position.add(point);
+        return this;
+    }
+}();
+
+*****LEGACY CODE FOR REMOVING ENTITIES - STILL WORKS*****
+
+// removes objects
+// is this still working or needed?
+// yes working, no longer needed - Odhran
+
+function removeEntity(object) {
+    var selectedObject = scene.getObjectByName(object.name);
+    scene.remove( selectedObject );
+    animate();
+}
+
+    //this code used to live in changeOrbit()
+    loadSpacecraft();
+    var radius = 0;
+    switch(orbit){
+        case "A":
+            radius = 125;
+            break;
+        case "B":
+            radius = 100;
+            break;
+        case "C":
+            radius = 75;
+            break;
+        case "D":
+            radius = 50;
+            break;
+     }
+
+     startSpacecraftOrbit(radius);
+
+
+// If the spacecraft is not orbiting, we do not need this code.
+// It could be good to keep around in case we need it for similar stuff later.
+
+*****END OF LEGACY CODE*****
+
+*/
