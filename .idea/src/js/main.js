@@ -501,7 +501,7 @@ function animatePsyche(){
     var psyche = scene.getObjectByName( "psyche" );
     if(psyche != null && orbit != "init") {
         //rotation
-        psyche.rotation.y -= 0.0025;
+        psyche.rotation.y += (psyche.position.x * 0.000025);
 
         /*
 
@@ -524,7 +524,6 @@ function animatePsyche(){
                 if(psyche.position.x >= -25) moveAway = true;
                 break;
         }
-
         if (moveAway == true) psyche.position.x -= 0.025;
         else psyche.position.x += 0.025;
 
