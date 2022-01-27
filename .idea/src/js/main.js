@@ -131,7 +131,7 @@ function init() {
     document.body.appendChild(cssrenderer.domElement);
 
     // -- models: load object model resources
-    loadPsyche('A'); // load psyche in orbit A can be updated later
+    loadPsyche(); // load psyche
 
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
@@ -428,13 +428,13 @@ function beginXRSession() {
         });
 }
 // Psyche object
-function loadPsyche(orbit=char) {
+function loadPsyche() {
 
     // psyche loader
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/psyche.obj',
         function (psyche) {
-            psyche.position.set(-125, -25, 0);
+            psyche.position.set(-100, -25, 0);
             psyche.scale.setScalar(15);
             psyche.name = "psyche";
             scene.add(psyche);
@@ -497,23 +497,15 @@ function renderRaycaster() {
     }
 }
 
-// render scene
-// animation loop
-// redraw scene 60FPS
-// keep function at bottom
-// needs to reference the above definitions
-
-
-function animate() {
-    // Rotate scene constantly
+function animatePsyche(){
     var psyche = scene.getObjectByName( "psyche" );
-    if(psyche != null) {
+    if(psyche != null && orbit != "init") {
         //rotation
         psyche.rotation.y -= 0.0025;
 
-        if(psyche.position.x == -155) moveAway = false;
+        /*
 
-        //ellipse
+        //ellipse code - commented out for the time being for further testing
         switch(orbit) {
             case "A":
                 if(psyche.position.x <= -150) moveAway = false;
@@ -532,15 +524,29 @@ function animate() {
                 if(psyche.position.x >= -25) moveAway = true;
                 break;
         }
-        //determine speed of ellipse
-        if(moveAway == true) psyche.position.x -= 0.025;
+
+        if (moveAway == true) psyche.position.x -= 0.025;
         else psyche.position.x += 0.025;
+
+         */
     }
+}
+
+// render scene
+// animation loop
+// redraw scene 60FPS
+// keep function at bottom
+// needs to reference the above definitions
+
+
+function animate() {
+    // Rotate scene constantly
     renderRaycaster();
     renderer.render(scene, camera);
     cssrenderer.render(scene, camera);
 
     requestAnimationFrame(animate); // recursive call to animate function
+    animatePsyche();
     animateStars();
 }
 
