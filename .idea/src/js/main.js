@@ -437,58 +437,6 @@ function loadMagnetometer(x, y, z, material) {
     )
 }
 
-function loadInstrument(instrumentType, x, y, z, rotation, scale) {
-    // psyche loader
-    const objLoader = new OBJLoader();
-    let instrumentTypeString = "";
-    // var gammaRaySpectrometer;
-    // var magnetometer;
-    // var imager;
-    // var neutronSpectrometer;
-
-    switch (instrumentType) {
-        case magnetometer:
-            instrumentTypeString = "magnetometer";
-            break;
-        case imager:
-            instrumentTypeString = "imager";
-            break;
-        case neutronSpectrometer:
-            instrumentTypeString = "neutronSpectrometer";
-            break;
-        case gammaRaySpectrometer:
-            instrumentTypeString = "gammaRaySpectrometer";
-            break;
-    }
-
-    objLoader.load('../src/res/stl/instruments/' + instrumentTypeString + '.obj',
-        function (instrumentType) {
-            instrumentType.position.set(x, y, z);
-            instrumentType.scale.setScalar(scale);
-            instrumentType.name = instrumentTypeString;
-
-            switch(rotation) {
-                case 90:
-                    instrumentType.rotation.y = Math.PI / 2;
-                    break;
-                case 180:
-                    instrumentType.rotation.y = Math.PI;
-                    break;
-                case 270:
-                    instrumentType.rotation.y = (3 * Math.PI) / 2;
-                    break;
-            }
-            scene.add(instrumentType);
-        },
-        function(xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function(error) {
-            console.log('An error occurred');
-        }
-    );
-}
-
 function loadModelMaterial(color) {
     const material = new THREE.MeshPhysicalMaterial({
         color: color,
