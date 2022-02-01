@@ -20,11 +20,10 @@ var mesh,
     material,
     line,
     gtlfLoader,
+    // Mesh to load spacecraft.
     spacecraftMesh,
     gammaRaySpectrometerMesh,
     neutronSpectrometerMesh,
-    magnetometerMesh,
-    envTexture,
     raycaster,
     // raycaster "object intersected"
     INTERSECTED,
@@ -81,11 +80,6 @@ function init() {
     light.position.set(0.5, 5, 5);
     scene.add(light);
 
-    // var light = new THREE.DirectionalLight(0xcccccc, 1);
-    // light.position.set(-5, 1, 1);
-    // scene.add(light);
-
-
     light.caseShadow = true;
     light.shadow.camera.near = 0.01;
     light.shadow.camera.far = 45;
@@ -109,9 +103,7 @@ function init() {
     // -- controls: allows mouse controls such as click+drag, zoom, etc.
     // Add mouse controls
     orbitControls = new OrbitControls(camera, renderer.domElement);
-    //todo: change the min distance back to a farther value so the user cant zoom so far in
-    // (this was used to position instruments)
-    orbitControls.minDistance = 4;
+    orbitControls.minDistance = 7;
     orbitControls.maxDistance = 60;
 
     // css renderer testing
@@ -324,183 +316,14 @@ function animateStars() {
         // if particle is too close move it backwards
         if(particle.position.z > 1000) particle.position.z -=2000;
     }
+
     particle.rotation.y += 0.00001;
 }
 
-function loadSpacecraft() {
-    var spacecraftMaterial = loadModelMaterial(0x8c8c8c);
-    loadSpacecraftModel(spacecraftMaterial);
-
-    var neutronSpectrometerMaterial = loadModelMaterial(0xFFFFFF);
-    loadNeutronSpectrometer(neutronSpectrometerMaterial);
-
-    var magnetometerMaterial = loadModelMaterial(0xFFFFFF);
-    loadMagnetometers(magnetometerMaterial);
-
-    loadImagers();
-    loadGammaRaySpectrometer();
-}
-
-function loadGammaRaySpectrometer() {
-    const objLoader = new OBJLoader();
-    objLoader.load('../src/res/stl/instruments/gamma_ray_spectrometer.obj',
-        function (gammaRaySpectrometer) {
-            gammaRaySpectrometer.position.set(-1.1, 2.7, 0.1);
-            gammaRaySpectrometer.rotation.y = (3 * Math.PI) / 2;
-            gammaRaySpectrometer.scale.setScalar(0.2);
-            gammaRaySpectrometer.name = "gammaRaySpectrometer";
-            scene.add(gammaRaySpectrometer);
-        },
-        function(xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function(error) {
-            console.log('An error occurred');
-        }
-    );
-}
-
-function loadNeutronSpectrometer(material) {
-    const stlLoader = new STLLoader();
-    stlLoader.load(
-        '../src/res/stl/instruments/neutron_spectrometer.stl',
-        function (geometry) {
-            neutronSpectrometerMesh = new THREE.Mesh(geometry, material)
-            neutronSpectrometerMesh.position.set(-1.12,1.8,0.115);
-            neutronSpectrometerMesh.rotation.x = -1 * Math.PI / 2;
-            neutronSpectrometerMesh.rotation.z = 3 * Math.PI / 2;
-            neutronSpectrometerMesh.scale.setScalar(0.14);
-            neutronSpectrometerMesh.name = "neutronSpectrometer";
-            scene.add(neutronSpectrometerMesh)
-        },
-        (xhr) => {
-            console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
-        },
-        (error) => {
-            console.log(error)
-        }
-    )
-}
-
-function loadImagers() {
-    loadImager(-1.175, 1.075, -0.25);
-    loadImager(-1.175, 1.075, -0.45);
-}
-
-function loadImager(x, y, z) {
-    const objLoader = new OBJLoader();
-    objLoader.load('../src/res/stl/instruments/imager.obj',
-        function (imager) {
-            imager.position.set(x, y, z);
-            imager.rotation.y = Math.PI;
-            imager.scale.setScalar(0.09);
-            // imager.name = imagerName;
-            scene.add(imager);
-        },
-        function(xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function(error) {
-            console.log('An error occurred');
-        }
-    );
-}
-
-function loadMagnetometers(material) {
-    loadMagnetometer(-1.28, 2.7, -0.85, material);
-    loadMagnetometer(-1.28, 2.2, -0.85, material);
-}
-
-function loadMagnetometerMaterial() {
+function loadSpacecraftMaterial() {
     const material = new THREE.MeshPhysicalMaterial({
-        color: 0xDEDEDE,
-        metalness: 0.25,
-        roughness: 0.1,
-        transparent: false,
-        transmission: 0.99,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.25
-    })
-    return material;
-}
-
-function loadMagnetometer(x, y, z, material) {
-    const stlLoader = new STLLoader();
-    stlLoader.load(
-        '../src/res/stl/instruments/magnetometer.stl',
-        function (geometry) {
-            magnetometerMesh = new THREE.Mesh(geometry, material)
-            magnetometerMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
-            magnetometerMesh.rotation.y = Math.PI / 2;
-            magnetometerMesh.position.set(x,y,z);
-            magnetometerMesh.scale.setScalar(0.05);
-            scene.add(magnetometerMesh)
-        },
-        (xhr) => {
-            console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
-        },
-        (error) => {
-            console.log(error)
-        }
-    )
-}
-
-function loadInstrument(instrumentType, x, y, z, rotation, scale) {
-    // psyche loader
-    const objLoader = new OBJLoader();
-    let instrumentTypeString = "";
-    // var gammaRaySpectrometer;
-    // var magnetometer;
-    // var imager;
-    // var neutronSpectrometer;
-
-    switch (instrumentType) {
-        case magnetometer:
-            instrumentTypeString = "magnetometer";
-            break;
-        case imager:
-            instrumentTypeString = "imager";
-            break;
-        case neutronSpectrometer:
-            instrumentTypeString = "neutronSpectrometer";
-            break;
-        case gammaRaySpectrometer:
-            instrumentTypeString = "gammaRaySpectrometer";
-            break;
-    }
-
-    objLoader.load('../src/res/stl/instruments/' + instrumentTypeString + '.obj',
-        function (instrumentType) {
-            instrumentType.position.set(x, y, z);
-            instrumentType.scale.setScalar(scale);
-            instrumentType.name = instrumentTypeString;
-
-            switch(rotation) {
-                case 90:
-                    instrumentType.rotation.y = Math.PI / 2;
-                    break;
-                case 180:
-                    instrumentType.rotation.y = Math.PI;
-                    break;
-                case 270:
-                    instrumentType.rotation.y = (3 * Math.PI) / 2;
-                    break;
-            }
-            scene.add(instrumentType);
-        },
-        function(xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function(error) {
-            console.log('An error occurred');
-        }
-    );
-}
-
-function loadModelMaterial(color) {
-    const material = new THREE.MeshPhysicalMaterial({
-        color: color,
-        // envMap: envTexture,
+        color: 0x8c8c8c,
+        //envMap: envTexture,
         metalness: 0.25,
         roughness: 0.1,
         //opacity: 2,
@@ -509,8 +332,44 @@ function loadModelMaterial(color) {
         clearcoat: 1.0,
         clearcoatRoughness: 0.25
     })
+
     return material;
 }
+
+// Spacecraft object
+function loadSpacecraft() {
+    var material = loadSpacecraftMaterial()
+
+    loadSpacecraftModel(material);
+
+    loadGamma();
+    // loadGammaRaySpectrometer(material);
+}
+
+function loadGamma() {
+
+    // psyche loader
+    const objLoader = new OBJLoader();
+    objLoader.load('../src/res/stl/instruments/gamma_ray_spectrometer.obj',
+        function (spectrometer) {
+        //
+            spectrometer.position.set(2.9, 2.7, 0.1);
+            spectrometer.rotation.y = (3 * Math.PI) / 2;
+            spectrometer.scale.setScalar(0.2);
+            spectrometer.name = "gammaRaySpectrometer";
+            scene.add(spectrometer);
+        },
+        function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function(error) {
+            console.log('An error occurred');
+        }
+    );
+}
+
+
+
 
 function loadSpacecraftModel(material) {
     // Spacecraft Loader
@@ -530,7 +389,7 @@ function loadSpacecraftModel(material) {
             // flat setup is used for loading & aligning other 3d objects.
             spacecraftMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
             spacecraftMesh.rotation.z = Math.PI / 2;
-            spacecraftMesh.position.set(-4,0,0);
+            spacecraftMesh.position.set(0,0,0);
 
             //todo: fix camera zoom to be closer on load.
             spacecraftMesh.scale.set(0.025,0.025,0.025);
@@ -539,6 +398,43 @@ function loadSpacecraftModel(material) {
             camera.position.x = -80;
             camera.position.y = -20;
             camera.position.z = 150;
+        },
+        (xhr) => {
+            console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
+}
+
+function loadGammaRaySpectrometer(material) {
+    // Spacecraft Loader
+    const stlLoader = new STLLoader();
+    stlLoader.load(
+        '../src/res/stl/instruments/gamma_ray_spectrometer.stl',
+        function (geometry) {
+            gammaRaySpectrometerMesh = new THREE.Mesh(geometry, material)
+            // change these values to modify the x,y,z plane that this model sits on when it is loaded.
+
+            // orbiting setup (DO NOT DELETE. Use this for final realistic orbiting view.)
+            // spacecraftMesh.rotation.set(-Math.PI / 1.8, 0.3,  Math.PI / 2);
+            // spacecraftMesh.rotation.z = Math.PI / 1.8;
+            gammaRaySpectrometerMesh.position.set(0,0,0.5);
+
+            // DO NOT DELETE.
+            // flat setup is used for loading & aligning other 3d objects.
+            // spacecraftMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
+            // spacecraftMesh.rotation.z = Math.PI / 2;
+            // spacecraftMesh.position.set(0,0,0);
+
+            //todo: fix camera zoom to be closer on load.
+            gammaRaySpectrometerMesh.scale.set(0.25,0.25,0.25);
+            scene.add(gammaRaySpectrometerMesh)
+            //camera.lookAt(spacecraftMesh);
+            // camera.position.x = -80;
+            // camera.position.y = -20;
+            // camera.position.z = 150;
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
