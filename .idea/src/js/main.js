@@ -20,8 +20,11 @@ var mesh,
     material,
     line,
     gtlfLoader,
-    // Mesh to load spacecraft.
     spacecraftMesh,
+    gammaRaySpectrometerMesh,
+    neutronSpectrometerMesh,
+    magnetometerMesh,
+    envTexture,
     raycaster,
     // raycaster "object intersected"
     INTERSECTED,
@@ -101,7 +104,7 @@ function init() {
     // -- controls: allows mouse controls such as click+drag, zoom, etc.
     // Add mouse controls
     orbitControls = new OrbitControls(camera, renderer.domElement);
-    orbitControls.minDistance = 7;
+    orbitControls.minDistance = 4;
     orbitControls.maxDistance = 60;
 
     // css renderer testing
@@ -131,7 +134,7 @@ function init() {
     document.body.appendChild(cssrenderer.domElement);
 
     // -- models: load object model resources
-    loadPsyche(); // load psyche
+    loadPsyche('A'); // load psyche in orbit A can be updated later
 
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
@@ -314,15 +317,183 @@ function animateStars() {
         // if particle is too close move it backwards
         if(particle.position.z > 1000) particle.position.z -=2000;
     }
-
     particle.rotation.y += 0.00001;
 }
 
-// Spacecraft object
 function loadSpacecraft() {
+    var spacecraftMaterial = loadModelMaterial(0x8c8c8c);
+    loadSpacecraftModel(spacecraftMaterial);
+
+    var neutronSpectrometerMaterial = loadModelMaterial(0xFFFFFF);
+    loadNeutronSpectrometer(neutronSpectrometerMaterial);
+
+    var magnetometerMaterial = loadModelMaterial(0xFFFFFF);
+    loadMagnetometers(magnetometerMaterial);
+
+    loadImagers();
+    loadGammaRaySpectrometer();
+}
+
+function loadGammaRaySpectrometer() {
+    const objLoader = new OBJLoader();
+    objLoader.load('../src/res/stl/instruments/gamma_ray_spectrometer.obj',
+        function (gammaRaySpectrometer) {
+            gammaRaySpectrometer.position.set(-1.1, 2.7, 0.1);
+            gammaRaySpectrometer.rotation.y = (3 * Math.PI) / 2;
+            gammaRaySpectrometer.scale.setScalar(0.2);
+            gammaRaySpectrometer.name = "gammaRaySpectrometer";
+            scene.add(gammaRaySpectrometer);
+        },
+        function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function(error) {
+            console.log('An error occurred');
+        }
+    );
+}
+
+function loadNeutronSpectrometer(material) {
+    const stlLoader = new STLLoader();
+    stlLoader.load(
+        '../src/res/stl/instruments/neutron_spectrometer.stl',
+        function (geometry) {
+            neutronSpectrometerMesh = new THREE.Mesh(geometry, material)
+            neutronSpectrometerMesh.position.set(-1.12,1.8,0.115);
+            neutronSpectrometerMesh.rotation.x = -1 * Math.PI / 2;
+            neutronSpectrometerMesh.rotation.z = 3 * Math.PI / 2;
+            neutronSpectrometerMesh.scale.setScalar(0.14);
+            neutronSpectrometerMesh.name = "neutronSpectrometer";
+            scene.add(neutronSpectrometerMesh)
+        },
+        (xhr) => {
+            console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
+}
+
+function loadImagers() {
+    loadImager(-1.175, 1.075, -0.25);
+    loadImager(-1.175, 1.075, -0.45);
+}
+
+function loadImager(x, y, z) {
+    const objLoader = new OBJLoader();
+    objLoader.load('../src/res/stl/instruments/imager.obj',
+        function (imager) {
+            imager.position.set(x, y, z);
+            imager.rotation.y = Math.PI;
+            imager.scale.setScalar(0.09);
+            // imager.name = imagerName;
+            scene.add(imager);
+        },
+        function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function(error) {
+            console.log('An error occurred');
+        }
+    );
+}
+
+function loadMagnetometers(material) {
+    loadMagnetometer(-1.28, 2.7, -0.85, material);
+    loadMagnetometer(-1.28, 2.2, -0.85, material);
+}
+
+function loadMagnetometerMaterial() {
     const material = new THREE.MeshPhysicalMaterial({
-        color: 0x8c8c8c,
-        //envMap: envTexture,
+        color: 0xDEDEDE,
+        metalness: 0.25,
+        roughness: 0.1,
+        transparent: false,
+        transmission: 0.99,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.25
+    })
+    return material;
+}
+
+function loadMagnetometer(x, y, z, material) {
+    const stlLoader = new STLLoader();
+    stlLoader.load(
+        '../src/res/stl/instruments/magnetometer.stl',
+        function (geometry) {
+            magnetometerMesh = new THREE.Mesh(geometry, material)
+            magnetometerMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
+            magnetometerMesh.rotation.y = Math.PI / 2;
+            magnetometerMesh.position.set(x,y,z);
+            magnetometerMesh.scale.setScalar(0.05);
+            scene.add(magnetometerMesh)
+        },
+        (xhr) => {
+            console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
+}
+
+function loadInstrument(instrumentType, x, y, z, rotation, scale) {
+    // psyche loader
+    const objLoader = new OBJLoader();
+    let instrumentTypeString = "";
+    // var gammaRaySpectrometer;
+    // var magnetometer;
+    // var imager;
+    // var neutronSpectrometer;
+
+    switch (instrumentType) {
+        case magnetometer:
+            instrumentTypeString = "magnetometer";
+            break;
+        case imager:
+            instrumentTypeString = "imager";
+            break;
+        case neutronSpectrometer:
+            instrumentTypeString = "neutronSpectrometer";
+            break;
+        case gammaRaySpectrometer:
+            instrumentTypeString = "gammaRaySpectrometer";
+            break;
+    }
+
+    objLoader.load('../src/res/stl/instruments/' + instrumentTypeString + '.obj',
+        function (instrumentType) {
+            instrumentType.position.set(x, y, z);
+            instrumentType.scale.setScalar(scale);
+            instrumentType.name = instrumentTypeString;
+
+            switch(rotation) {
+                case 90:
+                    instrumentType.rotation.y = Math.PI / 2;
+                    break;
+                case 180:
+                    instrumentType.rotation.y = Math.PI;
+                    break;
+                case 270:
+                    instrumentType.rotation.y = (3 * Math.PI) / 2;
+                    break;
+            }
+            scene.add(instrumentType);
+        },
+        function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function(error) {
+            console.log('An error occurred');
+        }
+    );
+}
+
+function loadModelMaterial(color) {
+    const material = new THREE.MeshPhysicalMaterial({
+        color: color,
+        // envMap: envTexture,
         metalness: 0.25,
         roughness: 0.1,
         //opacity: 2,
@@ -331,26 +502,28 @@ function loadSpacecraft() {
         clearcoat: 1.0,
         clearcoatRoughness: 0.25
     })
+    return material;
+}
 
+function loadSpacecraftModel(material) {
     // Spacecraft Loader
     const stlLoader = new STLLoader();
     stlLoader.load(
-        '../src/res/stl/spacecraft/spacecraft_panels_antenna_attached.stl',
+        '../src/res/stl/spacecraft/spacecraft_with_frame.stl',
         function (geometry) {
             spacecraftMesh = new THREE.Mesh(geometry, material)
-
             // change these values to modify the x,y,z plane that this model sits on when it is loaded.
 
             // orbiting setup (DO NOT DELETE. Use this for final realistic orbiting view.)
-            spacecraftMesh.rotation.set(-Math.PI / 1.8, 0.3,  Math.PI / 2);
-            spacecraftMesh.rotation.z = Math.PI / 1.8;
-            spacecraftMesh.position.set(0,0,0.5);
+            // spacecraftMesh.rotation.set(-Math.PI / 1.8, 0.3,  Math.PI / 2);
+            // spacecraftMesh.rotation.z = Math.PI / 1.8;
+            // spacecraftMesh.position.set(0,0,0.5);
 
             // DO NOT DELETE.
             // flat setup is used for loading & aligning other 3d objects.
-            // spacecraftMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
-            // spacecraftMesh.rotation.z = Math.PI / 2;
-            // spacecraftMesh.position.set(0,0,0);
+            spacecraftMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
+            spacecraftMesh.rotation.z = Math.PI / 2;
+            spacecraftMesh.position.set(-4,0,0);
 
             //todo: fix camera zoom to be closer on load.
             spacecraftMesh.scale.set(0.025,0.025,0.025);
@@ -414,7 +587,6 @@ function changeOrbit(orbit = char){
     psyche.position.set(x, y, z);
 }
 
-
 // not working need to debug...
 function beginXRSession() {
     // requestSession must be called within a user gesture event
@@ -427,14 +599,15 @@ function beginXRSession() {
             window.requestAnimationFrame(onDrawFrame);
         });
 }
+
 // Psyche object
-function loadPsyche() {
+function loadPsyche(orbit=char) {
 
     // psyche loader
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/psyche.obj',
         function (psyche) {
-            psyche.position.set(-100, -25, 0);
+            psyche.position.set(-125, -25, 0);
             psyche.scale.setScalar(15);
             psyche.name = "psyche";
             scene.add(psyche);
@@ -448,6 +621,7 @@ function loadPsyche() {
         }
     );
 }
+
 // ability to interact with obj on screen
 function renderRaycaster() {
     raycaster.setFromCamera( pointer, camera );
@@ -497,15 +671,21 @@ function renderRaycaster() {
     }
 }
 
-function animatePsyche(){
+// render scene
+// animation loop
+// redraw scene 60FPS
+// keep function at bottom
+// needs to reference the above definitions
+function animate() {
+    // Rotate scene constantly
     var psyche = scene.getObjectByName( "psyche" );
-    if(psyche != null && orbit != "init") {
+    if(psyche != null) {
         //rotation
-        psyche.rotation.y += (psyche.position.x * 0.000025);
+        psyche.rotation.y += 0.0025;
 
-        /*
+        if(psyche.position.x == -155) moveAway = false;
 
-        //ellipse code - commented out for the time being for further testing
+        //ellipse
         switch(orbit) {
             case "A":
                 if(psyche.position.x <= -150) moveAway = false;
@@ -524,28 +704,15 @@ function animatePsyche(){
                 if(psyche.position.x >= -25) moveAway = true;
                 break;
         }
-        if (moveAway == true) psyche.position.x -= 0.025;
+        //determine speed of ellipse
+        if(moveAway == true) psyche.position.x -= 0.025;
         else psyche.position.x += 0.025;
-
-         */
     }
-}
-
-// render scene
-// animation loop
-// redraw scene 60FPS
-// keep function at bottom
-// needs to reference the above definitions
-
-
-function animate() {
-    // Rotate scene constantly
     renderRaycaster();
     renderer.render(scene, camera);
     cssrenderer.render(scene, camera);
 
     requestAnimationFrame(animate); // recursive call to animate function
-    animatePsyche();
     animateStars();
 }
 
