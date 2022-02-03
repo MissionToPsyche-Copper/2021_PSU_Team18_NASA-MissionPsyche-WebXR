@@ -550,24 +550,30 @@ function beginXRSession() {
 // Psyche object
 function loadPsyche(orbit=char) {
 
-    // psyche loader
-    const objLoader = new OBJLoader();
-    objLoader.load('../src/res/psyche.obj',
-        function (psyche) {
-            psyche.position.set(-125, -25, 0);
-            psyche.scale.setScalar(15);
-            psyche.name = "psyche";
-            scene.add(psyche);
-        },
-        function(xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
+    new MTLLoader().setPath('../src/res/Psyche/')
+        .load('Psyche_.mtl', (materials) => {
+            materials.preload()
 
-        function(error) {
-            console.log('An error occurred');
-        }
-    );
+            // psyche loader
+            new OBJLoader()
+                .setMaterials(materials)
+                .setPath('../src/res/Psyche/')
+                .load('Psyche_.obj', (psyche) => {
+                        psyche.position.set(-125, -25, 0);
+                        psyche.scale.setScalar(15);
+                        psyche.name = "psyche";
+                        scene.add(psyche);
+                    },
+                    function(xhr) {
+                        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                    },
+                    function(error) {
+                        console.log('An error occurred');
+                    }
+                );
+        })
 }
+
 
 // ability to interact with obj on screen
 function renderRaycaster() {
