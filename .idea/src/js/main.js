@@ -28,6 +28,8 @@ var mesh,
     raycaster,
     // raycaster "object intersected"
     INTERSECTED,
+    previousObjectSelected = "",
+    objectSelected,
     // track mouse
     mouseX = 0, mouseY = 0,
     // hold particles
@@ -375,18 +377,18 @@ function loadNeutronSpectrometer(material) {
 }
 
 function loadImagers() {
-    loadImager(-1.175, 1.075, -0.25);
-    loadImager(-1.175, 1.075, -0.45);
+    loadImager(-1.175, 1.075, -0.25, 1);
+    loadImager(-1.175, 1.075, -0.45, 2);
 }
 
-function loadImager(x, y, z) {
+function loadImager(x, y, z, id) {
     const objLoader = new OBJLoader();
     objLoader.load('../src/res/stl/instruments/imager.obj',
         function (imager) {
             imager.position.set(x, y, z);
             imager.rotation.y = Math.PI;
             imager.scale.setScalar(0.09);
-            // imager.name = imagerName;
+            imager.name = "imager" + id;
             scene.add(imager);
         },
         function(xhr) {
@@ -426,6 +428,7 @@ function loadMagnetometer(x, y, z, material) {
             magnetometerMesh.rotation.y = Math.PI / 2;
             magnetometerMesh.position.set(x,y,z);
             magnetometerMesh.scale.setScalar(0.05);
+            magnetometerMesh.name = "magnetometer";
             scene.add(magnetometerMesh)
         },
         (xhr) => {
@@ -579,14 +582,7 @@ function loadPsyche(orbit=char) {
 function renderRaycaster() {
     raycaster.setFromCamera( pointer, camera );
     const intersects = raycaster.intersectObjects( scene.children, true );
-
     if (intersects.length > 0) {
-        // TODO: remove this when done, just printing intersections to log
-        // for testing purpuses.
-         for (var i = 0; i < intersects.length; i++) {
-             console.log(intersects[i].face)
-         }
-
         if (INTERSECTED != intersects[0].object) {
             if (INTERSECTED){
                 material = INTERSECTED.material;
@@ -607,7 +603,7 @@ function renderRaycaster() {
                 INTERSECTED.currentHex = material.color.getHex();
                 material.color.setHex(0xff0000);
             }
-            console.log(INTERSECTED.position);
+            objectSelected = INTERSECTED;
         }
     } else {
         if (INTERSECTED){
@@ -622,6 +618,53 @@ function renderRaycaster() {
         }
         INTERSECTED = null;
     }
+}
+
+document.body.onmousedown = function() {
+    if(objectSelected != null) {
+        if(objectSelected.parent.name == "spacecraft") {
+            onSpacecraftClicked();
+        }
+        if(objectSelected.parent.name == "gammaRaySpectrometer") {
+            onGammaRaySpectrometerClicked();
+        }
+        if(objectSelected.name == "neutronSpectrometer") {
+            onNeutronSpectrometerClicked();
+        }
+        if(objectSelected.parent.name == "imager1" || objectSelected.parent.name == "imager2") {
+            onImagerClicked();
+        }
+        if(objectSelected.name == "magnetometer") {
+            onMagnetometerClicked();
+        }
+        if(objectSelected.parent.name == "psyche") {
+            onPsycheClicked();
+        }
+    }
+}
+
+function onPsycheClicked() {
+    console.log("Psyche clicked");
+}
+
+function onSpacecraftClicked() {
+    console.log("Spacecraft clicked");
+}
+
+function onMagnetometerClicked() {
+    console.log("Magnetometer clicked");
+}
+
+function onImagerClicked() {
+    console.log("Imager clicked");
+}
+
+function onNeutronSpectrometerClicked() {
+    console.log("Neutron Spectrometer clicked");
+}
+
+function onGammaRaySpectrometerClicked() {
+    console.log("Gamma Ray Spectrometer clicked");
 }
 
 // render scene
