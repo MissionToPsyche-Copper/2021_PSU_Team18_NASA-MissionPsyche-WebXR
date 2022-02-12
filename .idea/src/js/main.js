@@ -353,12 +353,12 @@ function animateStars() {
     for(var i = 0; i<particles.length; i++) {
         var particle = particles[i];
         // move particle forward based on mouse y position
-        particle.position.z += mouseY * 0.0002;
+        particle.position.z += mouseY * 0.00002;
 
         // if particle is too close move it backwards
         if(particle.position.z > 1000) particle.position.z -=2000;
     }
-    particle.rotation.y += 0.00001;
+    particle.rotation.y += 0.000001;
 }
 
 function loadSpacecraft() {
