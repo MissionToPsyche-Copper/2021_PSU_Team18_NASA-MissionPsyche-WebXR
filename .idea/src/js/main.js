@@ -11,6 +11,7 @@ import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/js
 var mesh,
     renderer,
     cssrenderer,
+    css2Drenderer,
     scene,
     camera,
     orbitControls,
@@ -66,6 +67,7 @@ function init() {
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
         45, window.innerWidth / window.innerHeight, 0.1, 10000);
+    camera.position.z = 3000;
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -117,6 +119,11 @@ function init() {
     cssrenderer.domElement.style.top = '0px';
     document.getElementById('info').appendChild(cssrenderer.domElement);
 
+    css2Drenderer = new CSS2DRenderer();
+    css2Drenderer.domElement.style.position = 'absolute';
+    css2Drenderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('info').appendChild(css2Drenderer.domElement);
+
     // -- models: load object model resources
     loadPsyche('A'); // load psyche in orbit A can be updated later
     // document.getElementById("tip").style.visibility = 'hidden';
@@ -127,10 +134,10 @@ function init() {
     const tip = document.getElementById('tip');
     tip.style.visibility = 'visible';
     tip.style.marginTop = '-1em';
-    tip.style.fontSize = '10px';
+    tip.style.fontSize = '12px';
     tip.style.color = 'white';
-    const tipLabel = new CSS3DObject(tip);
-    tipLabel.position.set(50, 10, -400);
+    const tipLabel = new CSS2DObject(tip);
+    tipLabel.position.set(-400, -50, -400);
     scene.add(tipLabel);
 
     // Button listeners for the orbits
@@ -178,7 +185,7 @@ function init() {
         OrbitB.style.fontSize = '10px';
         OrbitB.style.color = 'white';
         const orbitBLabel = new CSS3DObject(OrbitB);
-        orbitBLabel.position.set(0,10,-400);
+        orbitBLabel.position.set(-400,10,-300);
         scene.add(orbitBLabel);
     });
 
@@ -199,7 +206,7 @@ function init() {
         OrbitC.style.fontSize = '10px';
         OrbitC.style.color = 'white';
         const orbitCLabel = new CSS3DObject(OrbitC);
-        orbitCLabel.position.set(0,10,-400);
+        orbitCLabel.position.set(-400,10,-400);
         scene.add(orbitCLabel);
     });
 
@@ -220,7 +227,7 @@ function init() {
         OrbitD.style.fontSize = '10px';
         OrbitD.style.color = 'white';
         const orbitDLabel = new CSS3DObject(OrbitD);
-        orbitDLabel.position.set(0,10,-400);
+        orbitDLabel.position.set(-200,-100,-200);
         scene.add(orbitDLabel);
     });
 
@@ -761,7 +768,7 @@ function animate() {
     cssrenderer.render(scene, camera);
     renderRaycaster();
     renderer.render(scene, camera);
-
+    css2Drenderer.render(scene,camera);
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
 }
