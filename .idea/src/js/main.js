@@ -5,6 +5,7 @@ import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/j
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/MTLLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS2DRenderer.js';
+import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
 var mesh,
@@ -64,7 +65,7 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 0.1, 4000);
+        45, window.innerWidth / window.innerHeight, 0.1, 10000);
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -73,8 +74,8 @@ function init() {
     // -- raycaster: intersect object models & register events based on mouse interactions
     raycaster = new THREE.Raycaster();
 
-    document.body.appendChild( VRButton.createButton( renderer ) );
-    renderer.xr.enabled = true;
+    // document.body.appendChild( VRButton.createButton( renderer ) );
+     renderer.xr.enabled = true;
 
     // -- lighting
     scene.add(new THREE.AmbientLight(0x888888));
@@ -107,35 +108,30 @@ function init() {
     orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.minDistance = 4;
     orbitControls.maxDistance = 60;
+    // orbitControls.update();
 
-    // css renderer testing
-    // displays that psyche label in the scene
-    // using this for testing
-    const psycheDiv = document.createElement('label-psyche');
-    psycheDiv.textContent = 'Psyche';
-    psycheDiv.style.marginTop = '-1em';
-    psycheDiv.style.color = 'white';
-    const psycheLabel = new CSS2DObject(psycheDiv);
-    psycheLabel.position.set(-200,10,0);
-    scene.add(psycheLabel);
+    // allows me to display the css elements in our scene
+    cssrenderer = new CSS3DRenderer();
+    cssrenderer.setSize(window.innerWidth, window.innerHeight);
+    cssrenderer.domElement.style.position = 'absolute';
+    cssrenderer.domElement.style.top = '0px';
+    document.getElementById('info').appendChild(cssrenderer.domElement);
 
-    document.getElementById("tip").style.visibility = 'hidden';
+    // -- models: load object model resources
+    loadPsyche('A'); // load psyche in orbit A can be updated later
+    // document.getElementById("tip").style.visibility = 'hidden';
     document.getElementById("orbit-a").style.visibility = 'hidden';
     document.getElementById("orbit-b").style.visibility = 'hidden';
     document.getElementById("orbit-c").style.visibility = 'hidden';
     document.getElementById("orbit-d").style.visibility = 'hidden';
-    // document.getElementById("16psyche").style.display = 'none';
-    // document.getElementById("instrument").style.display = 'none';
-
-    // allows me to display the css elements in our scene
-    cssrenderer = new CSS2DRenderer();
-    cssrenderer.setSize(window.innerWidth/2, window.innerHeight/2);
-    cssrenderer.domElement.style.position = 'absolute';
-    cssrenderer.domElement.style.top = '0px';
-    document.body.appendChild(cssrenderer.domElement);
-
-    // -- models: load object model resources
-    loadPsyche('A'); // load psyche in orbit A can be updated later
+    const tip = document.getElementById('tip');
+    tip.style.visibility = 'visible';
+    tip.style.marginTop = '-1em';
+    tip.style.fontSize = '10px';
+    tip.style.color = 'white';
+    const tipLabel = new CSS3DObject(tip);
+    tipLabel.position.set(50, 10, -400);
+    scene.add(tipLabel);
 
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
@@ -143,12 +139,25 @@ function init() {
         if(orbit != "A") {
             orbit = "A";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'visible';
+            document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
         }
+
+        // css renderer testing
+        // displays that psyche label in the scene
+        // using this for testing
+        const OrbitA = document.getElementById('orbit-a');
+        OrbitA.style.visibility = 'visible';
+        // OrbitA.textContent = 'OrbitA';
+        OrbitA.style.marginTop = '-1em';
+        OrbitA.style.fontSize = '10px';
+        OrbitA.style.color = 'white';
+        const orbitALabel = new CSS3DObject(OrbitA);
+        orbitALabel.position.set(0, 10, -400);
+        scene.add(orbitALabel);
     });
 
     const buttonOrbitB = document.getElementById('orbitB');
@@ -158,10 +167,19 @@ function init() {
             changeOrbit(orbit);
             document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
-            document.getElementById("orbit-b").style.visibility = 'visible';
+            document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
         }
+
+        const OrbitB = document.getElementById('orbit-b');
+        OrbitB.style.visibility = 'visible';
+        OrbitB.style.marginTop = '-1em';
+        OrbitB.style.fontSize = '10px';
+        OrbitB.style.color = 'white';
+        const orbitBLabel = new CSS3DObject(OrbitB);
+        orbitBLabel.position.set(0,10,-400);
+        scene.add(orbitBLabel);
     });
 
     const buttonOrbitC = document.getElementById('orbitC');
@@ -175,6 +193,14 @@ function init() {
             document.getElementById("orbit-c").style.visibility = 'visible';
             document.getElementById("orbit-d").style.visibility = 'hidden';
         }
+        const OrbitC = document.getElementById('orbit-c');
+        OrbitC.style.visibility = 'visible';
+        OrbitC.style.marginTop = '-1em';
+        OrbitC.style.fontSize = '10px';
+        OrbitC.style.color = 'white';
+        const orbitCLabel = new CSS3DObject(OrbitC);
+        orbitCLabel.position.set(0,10,-400);
+        scene.add(orbitCLabel);
     });
 
     const buttonOrbitD = document.getElementById('orbitD');
@@ -188,6 +214,14 @@ function init() {
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'visible';
         }
+        const OrbitD = document.getElementById('orbit-d');
+        OrbitD.style.visibility = 'visible';
+        OrbitD.style.marginTop = '-1em';
+        OrbitD.style.fontSize = '10px';
+        OrbitD.style.color = 'white';
+        const orbitDLabel = new CSS3DObject(OrbitD);
+        orbitDLabel.position.set(0,10,-400);
+        scene.add(orbitDLabel);
     });
 
     scene.fog = new THREE.FogExp2(0x141414, 0.002);
@@ -257,9 +291,15 @@ function addStars() {
     // move from -1000 super far to closer which is 1000 where the cam is
     // and this will add random particles
     // at every z position
-    for (var zpos = -5000; zpos < 2000; zpos += 0.4) {
+    for (var zpos = -2000; zpos < 2000; zpos += 0.4) {
         // dynamic object initialisation method
         var geometry = new THREE.SphereGeometry(0.3, 5, 5);
+        // We assume you already found the mesh with the problem.
+        const problemGeometry = geometry;
+
+// Now we dig through the console to see each attribute.
+// Look up each attribute.count property to see which one is short.
+        console.log(problemGeometry.attributes);
 
         let material = new THREE.MeshBasicMaterial({
             color: generateRandomColor()
@@ -269,8 +309,8 @@ function addStars() {
         var particle = new THREE.Mesh(geometry, material);
 
         // give random (x,y) coords between -500 to 500
-        particle.position.x = randomRange(-550,200);
-        particle.position.y = randomRange(-550,200);
+        particle.position.x = randomRange(-550,500);
+        particle.position.y = randomRange(-550,500);
         // math.random returns 0 - 1 but not 1 inclusive
         // we multiply that by 1000 giving us 1000 or 0
         // and subtracting 500 from this value
@@ -292,7 +332,7 @@ function addStars() {
     const geo = new THREE.BufferGeometry();
     const vertices = [];
 
-    for ( let i = 0; i < 20000; i++ ) {
+    for ( let i = 0; i < 2000; i++ ) {
         vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // x
         vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // y
         vertices.push( THREE.MathUtils.randFloatSpread( -2000 ) ); // z
@@ -565,6 +605,7 @@ function loadPsyche(orbit=char) {
                         psyche.position.set(-125, -25, 0);
                         psyche.scale.setScalar(15);
                         psyche.name = "psyche";
+
                         scene.add(psyche);
                     },
                     function(xhr) {
@@ -638,12 +679,17 @@ document.body.onmousedown = function() {
             onMagnetometerClicked();
         }
         if(objectSelected.parent.name == "psyche") {
+            // css renderer testing
+            // displays that psyche label in the scene
+            // using this for testing
+
             onPsycheClicked();
         }
     }
 }
 
 function onPsycheClicked() {
+
     console.log("Psyche clicked");
 }
 
@@ -664,6 +710,13 @@ function onNeutronSpectrometerClicked() {
 }
 
 function onGammaRaySpectrometerClicked() {
+    const psycheDiv = document.createElement('label-psyche');
+    psycheDiv.textContent = 'Psyche';
+    psycheDiv.style.marginTop = '-1em';
+    psycheDiv.style.color = 'white';
+    const psycheLabel = new CSS3DObject(psycheDiv);
+    psycheLabel.position.set(-125, -50, 0);
+    scene.add(psycheLabel);
     console.log("Gamma Ray Spectrometer clicked");
 }
 
@@ -704,9 +757,10 @@ function animate() {
         if(moveAway == true) psyche.position.x -= 0.025;
         else psyche.position.x += 0.025;
     }
+
+    cssrenderer.render(scene, camera);
     renderRaycaster();
     renderer.render(scene, camera);
-    cssrenderer.render(scene, camera);
 
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
