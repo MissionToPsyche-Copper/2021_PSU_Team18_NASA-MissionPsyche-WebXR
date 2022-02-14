@@ -41,6 +41,8 @@ var orbit="init";
 var moveAway = true;
 var loaded=false;
 
+const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
+
 // This pointer is used for the raycaster
 const pointer = new THREE.Vector2();
 
@@ -66,11 +68,13 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.z = 3000;
+        45, window.innerWidth / window.innerHeight, 0.1, 20000);
+    camera.position.set( amount, amount, amount );
+    camera.lookAt(0,0,0);
 
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setPixelRatio( window.devicePixelRatio );
     renderer.shadowMap.enabled = true;
 
     // -- raycaster: intersect object models & register events based on mouse interactions
@@ -110,6 +114,9 @@ function init() {
     orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.minDistance = 4;
     orbitControls.maxDistance = 60;
+    //orbitControls.maxPolarAngle = Math.PI / 2;
+    orbitControls.enableDamping = true;
+   // orbitControls.addEventListener( 'change', renderer );
     // orbitControls.update();
 
     // allows me to display the css elements in our scene
@@ -232,18 +239,8 @@ function init() {
     });
 
     scene.fog = new THREE.FogExp2(0x141414, 0.002);
-
-    document.addEventListener("mousemove", (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        // for raycaster
-        // (TODO: this doesn't seem to be exact, this may need little bit of tweaking
-        // based on screen size, etc? y coordinates didn't seem 100% accurate, although
-        // changing the constant from 1 to 0.95 has helped a whole lot. Change back to 1
-        // to see original raycaster behavior.)
-        pointer.x = ( (event.clientX -renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
-        pointer.y = -( (event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 0.95;
-    });
+    // window.addEventListener( 'resize', onWindowResize );
+    document.addEventListener( 'mousemove', onMouseMove );
 
     // Responsive Design //
     // allow for window resizing //
@@ -268,6 +265,17 @@ var fullColorHex = function(r,g,b) {
     var blue = rgbToHex(b);
     return red+green+blue;
 };
+
+function onMouseMove( event ) {
+
+    event.preventDefault();
+
+    pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+    console.log("Mouse position: ", pointer.x, pointer.y)
+
+}
 // for stars
 function generateRandomColor()
 {
@@ -287,6 +295,10 @@ function generateRandomColor()
 }
 
 function addStars() {
+    const textureLoader = new THREE.TextureLoader();
+    const sprite1 = textureLoader.load('./res/spikey.png');
+    sprite1.wrapS = sprite1.wrapT = THREE.RepeatWrapping;
+    sprite1.anisotropy = renderer.capabilities.getMaxAnisotropy();
     // set interval val is in milliseconds - so convert frames per sec
     // to mils per frame
     // take 1000 which is the num of mils in one second
@@ -298,26 +310,22 @@ function addStars() {
     // move from -1000 super far to closer which is 1000 where the cam is
     // and this will add random particles
     // at every z position
-    for (var zpos = -2000; zpos < 2000; zpos += 0.4) {
+    for (var zpos = -4000; zpos < 4000; zpos += 0.4) {
         // dynamic object initialisation method
         var geometry = new THREE.SphereGeometry(0.3, 5, 5);
         // We assume you already found the mesh with the problem.
-        const problemGeometry = geometry;
-
-// Now we dig through the console to see each attribute.
-// Look up each attribute.count property to see which one is short.
-        console.log(problemGeometry.attributes);
 
         let material = new THREE.MeshBasicMaterial({
-            color: generateRandomColor()
+            color: generateRandomColor(),
+            map: sprite1
         });
 
         //make particle
         var particle = new THREE.Mesh(geometry, material);
 
         // give random (x,y) coords between -500 to 500
-        particle.position.x = randomRange(-550,500);
-        particle.position.y = randomRange(-550,500);
+        particle.position.x = randomRange(-1000, 2000);
+        particle.position.y = randomRange(-400,400);
         // math.random returns 0 - 1 but not 1 inclusive
         // we multiply that by 1000 giving us 1000 or 0
         // and subtracting 500 from this value
@@ -339,15 +347,21 @@ function addStars() {
     const geo = new THREE.BufferGeometry();
     const vertices = [];
 
-    for ( let i = 0; i < 2000; i++ ) {
-        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // x
-        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) ); // y
-        vertices.push( THREE.MathUtils.randFloatSpread( -2000 ) ); // z
+    for ( let i = 0; i < 10000; i++ ) {
+        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) - 1000 ); // x
+        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) - 1000 ); // y
+        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) - 1000 ); // z
     }
 
     geo.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
     const BGparticles = new THREE.Points( geo,
-        new THREE.PointsMaterial( { color: generateRandomColor() } ) );
+        new THREE.PointsMaterial( {
+            color: generateRandomColor(),
+            map: sprite1 } ) );
+
+    BGparticles.rotation.x = Math.random() * 6;
+    BGparticles.rotation.y = Math.random() * 6;
+    BGparticles.rotation.z = Math.random() * 6;
     scene.add( BGparticles );
 }
 
@@ -625,11 +639,11 @@ function loadPsyche(orbit=char) {
         })
 }
 
-
 // ability to interact with obj on screen
 function renderRaycaster() {
     raycaster.setFromCamera( pointer, camera );
-    const intersects = raycaster.intersectObjects( scene.children, true );
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
     if (intersects.length > 0) {
         if (INTERSECTED != intersects[0].object) {
             if (INTERSECTED){
@@ -645,11 +659,13 @@ function renderRaycaster() {
             material = INTERSECTED.material;
             if(material.emissive){
                 INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-                material.emissive.setHex(0xff0000);
+                material.emissive.setHex(Math.random() * 0xffffff);
+                material.emissive.needsUpdate = true;
             }
             else{
                 INTERSECTED.currentHex = material.color.getHex();
                 material.color.setHex(0xff0000);
+                material.color.needsUpdate = true;
             }
             objectSelected = INTERSECTED;
         }
@@ -765,16 +781,26 @@ function animate() {
         else psyche.position.x += 0.025;
     }
 
+    // camera.position.x += ( mouseX - camera.position.x ) * .0001;
+    // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY - 200 ) - camera.position.y ) * .05, 50, 1000 );
+
+    // camera.lookAt( scene.position );
+    //
+    render();
     cssrenderer.render(scene, camera);
     renderRaycaster();
-    renderer.render(scene, camera);
+    orbitControls.update();
     css2Drenderer.render(scene,camera);
     requestAnimationFrame(animate); // recursive call to animate function
     animateStars();
 }
 
-loadSpacecraft();
+function render() {
+    renderer.render(scene, camera);
+}
+
 addStars();
+loadSpacecraft();
 checkForXRSupport();
 animate();
 
