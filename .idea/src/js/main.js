@@ -8,6 +8,8 @@ import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0
 import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
+
+
 var mesh,
     renderer,
     cssrenderer,
@@ -48,7 +50,7 @@ const pointer = new THREE.Vector2();
 
 // used for gtlf loading (can be removed if we do not end up using any gltf resources,
 // more or less just here for example for now.
-let gltfLoader = new GLTFLoader().setPath('./res/gltf/cube/');
+// let gltfLoader = new GLTFLoader().setPath('./res/gltf/cube/');
 
 init();
 
@@ -68,10 +70,8 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 0.1, 20000);
-    camera.position.set( amount, amount, amount );
-    camera.lookAt(0,0,0);
-
+        45, window.innerWidth / window.innerHeight, 0.1, 10000);
+    camera.position.set(amount, amount, amount);
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -80,7 +80,7 @@ function init() {
     // -- raycaster: intersect object models & register events based on mouse interactions
     raycaster = new THREE.Raycaster();
 
-    // document.body.appendChild( VRButton.createButton( renderer ) );
+    document.body.appendChild( VRButton.createButton( renderer ) );
      renderer.xr.enabled = true;
 
     // -- lighting
@@ -114,9 +114,9 @@ function init() {
     orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.minDistance = 4;
     orbitControls.maxDistance = 60;
-    //orbitControls.maxPolarAngle = Math.PI / 2;
+    orbitControls.maxPolarAngle = Math.PI / 2;
     orbitControls.enableDamping = true;
-   // orbitControls.addEventListener( 'change', renderer );
+    // orbitControls.addEventListener( 'change', renderer );
     // orbitControls.update();
 
     // allows me to display the css elements in our scene
@@ -144,7 +144,7 @@ function init() {
     tip.style.fontSize = '12px';
     tip.style.color = 'white';
     const tipLabel = new CSS2DObject(tip);
-    tipLabel.position.set(-400, -50, -400);
+    tipLabel.position.set(10, 20, -200);
     scene.add(tipLabel);
 
     // Button listeners for the orbits
@@ -273,7 +273,7 @@ function onMouseMove( event ) {
     pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-    console.log("Mouse position: ", pointer.x, pointer.y)
+    // console.log("Mouse position: ", pointer.x, pointer.y)
 
 }
 // for stars
@@ -297,90 +297,53 @@ function generateRandomColor()
 function addStars() {
     const textureLoader = new THREE.TextureLoader();
     const sprite1 = textureLoader.load('./res/spikey.png');
-    sprite1.wrapS = sprite1.wrapT = THREE.RepeatWrapping;
-    sprite1.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    // set interval val is in milliseconds - so convert frames per sec
-    // to mils per frame
-    // take 1000 which is the num of mils in one second
-    // divide it by your frame rate
-
+    const radius = 200;
     // particles - called point sprinte or bill-board
     // create random filed of particle objects
-
-    // move from -1000 super far to closer which is 1000 where the cam is
-    // and this will add random particles
-    // at every z position
-    for (var zpos = -4000; zpos < 4000; zpos += 0.4) {
-        // dynamic object initialisation method
-        var geometry = new THREE.SphereGeometry(0.3, 5, 5);
-        // We assume you already found the mesh with the problem.
-
-        let material = new THREE.MeshBasicMaterial({
-            color: generateRandomColor(),
-            map: sprite1
-        });
-
-        //make particle
-        var particle = new THREE.Mesh(geometry, material);
-
-        // give random (x,y) coords between -500 to 500
-        particle.position.x = randomRange(-1000, 2000);
-        particle.position.y = randomRange(-400,400);
-        // math.random returns 0 - 1 but not 1 inclusive
-        // we multiply that by 1000 giving us 1000 or 0
-        // and subtracting 500 from this value
-        // resulting in 0 - 500 or 1000 - 500
-        // which equals -500 or 500
-
-        // z position
-        particle.position.z = zpos;
-
-        // make it bigger
-        particle.scale.x = particle.scale.y = 1;
-        // add to scene
-        scene.add(particle);
-        /// add particle to particle array
-        particles.push(particle);
-
-    }
     // need more stars to fill space
     const geo = new THREE.BufferGeometry();
     const vertices = [];
+    const sizes = [];
 
-    for ( let i = 0; i < 10000; i++ ) {
-        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) - 1000 ); // x
-        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) - 1000 ); // y
-        vertices.push( THREE.MathUtils.randFloatSpread( 2000 ) - 1000 ); // z
+    for ( let i = 0; i < 100000; i++ ) {
+        vertices.push( ( ( Math.random() * 2 - 1 ) * radius )  ); // x
+        vertices.push( (( Math.random() * 2 - 1 ) * radius  ) ); // y
+        vertices.push( (( Math.random() * 2 - 1 ) * radius  )); // z
+
+        sizes.push( 20 );
     }
 
     geo.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-    const BGparticles = new THREE.Points( geo,
-        new THREE.PointsMaterial( {
-            color: generateRandomColor(),
-            map: sprite1 } ) );
+    geo.setAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ).setUsage( THREE.DynamicDrawUsage ) );
 
-    BGparticles.rotation.x = Math.random() * 6;
-    BGparticles.rotation.y = Math.random() * 6;
-    BGparticles.rotation.z = Math.random() * 6;
-    scene.add( BGparticles );
-}
+        var BGparticles = new THREE.Points(geo, new THREE.PointsMaterial({
+            transparent: true,
+            map: sprite1
+        }));
+
+        BGparticles.rotation.x = Math.random() * 2;
+        BGparticles.rotation.y = Math.random() * 2;
+        BGparticles.rotation.z = Math.random() * 2;
+
+        scene.add(BGparticles);
+    }
 
 /// create a random between any two values
 function randomRange(min, max) {
     return Math.floor(Math.random() * (max-min + 1) + min);
 }
 
-function animateStars() {
-    for(var i = 0; i<particles.length; i++) {
-        var particle = particles[i];
-        // move particle forward based on mouse y position
-        particle.position.z += mouseY * 0.00002;
-
-        // if particle is too close move it backwards
-        if(particle.position.z > 1000) particle.position.z -=2000;
-    }
-    particle.rotation.y += 0.000001;
-}
+// function animateStars() {
+//     for(var i = 0; i < particles.length; i++) {
+//         var particle = particles[i];
+//         // move particle forward based on mouse y position
+//         particle.position.z += mouseY * 0.00002;
+//
+//         // if particle is too close move it backwards
+//         if(particle.position.z > 1000) particle.position.z -=2000;
+//     }
+//     particle.rotation.y += 0.000001;
+// }
 
 function loadSpacecraft() {
     var spacecraftMaterial = loadModelMaterial(0x8c8c8c);
@@ -652,7 +615,7 @@ function renderRaycaster() {
                     material.emissive.setHex(INTERSECTED.currentHex);
                 }
                 else{
-                    material.color.setHex(INTERSECTED.currentHex);
+                    material.color = INTERSECTED.currentHex;
                 }
             }
             INTERSECTED = intersects[0].object;
@@ -663,9 +626,9 @@ function renderRaycaster() {
                 material.emissive.needsUpdate = true;
             }
             else{
-                INTERSECTED.currentHex = material.color.getHex();
-                material.color.setHex(0xff0000);
-                material.color.needsUpdate = true;
+                INTERSECTED.currentHex = material.color;
+                // material.color.setHex(0xff0000);
+                // material.color.needsUpdate = true;
             }
             objectSelected = INTERSECTED;
         }
@@ -677,7 +640,7 @@ function renderRaycaster() {
             }
             else
             {
-                material.color.setHex(INTERSECTED.currentHex);
+                material.color = INTERSECTED.currentHex;
             }
         }
         INTERSECTED = null;
@@ -702,17 +665,12 @@ document.body.onmousedown = function() {
             onMagnetometerClicked();
         }
         if(objectSelected.parent.name == "psyche") {
-            // css renderer testing
-            // displays that psyche label in the scene
-            // using this for testing
-
             onPsycheClicked();
         }
     }
 }
 
 function onPsycheClicked() {
-
     console.log("Psyche clicked");
 }
 
@@ -737,9 +695,10 @@ function onGammaRaySpectrometerClicked() {
     psycheDiv.textContent = 'Psyche';
     psycheDiv.style.marginTop = '-1em';
     psycheDiv.style.color = 'white';
-    const psycheLabel = new CSS3DObject(psycheDiv);
-    psycheLabel.position.set(-125, -50, 0);
+    const psycheLabel = new CSS2DObject(psycheDiv);
+    psycheLabel.position.set(0, 0, 0);
     scene.add(psycheLabel);
+
     console.log("Gamma Ray Spectrometer clicked");
 }
 
@@ -781,18 +740,16 @@ function animate() {
         else psyche.position.x += 0.025;
     }
 
-    // camera.position.x += ( mouseX - camera.position.x ) * .0001;
-    // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY - 200 ) - camera.position.y ) * .05, 50, 1000 );
-
-    // camera.lookAt( scene.position );
-    //
+    // camera.position.x += ( mouseX + camera.position.x ) * .05;
+     // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY ) + camera.position.y ) * .05, 100, 100 );
+    camera.lookAt( scene.position );
     render();
     cssrenderer.render(scene, camera);
     renderRaycaster();
     orbitControls.update();
     css2Drenderer.render(scene,camera);
     requestAnimationFrame(animate); // recursive call to animate function
-    animateStars();
+    // animateStars();
 }
 
 function render() {
