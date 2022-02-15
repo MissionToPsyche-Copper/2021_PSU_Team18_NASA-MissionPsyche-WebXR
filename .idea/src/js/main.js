@@ -702,21 +702,15 @@ function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
 }
 
-// render scene
-// animation loop
-// redraw scene 60FPS
-// keep function at bottom
-// needs to reference the above definitions
-function animate() {
-    // Rotate scene constantly
+function animatePsyche(){
     var psyche = scene.getObjectByName( "psyche" );
-    if(psyche != null) {
+    if(psyche != null && orbit != "init") {
         //rotation
-        psyche.rotation.y += 0.0025;
+        psyche.rotation.y -= 0.0006;
 
-        if(psyche.position.x == -155) moveAway = false;
+        /*
 
-        //ellipse
+        //ellipse code - commented out for the time being for further testing
         switch(orbit) {
             case "A":
                 if(psyche.position.x <= -150) moveAway = false;
@@ -735,10 +729,21 @@ function animate() {
                 if(psyche.position.x >= -25) moveAway = true;
                 break;
         }
-        //determine speed of ellipse
-        if(moveAway == true) psyche.position.x -= 0.025;
+
+        if (moveAway == true) psyche.position.x -= 0.025;
         else psyche.position.x += 0.025;
+
+         */
     }
+}
+
+// render scene
+// animation loop
+// redraw scene 60FPS
+// keep function at bottom
+// needs to reference the above definitions
+function animate() {
+    // Rotate scene constantly
 
     // camera.position.x += ( mouseX + camera.position.x ) * .05;
      // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY ) + camera.position.y ) * .05, 100, 100 );
@@ -749,6 +754,7 @@ function animate() {
     orbitControls.update();
     css2Drenderer.render(scene,camera);
     requestAnimationFrame(animate); // recursive call to animate function
+    animatePsyche();
     // animateStars();
 }
 
