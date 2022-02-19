@@ -1,5 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.120.1/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/OrbitControls.js';
+// import { EventsControls } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/EventsControls.js';
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
@@ -112,12 +113,11 @@ function init() {
     // -- controls: allows mouse controls such as click+drag, zoom, etc.
     // Add mouse controls
     orbitControls = new OrbitControls(camera, renderer.domElement);
+    // limiting zoom determine how far zoom in and zoom out
     orbitControls.minDistance = 4;
-    orbitControls.maxDistance = 60;
+    orbitControls.maxDistance = 100;
     orbitControls.maxPolarAngle = Math.PI / 2;
     orbitControls.enableDamping = true;
-    // orbitControls.addEventListener( 'change', renderer );
-    // orbitControls.update();
 
     // allows me to display the css elements in our scene
     cssrenderer = new CSS3DRenderer();
@@ -241,6 +241,7 @@ function init() {
     scene.fog = new THREE.FogExp2(0x141414, 0.002);
     // window.addEventListener( 'resize', onWindowResize );
     document.addEventListener( 'mousemove', onMouseMove );
+    document.addEventListener( 'pointerdown', onPointerDown );
 
     // Responsive Design //
     // allow for window resizing //
@@ -269,13 +270,78 @@ var fullColorHex = function(r,g,b) {
 function onMouseMove( event ) {
 
     event.preventDefault();
-
     pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
     // console.log("Mouse position: ", pointer.x, pointer.y)
 
+    raycaster.setFromCamera( pointer, camera );
+
+    const intersects = raycaster.intersectObjects( scene.children, true );
+
+    if ( intersects.length > 0 ) {
+        const intersect = intersects[0];
+        // console.log(intersect.object.name);
+        // console.log(intersect.object.parent.name);
+
+        switch (intersect.object.parent.name) {
+            case "psyche":
+
+                break;
+            default:
+                break;
+        }
+    }
 }
+
+function onPointerDown(event) {
+    event.preventDefault();
+    pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+    raycaster.setFromCamera( pointer, camera );
+
+    const intersects = raycaster.intersectObjects( scene.children, true );
+
+    if ( intersects.length > 0 ) {
+        const intersect = intersects[ 0 ];
+        // console.log(intersect.object.name);
+        // console.log(intersect.object.parent.name);
+
+        switch(intersect.object.parent.name) {
+            case "gammaRaySpectrometer":
+                onGammaRaySpectrometerClicked();
+                break;
+            case "imager1":
+                onImagerClicked();
+                break;
+            case "imager2":
+                onImagerClicked();
+                break;
+            case "psyche":
+                onPsycheClicked();
+                break;
+            default:
+                break;
+        }
+
+        switch(intersect.object.name) {
+            case "spacecraft":
+                onSpacecraftClicked();
+                break;
+            case "neutronSpectrometer":
+                onNeutronSpectrometerClicked();
+                break;
+            case "magnetometer":
+                onMagnetometerClicked();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+}
+
 // for stars
 function generateRandomColor()
 {
@@ -498,6 +564,7 @@ function loadSpacecraftModel(material) {
             spacecraftMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
             spacecraftMesh.rotation.z = Math.PI / 2;
             spacecraftMesh.position.set(-4,0,0);
+            spacecraftMesh.name = 'spacecraft';
 
             //todo: fix camera zoom to be closer on load.
             spacecraftMesh.scale.set(0.025,0.025,0.025);
@@ -589,7 +656,6 @@ function loadPsyche(orbit=char) {
                         psyche.position.set(-125, -25, 0);
                         psyche.scale.setScalar(15);
                         psyche.name = "psyche";
-
                         scene.add(psyche);
                     },
                     function(xhr) {
@@ -624,6 +690,9 @@ function renderRaycaster() {
                 INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
                 material.emissive.setHex(Math.random() * 0xffffff);
                 material.emissive.needsUpdate = true;
+                console.log(INTERSECTED.object);
+                // INTERSECTED.rotation.x += 0.5;
+                // INTERSECTED.userData.scaleUp(INTERSECTED);
             }
             else{
                 INTERSECTED.currentHex = material.color;
@@ -644,29 +713,6 @@ function renderRaycaster() {
             }
         }
         INTERSECTED = null;
-    }
-}
-
-document.body.onmousedown = function() {
-    if(objectSelected != null) {
-        if(objectSelected.parent.name == "spacecraft") {
-            onSpacecraftClicked();
-        }
-        if(objectSelected.parent.name == "gammaRaySpectrometer") {
-            onGammaRaySpectrometerClicked();
-        }
-        if(objectSelected.name == "neutronSpectrometer") {
-            onNeutronSpectrometerClicked();
-        }
-        if(objectSelected.parent.name == "imager1" || objectSelected.parent.name == "imager2") {
-            onImagerClicked();
-        }
-        if(objectSelected.name == "magnetometer") {
-            onMagnetometerClicked();
-        }
-        if(objectSelected.parent.name == "psyche") {
-            onPsycheClicked();
-        }
     }
 }
 
@@ -691,14 +737,6 @@ function onNeutronSpectrometerClicked() {
 }
 
 function onGammaRaySpectrometerClicked() {
-    const psycheDiv = document.createElement('label-psyche');
-    psycheDiv.textContent = 'Psyche';
-    psycheDiv.style.marginTop = '-1em';
-    psycheDiv.style.color = 'white';
-    const psycheLabel = new CSS2DObject(psycheDiv);
-    psycheLabel.position.set(0, 0, 0);
-    scene.add(psycheLabel);
-
     console.log("Gamma Ray Spectrometer clicked");
 }
 
