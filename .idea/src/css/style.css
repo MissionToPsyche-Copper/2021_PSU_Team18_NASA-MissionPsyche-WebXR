@@ -61,12 +61,15 @@ button:active {
     background-color: rgba(0,255,255,0.75);
 }
 #logo {
+    touch-action: none;
     height: 100px;
     width: 100px;
     margin-top: 20px;
     margin-left: 25px;
 }
+
 #controlstrip {
+    touch-action: none;
     /* bg color as white just for visiblity will change later */
     background: rgba(0,0,0,0.75);
     z-index: 100;
@@ -93,10 +96,11 @@ button:active {
 }
 
 #info {
+    touch-action: none;
     width:10vw;
     visibility: hidden;
     color: rgba(239,89,102);
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     position: absolute;
     /*height: 100vh;*/
     z-index: 20000;
