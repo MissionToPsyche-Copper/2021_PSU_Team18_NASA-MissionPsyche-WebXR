@@ -1,17 +1,31 @@
-/*-------
------ Main CSS Stylesheet
------
------*/
-
+/*---------------------------
+---- Main CSS Stylesheet ----
+-----------------------------
+---------------------------*/
 body {
     margin: 0;
-    height: 100vh; /* 100 view height */
+    height: 100%; /* 100 view height */
     width: 100vw;
     font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0;
+    font-weight: 300;
+    overscroll-behavior: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    -webkit-text-size-adjust: none;
+    display: block;
 }
 
-canvas {
-    font-family: 'Raleway', sans-serif;
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.ui {
+    position: absolute;
 }
 
 #menu {
@@ -21,6 +35,63 @@ canvas {
     padding: 10px;
     box-sizing: border-box;
     text-align: center;
+}
+
+.header {
+    display: grid;
+    grid-template-columns: auto auto auto 1fr;
+    align-items: center;
+    background-color: transparent;
+}
+
+.header .title {
+    line-height: 1.1;
+    opacity: 0.75;
+    margin-right: 3px;
+}
+
+.header .subtitle {
+    line-height: 1;
+    opacity: 0.5;
+}
+.header .title, .header .subtitle {
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.header .title .first {
+    letter-spacing: 0.2rem;
+    color: white;
+}
+
+.header .title span, .header .subtitle span {
+    display: block;
+}
+
+body .semi {
+    letter-spacing: 0.02em;
+}
+
+.semi {
+    font-weight: 600;
+}
+
+@media only screen and (min-width: 320px) {
+    .grid-layout .float-mid-bottom {
+        grid-column: main-start / side-end;
+        grid-row: extf-start / foot-end;
+        grid-template-columns: auto max-content;
+        grid-template-rows: auto auto auto;
+        align-self: end;
+        justify-self: center;
+        margin: 0 20px;
+        width: calc(100% - 40px);
+        display: grid;
+        justify-items: start;
+        gap: 10px 5px;
+    }
 }
 
 button {
@@ -51,6 +122,63 @@ ar {
     width: 100px;
 }
 
+h1 {
+    font-size: 41px;
+    line-height: 120%;
+    font-weight: 100;
+}
+h2 {
+    font-size: 36px;
+    line-height: 120%;
+    font-weight: 100;
+}
+h3 {
+    font-size: 29px;
+    line-height: 95%;
+    font-weight: 300;
+}
+h3.semi {
+    line-height: 100%;
+}
+h4 {
+    font-size: 22px;
+    line-height: 120%;
+    font-weight: 300;
+}
+h5 {
+    font-size: 18px;
+    line-height: 180%;
+    font-weight: 300;
+}
+h5.semi {
+    line-height: 150%;
+}
+
+.hidden {
+    display: none;
+}
+.semi {
+    font-weight: 600;
+}
+.small {
+    font-size: 14px;
+    line-height: 150%;
+    letter-spacing: 0;
+    font-family: "Metropolis", sans-serif;
+}
+.x-small {
+    font-size: 12px;
+    line-height: 180%;
+    letter-spacing: 0.03em;
+    font-family: "Metropolis", sans-serif;
+}
+.tiny {
+    font-size: 11px;
+    line-height: 180%;
+    letter-spacing: 0.03em;
+    font-family: "Metropolis", sans-serif;
+}
+
 button:hover {
     background-color: rgba(239,89,102, 0.8);
     color: white;
@@ -60,45 +188,54 @@ button:active {
     color: #000000;
     background-color: rgba(0,255,255,0.75);
 }
-#logo {
-    height: 100px;
-    width: 100px;
-    margin-top: 20px;
-    margin-left: 25px;
+
+.icon {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-image: url("/src/res/Psyche_Icon_BW-SVG.svg");
+    width: 45px;
+    height: 45px;
+    user-select: none;
+    margin-right: 15px;
+    margin-left: 10px;
+    margin-top: 2px;
+    opacity: 0.5;
 }
-#controlstrip {
-    /* bg color as white just for visiblity will change later */
-    background: rgba(0,0,0,0.75);
-    z-index: 100;
-    margin: 0;
-    position: absolute;
-    height: 100vh;
-    width: 10vw;
+.filter-white{
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(3deg) brightness(100%) contrast(104%);
 }
 
 #tip {
     color: white;
-    width:50vw;
+    width: 80vw;
     /*height: 80vh;*/
 }
 
-#title {
-    color: rgba(239,89,102);
+#info {
+    visibility: hidden;
     text-transform: uppercase;
-    align-content: center;
     position: absolute;
-    left: 25px;
-    top: 15vh;
-    z-index: 2000;
+    z-index: 1000;
+    align-content: center;
 }
 
-#info {
-    width:10vw;
-    visibility: hidden;
-    color: rgba(239,89,102);
-    text-transform: uppercase;
-    position: absolute;
-    /*height: 100vh;*/
-    z-index: 20000;
-    align-content: center;
+article {
+    display: block;
+}
+
+/* Landscape. 480x320 phones and above */
+@media only screen and (min-width: 320px) and (orientation: landscape),
+    /* Portrait. Portrait tablets/iPad and above */
+only screen and (min-width: 641px) and (orientation: portrait) {
+    .simple-grid {
+        gap: 4px 4px;
+        padding: 0 20px;
+    }
+}
+/* Exclude panorama. Big landscape tablets, laptops/desktops, and above */
+@media only screen and (min-width: 1025px) and (min-height: 600px) {
+    .simple-grid {
+        gap: 20px 24px;
+        padding: 0 20px;
+    }
 }

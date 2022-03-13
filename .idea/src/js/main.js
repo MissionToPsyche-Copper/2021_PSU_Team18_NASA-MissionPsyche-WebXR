@@ -82,7 +82,7 @@ function init() {
     raycaster = new THREE.Raycaster();
 
     document.body.appendChild( VRButton.createButton( renderer ) );
-     renderer.xr.enabled = true;
+    renderer.xr.enabled = true;
 
     // -- lighting
     scene.add(new THREE.AmbientLight(0x888888));
@@ -103,8 +103,6 @@ function init() {
     light.shadow.bias = 0.001;
     light.shadow.mapSize.width = 1024 * 3;
 
-    // set color of bg in hex - 0-1 can be set for alpha - opacity
-    renderer.setClearColor("#02020A");
     // sets size of app
     renderer.setSize(window.innerWidth, window.innerHeight);
     // appends renderer to html doc as canvas to draw in browser
@@ -142,9 +140,9 @@ function init() {
     tip.style.visibility = 'visible';
     tip.style.marginTop = '-1em';
     tip.style.fontSize = '12px';
-    tip.style.color = 'white';
+    // tip.style.color = 'white';
     const tipLabel = new CSS2DObject(tip);
-    tipLabel.position.set(10, 20, -200);
+    // tipLabel.position.set(10, 20, -200);
     scene.add(tipLabel);
 
     // Button listeners for the orbits
@@ -296,7 +294,8 @@ function onMouseMove( event ) {
 
 function onPointerDown(event) {
     event.preventDefault();
-    pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+    pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, -
+        ( event.clientY / window.innerHeight ) * 2 + 1 );
 
     raycaster.setFromCamera( pointer, camera );
 
