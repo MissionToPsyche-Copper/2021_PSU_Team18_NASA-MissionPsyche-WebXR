@@ -9,6 +9,62 @@ import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0
 import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
+checkForXRSupport();
+
+// check for XR support
+// displaying enter AR if XR is supported
+// if not it will display session not supported in the web dev browser
+async function checkForXRSupport() {
+    navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+        if (supported) {
+            console.log('xr supported.');
+            enterXRExperiencePrompt();
+        } else {
+            console.log("xr not supported.");
+            if(isUsingAndroidDevice()) {
+                window.alert("WebXR experience not supported. Try downloading the \"Google Play Services for Ar\" application on the Google Play Store, and rescanning this QR code.");
+            }
+            else if(isUsingAppleDevice()) {
+                window.alert("WebXR experience not supported. Try downloading the \"WebXR Viewer\" application on the Apple App Store, and rescanning this QR code.");
+            }
+            else {
+                window.alert("WebXR experience not supported on Desktop devices.");
+            }
+            // comment this line out if you are using on a PC.
+            window.history.back()
+        }
+    });
+}
+
+function isUsingAndroidDevice() {
+    var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf("android") > -1;
+}
+
+function isUsingAppleDevice() {
+    return [
+            'iPad Simulator',
+            'iPhone Simulator',
+            'iPod Simulator',
+            'iPad',
+            'iPhone',
+            'iPod'
+        ].includes(navigator.platform)
+        // iPad on iOS 13 detection
+        || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+function enterXRExperiencePrompt() {
+    // We should add additional information here about the mission, the application, etc.
+    let promptText = "This is a webXR experience based on the Psyche Asteroid Misson, 2022. To load the WebXR application, press OK. To exit, press cancel.";
+    if (confirm(promptText) == true) {
+        console.log("loading WebXR experience...");
+    } else {
+        // exit webXR experience by navigating "back" in the browser.
+        // If there are no pages in the history, this will exit the browser.
+        window.history.back();
+    }
+}
 
 
 var mesh,
@@ -583,22 +639,6 @@ function loadSpacecraftModel(material) {
     )
 }
 
-// check for XR support
-// displaying enter AR if XR is supported
-// if not it will display session not supported in the web dev browser
-async function checkForXRSupport() {
-    navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-        if (supported) {
-            var enterXrBtn = document.createElement("ar");
-            enterXrBtn.innerHTML = "ENTER AR";
-            enterXrBtn.addEventListener("click", beginXRSession);
-            document.body.appendChild(enterXrBtn);
-        } else {
-            console.log("Session not supported: ");
-        }
-    });
-}
-
 // update radius
 function changeOrbit(orbit = char){
     var psyche = scene.getObjectByName( "psyche" );
@@ -802,7 +842,6 @@ function render() {
 
 addStars();
 loadSpacecraft();
-checkForXRSupport();
 animate();
 
 /*
