@@ -647,6 +647,9 @@ function changeOrbit(orbit = char){
             x = -125;
             y = -25;
             z = 0;
+            psyche.material = new MTLLoader().setPath('../src/res/Psyche/')
+                .load('grns.mtl', (materials) => {
+                    materials.preload()});
             break;
         case "B":
             x = -100;
