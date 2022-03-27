@@ -134,6 +134,8 @@ function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.shadowMap.enabled = true;
 
+
+
     // -- raycaster: intersect object models & register events based on mouse interactions
     raycaster = new THREE.Raycaster();
 
@@ -192,13 +194,16 @@ function init() {
     document.getElementById("orbit-b").style.visibility = 'hidden';
     document.getElementById("orbit-c").style.visibility = 'hidden';
     document.getElementById("orbit-d").style.visibility = 'hidden';
+    document.getElementById("canvas3").style.visibility = 'hidden';
     const tip = document.getElementById('tip');
     tip.style.visibility = 'visible';
-    tip.style.marginTop = '-1em';
-    tip.style.fontSize = '12px';
-    // tip.style.color = 'white';
+    tip.style.width = '50vw'
+    tip.style.height = '100vh'
+    tip.style.top = '50vh'
+    tip.style.fontSize = '16px';
+    tip.style.color = 'white';
     const tipLabel = new CSS2DObject(tip);
-    // tipLabel.position.set(10, 20, -200);
+    tipLabel.position.set(0, 0,0);
     scene.add(tipLabel);
 
     // Button listeners for the orbits
@@ -212,6 +217,7 @@ function init() {
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
+            document.getElementById("canvas3").style.visibility = 'hidden';
         }
 
         // css renderer testing
@@ -238,6 +244,7 @@ function init() {
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
+            document.getElementById("canvas3").style.visibility = 'hidden';
         }
 
         const OrbitB = document.getElementById('orbit-b');
@@ -260,6 +267,7 @@ function init() {
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'visible';
             document.getElementById("orbit-d").style.visibility = 'hidden';
+            document.getElementById("canvas3").style.visibility = 'hidden';
         }
         const OrbitC = document.getElementById('orbit-c');
         OrbitC.style.visibility = 'visible';
@@ -281,6 +289,7 @@ function init() {
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'visible';
+            document.getElementById("canvas3").style.visibility = 'hidden';
         }
         const OrbitD = document.getElementById('orbit-d');
         OrbitD.style.visibility = 'visible';
@@ -425,17 +434,22 @@ function addStars() {
     const geo = new THREE.BufferGeometry();
     const vertices = [];
     const sizes = [];
+    const colors = [];
+    let color;
 
     for ( let i = 0; i < 100000; i++ ) {
         vertices.push( ( ( Math.random() * 2 - 1 ) * radius )  ); // x
         vertices.push( (( Math.random() * 2 - 1 ) * radius  ) ); // y
         vertices.push( (( Math.random() * 2 - 1 ) * radius  )); // z
+        color = Math.random() * 0xffffff;
+        colors.push(color);
 
         sizes.push( 20 );
     }
 
     geo.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
     geo.setAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ).setUsage( THREE.DynamicDrawUsage ) );
+    geo.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 1 ).setUsage( THREE.DynamicDrawUsage ) );
 
         var BGparticles = new THREE.Points(geo, new THREE.PointsMaterial({
             transparent: true,
@@ -445,6 +459,8 @@ function addStars() {
         BGparticles.rotation.x = Math.random() * 2;
         BGparticles.rotation.y = Math.random() * 2;
         BGparticles.rotation.z = Math.random() * 2;
+
+        particles.push(BGparticles);
 
         scene.add(BGparticles);
     }
@@ -461,7 +477,7 @@ function randomRange(min, max) {
 //         particle.position.z += mouseY * 0.00002;
 //
 //         // if particle is too close move it backwards
-//         if(particle.position.z > 1000) particle.position.z -=2000;
+//         // if(particle.position.z > 1000) particle.position.z -=2000;
 //     }
 //     particle.rotation.y += 0.000001;
 // }
@@ -730,13 +746,10 @@ function renderRaycaster() {
                 material.emissive.setHex(Math.random() * 0xffffff);
                 material.emissive.needsUpdate = true;
                 console.log(INTERSECTED.object);
-                // INTERSECTED.rotation.x += 0.5;
-                // INTERSECTED.userData.scaleUp(INTERSECTED);
+
             }
             else{
                 INTERSECTED.currentHex = material.color;
-                // material.color.setHex(0xff0000);
-                // material.color.needsUpdate = true;
             }
             objectSelected = INTERSECTED;
         }
@@ -757,26 +770,38 @@ function renderRaycaster() {
 
 function onPsycheClicked() {
     console.log("Psyche clicked");
+
+    ;
+    document.getElementById("tip").style.visibility= 'hidden';
+    document.getElementById("canvas3").style.visibility = 'visible';
+
 }
 
 function onSpacecraftClicked() {
     console.log("Spacecraft clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onMagnetometerClicked() {
     console.log("Magnetometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+
 }
 
 function onImagerClicked() {
     console.log("Imager clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+
 }
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function animatePsyche(){
@@ -785,32 +810,29 @@ function animatePsyche(){
         //rotation
         psyche.rotation.y -= 0.0006;
 
-        /*
-
         //ellipse code - commented out for the time being for further testing
-        switch(orbit) {
-            case "A":
-                if(psyche.position.x <= -150) moveAway = false;
-                if(psyche.position.x >= -100) moveAway = true;
-                break;
-            case "B":
-                if(psyche.position.x <= -125) moveAway = false;
-                if(psyche.position.x >= -75) moveAway = true;
-                break;
-            case "C":
-                if(psyche.position.x <= -100) moveAway = false;
-                if(psyche.position.x >= -50) moveAway = true;
-                break;
-            case "D":
-                if(psyche.position.x <= -75) moveAway = false;
-                if(psyche.position.x >= -25) moveAway = true;
-                break;
-        }
+        // switch(orbit) {
+        //     case "A":
+        //         if(psyche.position.x <= -150) moveAway = false;
+        //         if(psyche.position.x >= -100) moveAway = true;
+        //         break;
+        //     case "B":
+        //         if(psyche.position.x <= -125) moveAway = false;
+        //         if(psyche.position.x >= -75) moveAway = true;
+        //         break;
+        //     case "C":
+        //         if(psyche.position.x <= -100) moveAway = false;
+        //         if(psyche.position.x >= -50) moveAway = true;
+        //         break;
+        //     case "D":
+        //         if(psyche.position.x <= -75) moveAway = false;
+        //         if(psyche.position.x >= -25) moveAway = true;
+        //         break;
+        // }
+        //
+        // if (moveAway == true) psyche.position.x -= 0.025;
+        // else psyche.position.x += 0.025;
 
-        if (moveAway == true) psyche.position.x -= 0.025;
-        else psyche.position.x += 0.025;
-
-         */
     }
 }
 
@@ -824,6 +846,8 @@ function animate() {
 
     // camera.position.x += ( mouseX + camera.position.x ) * .05;
      // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY ) + camera.position.y ) * .05, 100, 100 );
+
+
     camera.lookAt( scene.position );
     render();
     cssrenderer.render(scene, camera);
@@ -836,6 +860,7 @@ function animate() {
 }
 
 function render() {
+
     renderer.render(scene, camera);
 }
 
