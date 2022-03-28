@@ -99,6 +99,7 @@ var mesh,
 var orbit="init";
 var moveAway = true;
 var loaded=false;
+var instrumentView=false;
 
 const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 
@@ -186,7 +187,7 @@ function init() {
     document.getElementById('info').appendChild(css2Drenderer.domElement);
 
     // -- models: load object model resources
-    loadPsyche('A'); // load psyche in orbit A can be updated later
+    loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
     // document.getElementById("tip").style.visibility = 'hidden';
     document.getElementById("orbit-a").style.visibility = 'hidden';
     document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -642,14 +643,12 @@ function loadSpacecraftModel(material) {
 function changeOrbit(orbit = char){
     var psyche = scene.getObjectByName( "psyche" );
     var x, y, z;
+
     switch(orbit) {
         case "A":
             x = -125;
             y = -25;
             z = 0;
-            psyche.material = new MTLLoader().setPath('../src/res/Psyche/')
-                .load('grns.mtl', (materials) => {
-                    materials.preload()});
             break;
         case "B":
             x = -100;
@@ -667,7 +666,17 @@ function changeOrbit(orbit = char){
             z = 0;
             break;
     }
-    psyche.position.set(x, y, z);
+    if (instrumentView==false) psyche.position.set(x, y, z);
+    else{
+        var yRotation = psyche.rotation.y;
+        if(instrumentView == true)
+        {
+            removePsyche();
+            loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+            instrumentView = false;
+            return;
+        }
+    }
 }
 
 // not working need to debug...
@@ -684,18 +693,19 @@ function beginXRSession() {
 }
 
 // Psyche object
-function loadPsyche(orbit=char) {
-
-    new MTLLoader().setPath('../src/res/Psyche/')
-        .load('Psyche_.mtl', (materials) => {
-            materials.preload()
+function loadPsyche(filePath=string, x=int, y=int, z=int, yRotation=int) {
+    new MTLLoader().load(filePath,
+            (material) => {
+            material.preload()
 
             // psyche loader
             new OBJLoader()
-                .setMaterials(materials)
+                .setMaterials(material)
                 .setPath('../src/res/Psyche/')
                 .load('Psyche_.obj', (psyche) => {
-                        psyche.position.set(-125, -25, 0);
+                        //psyche.position.set(-125, -25, 0);
+                        psyche.position.set(x, y, z);
+                        psyche.rotation.y = yRotation;
                         psyche.scale.setScalar(15);
                         psyche.name = "psyche";
                         scene.add(psyche);
@@ -708,6 +718,12 @@ function loadPsyche(orbit=char) {
                     }
                 );
         })
+}
+
+function removePsyche() {
+    var psyche = scene.getObjectByName( "psyche" );
+    scene.remove( psyche );
+    animate();
 }
 
 // ability to interact with obj on screen
@@ -768,18 +784,98 @@ function onSpacecraftClicked() {
 
 function onMagnetometerClicked() {
     console.log("Magnetometer clicked");
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'C' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/magnetometer/magnetometer.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'C' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onImagerClicked() {
     console.log("Imager clicked");
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'A' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/imager/imager.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'A' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'B' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'B' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'B' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'B' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function animatePsyche(){
@@ -891,12 +987,6 @@ THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
 // removes objects
 // is this still working or needed?
 // yes working, no longer needed - Odhran
-
-function removeEntity(object) {
-    var selectedObject = scene.getObjectByName(object.name);
-    scene.remove( selectedObject );
-    animate();
-}
 
     //this code used to live in changeOrbit()
     loadSpacecraft();
