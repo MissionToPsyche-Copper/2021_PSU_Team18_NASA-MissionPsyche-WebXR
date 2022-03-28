@@ -16,10 +16,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/grids-responsive-min.css">
+
     <!---------->
     <!----CSS--->
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
 
     <link rel="stylesheet" href="./css/style.css">
 </head>
@@ -45,17 +47,6 @@
 </div>
 <!-- Left Panel -->
 <!-- Mission Start Basic Info -->
-
-    <div id="tip">
-        For the first time ever, we are
-        exploring a world made not of rock or ice,
-        but of <b>metal</b>.
-
-        At the launch site the team conducts an entire re-check of the spacecraft before integrating into the launch vehicle.
-        The spacecraft launches in August of 2022.
-        Once in space, the spacecraft travels using solar-electric propulsion.
-        It arrives at the asteroid, located in the main asteroid belt between Mars and Jupiter, in early January of 2026.
-    </div>
 
 <!-- Orbit A Info -->
 <div id="info">
@@ -96,12 +87,18 @@
         </p>
     </div>
 </div>
-<div id="canvas3"></div>
 
+<div class="pure-g">
+    <div id="canvas3">
+        <div class="pure-u-1 pure-u-1-3"> <p>At the launch site the team conducts an entire re-check of the spacecraft before integrating into the launch vehicle.
+        The spacecraft launches in August of 2022.
+        Once in space, the spacecraft travels using solar-electric propulsion.
+        It arrives at the asteroid, located in the main asteroid belt between Mars and Jupiter, in early January of 2026.</p></div>
 
+        <div class="pure-u-1 pure-u-1-3 orbit-A"> <p>Over the course of the first 56 days of observation and 41 orbits of 16 Psyche, the mission will focus on the characterization of the asteroid. Characterization is the process of observing the physical properties of the asteroid such as rotation, shape, size, albedo (the ability to reflect sunlight), mass, density and material composition.</p></div>
+    </div>
+</div>
 
-<!-- Option 1: Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 </body>
 

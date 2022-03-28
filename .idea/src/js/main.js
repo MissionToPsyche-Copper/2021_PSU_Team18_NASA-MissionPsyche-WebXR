@@ -1,6 +1,5 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.120.1/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/OrbitControls.js';
-// import { EventsControls } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/EventsControls.js';
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
@@ -105,10 +104,6 @@ const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 // This pointer is used for the raycaster
 const pointer = new THREE.Vector2();
 
-// used for gtlf loading (can be removed if we do not end up using any gltf resources,
-// more or less just here for example for now.
-// let gltfLoader = new GLTFLoader().setPath('./res/gltf/cube/');
-
 init();
 
 function init() {
@@ -133,20 +128,18 @@ function init() {
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.shadowMap.enabled = true;
-
-
-
+    
     // -- raycaster: intersect object models & register events based on mouse interactions
     raycaster = new THREE.Raycaster();
 
-    document.body.appendChild( VRButton.createButton( renderer ) );
+   // document.body.appendChild( VRButton.createButton( renderer ) );
     renderer.xr.enabled = true;
 
     // -- lighting
     scene.add(new THREE.AmbientLight(0x888888));
 
     var light = new THREE.DirectionalLight(0xcccccc, 1);
-    light.position.set(0.5, 5, 5);
+    light.position.set(0.9, 5, 5);
     scene.add(light);
     light.caseShadow = true;
     light.shadow.camera.near = 0.01;
@@ -179,32 +172,19 @@ function init() {
     cssrenderer = new CSS3DRenderer();
     cssrenderer.setSize(window.innerWidth, window.innerHeight);
     cssrenderer.domElement.style.position = 'absolute';
-    cssrenderer.domElement.style.top = '0px';
     document.getElementById('info').appendChild(cssrenderer.domElement);
 
     css2Drenderer = new CSS2DRenderer();
     css2Drenderer.domElement.style.position = 'absolute';
     css2Drenderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('info').appendChild(css2Drenderer.domElement);
-
-    // -- models: load object model resources
-    loadPsyche('A'); // load psyche in orbit A can be updated later
+    
     // document.getElementById("tip").style.visibility = 'hidden';
     document.getElementById("orbit-a").style.visibility = 'hidden';
     document.getElementById("orbit-b").style.visibility = 'hidden';
     document.getElementById("orbit-c").style.visibility = 'hidden';
     document.getElementById("orbit-d").style.visibility = 'hidden';
     document.getElementById("canvas3").style.visibility = 'hidden';
-    const tip = document.getElementById('tip');
-    tip.style.visibility = 'visible';
-    tip.style.width = '50vw'
-    tip.style.height = '100vh'
-    tip.style.top = '50vh'
-    tip.style.fontSize = '16px';
-    tip.style.color = 'white';
-    const tipLabel = new CSS2DObject(tip);
-    tipLabel.position.set(0, 0,0);
-    scene.add(tipLabel);
 
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
@@ -212,7 +192,7 @@ function init() {
         if(orbit != "A") {
             orbit = "A";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
+           // document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
@@ -239,7 +219,7 @@ function init() {
         if(orbit != "B") {
             orbit = "B";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
+          //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
@@ -262,7 +242,7 @@ function init() {
         if(orbit != "C") {
             orbit = "C";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
+          //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'visible';
@@ -284,7 +264,7 @@ function init() {
         if(orbit != "D") {
             orbit = "D";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
+          //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
@@ -301,7 +281,7 @@ function init() {
         scene.add(orbitDLabel);
     });
 
-    scene.fog = new THREE.FogExp2(0x141414, 0.002);
+    scene.fog = new THREE.FogExp2(0x141414, 0.0001);
     // window.addEventListener( 'resize', onWindowResize );
     document.addEventListener( 'mousemove', onMouseMove );
     document.addEventListener( 'pointerdown', onPointerDown );
@@ -346,14 +326,6 @@ function onMouseMove( event ) {
         const intersect = intersects[0];
         // console.log(intersect.object.name);
         // console.log(intersect.object.parent.name);
-
-        switch (intersect.object.parent.name) {
-            case "psyche":
-
-                break;
-            default:
-                break;
-        }
     }
 }
 
@@ -427,10 +399,9 @@ function generateRandomColor()
 function addStars() {
     const textureLoader = new THREE.TextureLoader();
     const sprite1 = textureLoader.load('./res/spikey.png');
-    const radius = 200;
+    const radius = 220;
     // particles - called point sprinte or bill-board
     // create random filed of particle objects
-    // need more stars to fill space
     const geo = new THREE.BufferGeometry();
     const vertices = [];
     const sizes = [];
@@ -441,7 +412,7 @@ function addStars() {
         vertices.push( ( ( Math.random() * 2 - 1 ) * radius )  ); // x
         vertices.push( (( Math.random() * 2 - 1 ) * radius  ) ); // y
         vertices.push( (( Math.random() * 2 - 1 ) * radius  )); // z
-        color = Math.random() * 0xffffff;
+        color = generateRandomColor();
         colors.push(color);
 
         sizes.push( 20 );
@@ -641,9 +612,9 @@ function loadSpacecraftModel(material) {
             spacecraftMesh.scale.set(0.025,0.025,0.025);
             scene.add(spacecraftMesh)
             //camera.lookAt(spacecraftMesh);
-            camera.position.x = -80;
-            camera.position.y = -20;
-            camera.position.z = 150;
+            camera.position.x = 800;
+            camera.position.y = 200;
+            camera.position.z = -120;
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
@@ -709,7 +680,7 @@ function loadPsyche(orbit=char) {
                 .setPath('../src/res/Psyche/')
                 .load('Psyche_.obj', (psyche) => {
                         psyche.position.set(-125, -25, 0);
-                        psyche.scale.setScalar(15);
+                        psyche.scale.setScalar(50);
                         psyche.name = "psyche";
                         scene.add(psyche);
                     },
@@ -770,10 +741,8 @@ function renderRaycaster() {
 
 function onPsycheClicked() {
     console.log("Psyche clicked");
-
-    ;
-    document.getElementById("tip").style.visibility= 'hidden';
     document.getElementById("canvas3").style.visibility = 'visible';
+    document.getElementById("orbit-A").style.visibility = 'hidden';
 
 }
 
@@ -844,9 +813,10 @@ function animatePsyche(){
 function animate() {
     // Rotate scene constantly
 
-    // camera.position.x += ( mouseX + camera.position.x ) * .05;
-     // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY ) + camera.position.y ) * .05, 100, 100 );
+     //camera.position.x += ( mouseX + camera.position.x ) * .05;
+    //camera.position.y = THREE.MathUtils.clamp( camera.position.y - ( + ( mouseY ) - camera.position.y ) * .05, 100, 100 );
 
+    // camera.position.x = camera.position.y - ( - ( mouseY ) - camera.position.Y ) * .05, 0, 0;
 
     camera.lookAt( scene.position );
     render();
@@ -866,6 +836,9 @@ function render() {
 
 addStars();
 loadSpacecraft();
+// -- models: load object model resources
+loadPsyche('A'); // load psyche in orbit A can be updated later
+
 animate();
 
 /*
