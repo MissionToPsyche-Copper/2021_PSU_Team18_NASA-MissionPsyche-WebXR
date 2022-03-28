@@ -776,10 +776,12 @@ function renderRaycaster() {
 
 function onPsycheClicked() {
     console.log("Psyche clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onSpacecraftClicked() {
     console.log("Spacecraft clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onMagnetometerClicked() {
@@ -804,6 +806,8 @@ function onMagnetometerClicked() {
         instrumentView = false;
         return;
     }
+
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onImagerClicked() {
@@ -828,6 +832,8 @@ function onImagerClicked() {
         instrumentView = false;
         return;
     }
+
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onNeutronSpectrometerClicked() {
@@ -852,6 +858,8 @@ function onNeutronSpectrometerClicked() {
         instrumentView = false;
         return;
     }
+
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onGammaRaySpectrometerClicked() {
@@ -876,6 +884,8 @@ function onGammaRaySpectrometerClicked() {
         instrumentView = false;
         return;
     }
+
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function animatePsyche(){
