@@ -723,7 +723,6 @@ function loadPsyche(filePath=string, x=int, y=int, z=int, yRotation=int) {
 function removePsyche() {
     var psyche = scene.getObjectByName( "psyche" );
     scene.remove( psyche );
-    animate();
 }
 
 // ability to interact with obj on screen
@@ -786,6 +785,7 @@ function onSpacecraftClicked() {
 
 function onMagnetometerClicked() {
     console.log("Magnetometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
@@ -806,12 +806,11 @@ function onMagnetometerClicked() {
         instrumentView = false;
         return;
     }
-
-    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onImagerClicked() {
     console.log("Imager clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
@@ -832,12 +831,11 @@ function onImagerClicked() {
         instrumentView = false;
         return;
     }
-
-    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
@@ -858,13 +856,11 @@ function onNeutronSpectrometerClicked() {
         instrumentView = false;
         return;
     }
-
-    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
-
+    document.getElementById("canvas3").style.visibility = 'visible';
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
     var y = psyche.position.y;
@@ -884,8 +880,6 @@ function onGammaRaySpectrometerClicked() {
         instrumentView = false;
         return;
     }
-
-    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function animatePsyche(){
