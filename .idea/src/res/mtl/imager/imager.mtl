@@ -20,10 +20,10 @@ d  1.500000
 illum 10
 map_d asteroid_material_Normal_OpenGL.png
 map_Ka asteroid_material_Normal.png
-map_Kd asteroid_material_Base_color.png
+map_Kd PMSI_material_BaseColor.png
 map_Kd asteroid_material_Height.png
 map_Kd asteroid_material_Mixed_AO.png
-map_Ks asteroid_material_Base_color.png
-map_Ke asteroid_material_Base_color.png
+map_Ks PMSI_material_BaseColor.png
+map_Ke PMSI_material_BaseColor.png
 disp asteroid_material_Coat_roughness.png
 map_Ns asteroid_material_Roughness.png
