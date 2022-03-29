@@ -98,6 +98,7 @@ var mesh,
 var orbit="init";
 var moveAway = true;
 var loaded=false;
+var instrumentView=false;
 
 const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 
@@ -128,7 +129,7 @@ function init() {
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.shadowMap.enabled = true;
-    
+
     // -- raycaster: intersect object models & register events based on mouse interactions
     raycaster = new THREE.Raycaster();
 
@@ -178,7 +179,10 @@ function init() {
     css2Drenderer.domElement.style.position = 'absolute';
     css2Drenderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('info').appendChild(css2Drenderer.domElement);
-    
+
+
+    // -- models: load object model resources
+    loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
     // document.getElementById("tip").style.visibility = 'hidden';
     document.getElementById("orbit-a").style.visibility = 'hidden';
     document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -399,28 +403,23 @@ function generateRandomColor()
 function addStars() {
     const textureLoader = new THREE.TextureLoader();
     const sprite1 = textureLoader.load('./res/spikey.png');
-    const radius = 220;
+    const radius = 200;
     // particles - called point sprinte or bill-board
     // create random filed of particle objects
     const geo = new THREE.BufferGeometry();
     const vertices = [];
     const sizes = [];
-    const colors = [];
-    let color;
 
     for ( let i = 0; i < 100000; i++ ) {
         vertices.push( ( ( Math.random() * 2 - 1 ) * radius )  ); // x
         vertices.push( (( Math.random() * 2 - 1 ) * radius  ) ); // y
         vertices.push( (( Math.random() * 2 - 1 ) * radius  )); // z
-        color = generateRandomColor();
-        colors.push(color);
 
         sizes.push( 20 );
     }
 
     geo.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
     geo.setAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ).setUsage( THREE.DynamicDrawUsage ) );
-    geo.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 1 ).setUsage( THREE.DynamicDrawUsage ) );
 
         var BGparticles = new THREE.Points(geo, new THREE.PointsMaterial({
             transparent: true,
@@ -430,8 +429,6 @@ function addStars() {
         BGparticles.rotation.x = Math.random() * 2;
         BGparticles.rotation.y = Math.random() * 2;
         BGparticles.rotation.z = Math.random() * 2;
-
-        particles.push(BGparticles);
 
         scene.add(BGparticles);
     }
@@ -448,7 +445,7 @@ function randomRange(min, max) {
 //         particle.position.z += mouseY * 0.00002;
 //
 //         // if particle is too close move it backwards
-//         // if(particle.position.z > 1000) particle.position.z -=2000;
+//         if(particle.position.z > 1000) particle.position.z -=2000;
 //     }
 //     particle.rotation.y += 0.000001;
 // }
@@ -612,9 +609,9 @@ function loadSpacecraftModel(material) {
             spacecraftMesh.scale.set(0.025,0.025,0.025);
             scene.add(spacecraftMesh)
             //camera.lookAt(spacecraftMesh);
-            camera.position.x = 800;
-            camera.position.y = 200;
-            camera.position.z = -120;
+            camera.position.x = -80;
+            camera.position.y = -20;
+            camera.position.z = 150;
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
@@ -629,6 +626,7 @@ function loadSpacecraftModel(material) {
 function changeOrbit(orbit = char){
     var psyche = scene.getObjectByName( "psyche" );
     var x, y, z;
+
     switch(orbit) {
         case "A":
             x = -125;
@@ -651,7 +649,17 @@ function changeOrbit(orbit = char){
             z = 0;
             break;
     }
-    psyche.position.set(x, y, z);
+    if (instrumentView==false) psyche.position.set(x, y, z);
+    else{
+        var yRotation = psyche.rotation.y;
+        if(instrumentView == true)
+        {
+            removePsyche();
+            loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+            instrumentView = false;
+            return;
+        }
+    }
 }
 
 // not working need to debug...
@@ -668,19 +676,20 @@ function beginXRSession() {
 }
 
 // Psyche object
-function loadPsyche(orbit=char) {
-
-    new MTLLoader().setPath('../src/res/Psyche/')
-        .load('Psyche_.mtl', (materials) => {
-            materials.preload()
+function loadPsyche(filePath=string, x=int, y=int, z=int, yRotation=int) {
+    new MTLLoader().load(filePath,
+            (material) => {
+            material.preload()
 
             // psyche loader
             new OBJLoader()
-                .setMaterials(materials)
+                .setMaterials(material)
                 .setPath('../src/res/Psyche/')
                 .load('Psyche_.obj', (psyche) => {
-                        psyche.position.set(-125, -25, 0);
-                        psyche.scale.setScalar(50);
+                        //psyche.position.set(-125, -25, 0);
+                        psyche.position.set(x, y, z);
+                        psyche.rotation.y = yRotation;
+                        psyche.scale.setScalar(15);
                         psyche.name = "psyche";
                         scene.add(psyche);
                     },
@@ -692,6 +701,11 @@ function loadPsyche(orbit=char) {
                     }
                 );
         })
+}
+
+function removePsyche() {
+    var psyche = scene.getObjectByName( "psyche" );
+    scene.remove( psyche );
 }
 
 // ability to interact with obj on screen
@@ -742,8 +756,6 @@ function renderRaycaster() {
 function onPsycheClicked() {
     console.log("Psyche clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
-    document.getElementById("orbit-A").style.visibility = 'hidden';
-
 }
 
 function onSpacecraftClicked() {
@@ -755,22 +767,99 @@ function onMagnetometerClicked() {
     console.log("Magnetometer clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
 
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'C' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/magnetometer/magnetometer.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'C' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onImagerClicked() {
     console.log("Imager clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'A' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/imager/imager.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'A' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
 
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'B' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'B' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'B' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'B' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function animatePsyche(){
@@ -779,29 +868,32 @@ function animatePsyche(){
         //rotation
         psyche.rotation.y -= 0.0006;
 
-        //ellipse code - commented out for the time being for further testing
-        // switch(orbit) {
-        //     case "A":
-        //         if(psyche.position.x <= -150) moveAway = false;
-        //         if(psyche.position.x >= -100) moveAway = true;
-        //         break;
-        //     case "B":
-        //         if(psyche.position.x <= -125) moveAway = false;
-        //         if(psyche.position.x >= -75) moveAway = true;
-        //         break;
-        //     case "C":
-        //         if(psyche.position.x <= -100) moveAway = false;
-        //         if(psyche.position.x >= -50) moveAway = true;
-        //         break;
-        //     case "D":
-        //         if(psyche.position.x <= -75) moveAway = false;
-        //         if(psyche.position.x >= -25) moveAway = true;
-        //         break;
-        // }
-        //
-        // if (moveAway == true) psyche.position.x -= 0.025;
-        // else psyche.position.x += 0.025;
+        /*
 
+        //ellipse code - commented out for the time being for further testing
+        switch(orbit) {
+            case "A":
+                if(psyche.position.x <= -150) moveAway = false;
+                if(psyche.position.x >= -100) moveAway = true;
+                break;
+            case "B":
+                if(psyche.position.x <= -125) moveAway = false;
+                if(psyche.position.x >= -75) moveAway = true;
+                break;
+            case "C":
+                if(psyche.position.x <= -100) moveAway = false;
+                if(psyche.position.x >= -50) moveAway = true;
+                break;
+            case "D":
+                if(psyche.position.x <= -75) moveAway = false;
+                if(psyche.position.x >= -25) moveAway = true;
+                break;
+        }
+
+        if (moveAway == true) psyche.position.x -= 0.025;
+        else psyche.position.x += 0.025;
+
+         */
     }
 }
 
@@ -813,11 +905,8 @@ function animatePsyche(){
 function animate() {
     // Rotate scene constantly
 
-     //camera.position.x += ( mouseX + camera.position.x ) * .05;
-    //camera.position.y = THREE.MathUtils.clamp( camera.position.y - ( + ( mouseY ) - camera.position.y ) * .05, 100, 100 );
-
-    // camera.position.x = camera.position.y - ( - ( mouseY ) - camera.position.Y ) * .05, 0, 0;
-
+    // camera.position.x += ( mouseX + camera.position.x ) * .05;
+     // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY ) + camera.position.y ) * .05, 100, 100 );
     camera.lookAt( scene.position );
     render();
     cssrenderer.render(scene, camera);
@@ -830,15 +919,11 @@ function animate() {
 }
 
 function render() {
-
     renderer.render(scene, camera);
 }
 
 addStars();
 loadSpacecraft();
-// -- models: load object model resources
-loadPsyche('A'); // load psyche in orbit A can be updated later
-
 animate();
 
 /*
@@ -886,12 +971,6 @@ THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
 // removes objects
 // is this still working or needed?
 // yes working, no longer needed - Odhran
-
-function removeEntity(object) {
-    var selectedObject = scene.getObjectByName(object.name);
-    scene.remove( selectedObject );
-    animate();
-}
 
     //this code used to live in changeOrbit()
     loadSpacecraft();
