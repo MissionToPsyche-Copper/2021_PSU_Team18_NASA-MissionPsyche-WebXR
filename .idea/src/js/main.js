@@ -8,32 +8,32 @@ import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0
 import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
-checkForXRSupport();
+// checkForXRSupport();
 
 // check for XR support
 // displaying enter AR if XR is supported
 // if not it will display session not supported in the web dev browser
-async function checkForXRSupport() {
-    navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
-        if (supported) {
-            console.log('xr supported.');
-            enterXRExperiencePrompt();
-        } else {
-            console.log("xr not supported.");
-            if(isUsingAndroidDevice()) {
-                window.alert("WebXR experience not supported. Try downloading the \"Google Play Services for Ar\" application on the Google Play Store, and rescanning this QR code.");
-            }
-            else if(isUsingAppleDevice()) {
-                window.alert("WebXR experience not supported. Try downloading the \"WebXR Viewer\" application on the Apple App Store, and rescanning this QR code.");
-            }
-            else {
-                window.alert("WebXR experience not supported on Desktop devices.");
-            }
-            // comment this line out if you are using on a PC.
-            window.history.back()
-        }
-    });
-}
+// async function checkForXRSupport() {
+//     navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+//         if (supported) {
+//             console.log('xr supported.');
+//             enterXRExperiencePrompt();
+//         } else {
+//             console.log("xr not supported.");
+//             if(isUsingAndroidDevice()) {
+//                 window.alert("WebXR experience not supported. Try downloading the \"Google Play Services for Ar\" application on the Google Play Store, and rescanning this QR code.");
+//             }
+//             else if(isUsingAppleDevice()) {
+//                 window.alert("WebXR experience not supported. Try downloading the \"WebXR Viewer\" application on the Apple App Store, and rescanning this QR code.");
+//             }
+//             else {
+//                 window.alert("WebXR experience not supported on Desktop devices.");
+//             }
+//             // comment this line out if you are using on a PC.
+//             window.history.back()
+//         }
+//     });
+// }
 
 function isUsingAndroidDevice() {
     var ua = navigator.userAgent.toLowerCase();
@@ -123,7 +123,7 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 0.1, 10000);
+        45, window.innerWidth / window.innerHeight, 0.1, 5000);
     camera.position.set(amount, amount, amount);
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -197,24 +197,22 @@ function init() {
             orbit = "A";
             changeOrbit(orbit);
            // document.getElementById("tip").style.visibility = 'hidden';
-            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'visible';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
-            document.getElementById("canvas3").style.visibility = 'hidden';
+            document.getElementById("canvas3").style.visibility = 'visible';
         }
 
         // css renderer testing
         // displays that psyche label in the scene
         // using this for testing
         const OrbitA = document.getElementById('orbit-a');
-        OrbitA.style.visibility = 'visible';
-        // OrbitA.textContent = 'OrbitA';
         OrbitA.style.marginTop = '-1em';
         OrbitA.style.fontSize = '10px';
         OrbitA.style.color = 'white';
         const orbitALabel = new CSS3DObject(OrbitA);
-        orbitALabel.position.set(0, 10, -400);
+        orbitALabel.position.set(-20,-50,-500);
         scene.add(orbitALabel);
     });
 
@@ -225,10 +223,10 @@ function init() {
             changeOrbit(orbit);
           //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
-            document.getElementById("orbit-b").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'visible';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
-            document.getElementById("canvas3").style.visibility = 'hidden';
+            document.getElementById("canvas3").style.visibility = 'visble';
         }
 
         const OrbitB = document.getElementById('orbit-b');
@@ -259,7 +257,7 @@ function init() {
         OrbitC.style.fontSize = '10px';
         OrbitC.style.color = 'white';
         const orbitCLabel = new CSS3DObject(OrbitC);
-        orbitCLabel.position.set(-400,10,-400);
+        orbitCLabel.position.set(-400,10,-300);
         scene.add(orbitCLabel);
     });
 
@@ -281,7 +279,7 @@ function init() {
         OrbitD.style.fontSize = '10px';
         OrbitD.style.color = 'white';
         const orbitDLabel = new CSS3DObject(OrbitD);
-        orbitDLabel.position.set(-200,-100,-200);
+        orbitDLabel.position.set(-400,10,-300);
         scene.add(orbitDLabel);
     });
 
@@ -689,7 +687,7 @@ function loadPsyche(filePath=string, x=int, y=int, z=int, yRotation=int) {
                         //psyche.position.set(-125, -25, 0);
                         psyche.position.set(x, y, z);
                         psyche.rotation.y = yRotation;
-                        psyche.scale.setScalar(15);
+                        psyche.scale.setScalar(20);
                         psyche.name = "psyche";
                         scene.add(psyche);
                     },
@@ -905,7 +903,7 @@ function animatePsyche(){
 function animate() {
     // Rotate scene constantly
 
-    // camera.position.x += ( mouseX + camera.position.x ) * .05;
+     //camera.position.x += ( mouseX + camera.position.x ) * .05;
      // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY ) + camera.position.y ) * .05, 100, 100 );
     camera.lookAt( scene.position );
     render();

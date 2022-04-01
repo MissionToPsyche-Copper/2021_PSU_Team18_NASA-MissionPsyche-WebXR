@@ -3,21 +3,21 @@
 -----------------------------
 ---------------------------*/
 body {
-    line-height: 1.1;
     overscroll-behavior: none;
     position: fixed;
     -webkit-text-size-adjust: none;
-    font-family: "Metropolis", "Raleway", serif;
+    font-family: "Raleway", "Metropolis", serif;
     display: block;
-    line-height: 1.7em;
+    line-height: 2em;
     color: #fff;
-    font-size: 16px;
-    letter-spacing: 0.02em;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-p {
-    font-color: #ffffff;
-}
+/*p {*/
+/*    font-color: #ffffff;*/
+/*}*/
 
 * {
     -webkit-box-sizing: border-box;
@@ -29,9 +29,9 @@ p {
 html, button, input, select, textarea,
 .pure-g [class *= "pure-u"] {
     /* Set your content font stack here: */
-    font-family: "Metropolis", "Raleway", serif;
+    font-family: "Raleway", "Metropolis", serif;
     font-color: #fff;
-    line-height: 1.1;
+    line-height: 1.9em;
 }
 
 .ui {
@@ -42,12 +42,13 @@ html, button, input, select, textarea,
 
 #menu {
     position: absolute;
-    top: 5vh;
+    top: 90vh;
     width: 100vw;
-    display: block;
+    display: -moz-inline-block;
     padding: 10px;
     /*box-sizing: border-box;*/
     text-align: center;
+    z-index: 1000;
 }
 
 .header {
@@ -197,14 +198,14 @@ button:hover {
 
 #canvas3 {
     position: absolute;
-    background: -moz-linear-gradient(left, rgba(0,0,0,0.55) 0%, rgba(255,255,255,0) 40%, rgba(2,2,2,1) 100%); /* FF3.6-15 */
+    background: -moz-linear-gradient(left, rgba(0,0,0,0.65) 0%, rgba(255,255,255,0) 40%, rgba(2,2,2,1) 100%); /* FF3.6-15 */
 
     background: -webkit-linear-gradient(left, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* Chrome10-25,Safari5.1-6 */
 
     background: linear-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#020202',GradientType=1 ); /* IE6-9 */
 
-    opacity: 0.85;
+    opacity: 0.80;
     visibility: hidden;
     overflow: hidden;
     /* The following styles are required for the "scroll-over" effect */
@@ -235,8 +236,6 @@ button:hover {
     visibility: hidden;
     text-transform: uppercase;
     position: absolute;
-    z-index: 1000;
-    align-content: center;
 }
 
 /* Landscape. 480x320 phones and above */
