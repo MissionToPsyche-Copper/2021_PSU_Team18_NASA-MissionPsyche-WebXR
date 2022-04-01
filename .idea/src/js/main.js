@@ -38,7 +38,10 @@ var mesh,
     // track mouse
     mouseX = 0, mouseY = 0,
     // hold particles
-    particles = [];
+    particleSystem1,
+    particleSystem2,
+    cameraAxis = true,
+    systemsHaveStarted = false;
 
 var orbit="init";
 var moveAway = true;
@@ -49,9 +52,6 @@ const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 // This pointer is used for the raycaster
 const pointer = new THREE.Vector2();
 
-// used for gtlf loading (can be removed if we do not end up using any gltf resources,
-// more or less just here for example for now.
-// let gltfLoader = new GLTFLoader().setPath('./res/gltf/cube/');
 
 init();
 
@@ -144,6 +144,13 @@ function init() {
     const tipLabel = new CSS2DObject(tip);
     // tipLabel.position.set(10, 20, -200);
     scene.add(tipLabel);
+
+    spacecraftMesh = new THREE.Mesh(geometry, material)
+    // -- tracers: add movement tracers behind spacecraft
+    particleSystem1 = [];
+    particleSystem2 = [];
+    addTracers(particleSystem1);
+    addTracers(particleSystem2);
 
     // Button listeners for the orbits
     const buttonOrbitA = document.getElementById('orbitA');
@@ -605,22 +612,22 @@ function changeOrbit(orbit = char){
     switch(orbit) {
         case "A":
             x = -125;
-            y = -25;
+            y = -10;
             z = 0;
             break;
         case "B":
             x = -100;
-            y = -25;
+            y = -10;
             z = 0;
             break;
         case "C":
             x = -75;
-            y = -25;
+            y = -10;
             z = 0;
             break;
         case "D":
             x = -50;
-            y = -25;
+            y = -10;
             z = 0;
             break;
     }
@@ -652,7 +659,7 @@ function loadPsyche(orbit=char) {
                 .setMaterials(materials)
                 .setPath('../src/res/Psyche/')
                 .load('Psyche_.obj', (psyche) => {
-                        psyche.position.set(-125, -25, 0);
+                        psyche.position.set(-125, -10, 0);
                         psyche.scale.setScalar(15);
                         psyche.name = "psyche";
                         scene.add(psyche);
@@ -743,34 +750,41 @@ function animatePsyche(){
     var psyche = scene.getObjectByName( "psyche" );
     if(psyche != null && orbit != "init") {
         //rotation
-        psyche.rotation.y -= 0.0006;
+        psyche.rotation.y += 0.0006;
+    }
+}
 
-        /*
+function updateTracers() {
+    updateSystem(particleSystem1);
+    updateSystem(particleSystem2);
+    if(systemsHaveStarted) {
+        setTimeout(() => {  updateSystem(particleSystem1); }, 3500);
+        setTimeout(() => {  updateSystem(particleSystem2); }, 1000);
+    }
+    else {
+        updateSystem(particleSystem2);
+    }
+    systemsHaveStarted = true;
+}
 
-        //ellipse code - commented out for the time being for further testing
-        switch(orbit) {
-            case "A":
-                if(psyche.position.x <= -150) moveAway = false;
-                if(psyche.position.x >= -100) moveAway = true;
-                break;
-            case "B":
-                if(psyche.position.x <= -125) moveAway = false;
-                if(psyche.position.x >= -75) moveAway = true;
-                break;
-            case "C":
-                if(psyche.position.x <= -100) moveAway = false;
-                if(psyche.position.x >= -50) moveAway = true;
-                break;
-            case "D":
-                if(psyche.position.x <= -75) moveAway = false;
-                if(psyche.position.x >= -25) moveAway = true;
-                break;
+function updateSystem(system) {
+    for (var i = 0; i < system.length; ++i) {
+        var points = system[i];
+        var material = points.material;
+        var particle = points.geometry.vertices[0];
+
+        points.position.z -= 0.005 + Math.random() * (0.0075 - 0.0025) + 0.0025;
+        points.position.x -= 0.0075;
+
+        if (points.position.z < -4 && points.position.x < 0.0075) {
+            points.position.z = 0;
+            points.position.x = 0;
+            material.size = 2;
         }
 
-        if (moveAway == true) psyche.position.x -= 0.025;
-        else psyche.position.x += 0.025;
-
-         */
+        if (material.size < 40) {
+            material.size -= 0.005;
+        }
     }
 }
 
@@ -782,8 +796,8 @@ function animatePsyche(){
 function animate() {
     // Rotate scene constantly
 
+    updateTracers();
     // camera.position.x += ( mouseX + camera.position.x ) * .05;
-     // camera.position.y = THREE.MathUtils.clamp( camera.position.y + ( - ( mouseY ) + camera.position.y ) * .05, 100, 100 );
     camera.lookAt( scene.position );
     render();
     cssrenderer.render(scene, camera);
@@ -792,6 +806,7 @@ function animate() {
     css2Drenderer.render(scene,camera);
     requestAnimationFrame(animate); // recursive call to animate function
     animatePsyche();
+    setTimeout(() => {  agitateSpacecraft(); }, 500);
     // animateStars();
 }
 
@@ -799,11 +814,47 @@ function render() {
     renderer.render(scene, camera);
 }
 
+function addTracers(system) {
+    var texture = new THREE.TextureLoader().load("./res/spikey.png");
+    let particleSystemCount = 32;
+    for (var i = 0; i < particleSystemCount; i++) {
+        var geometry = new THREE.Geometry();
+        var pMaterial = new THREE.PointsMaterial({
+            size: 1.5,
+            map: texture,
+            blending: THREE.AdditiveBlending,
+            depthTest: false,
+            sizeAttenuation: true,
+        });
+        var px = -2.1 + i / 10;
+        var py = 0.6
+        var pz = -5 - Math.random() * (5 - 1) + 1;
+
+        if (i > 8 && i < 24) {
+            pz += -1.5;
+        }
+        var particle = new THREE.Vector3(px, py, pz);
+        particle.velocity = new THREE.Vector3(0, 0, 0);
+        particle.color = new THREE.Color(0xf50c0c);
+        geometry.vertices.push(particle);
+        var points = new THREE.Points(geometry, pMaterial);
+        scene.add(points);
+        system.push(points);
+    }
+}
+
+function agitateSpacecraft() {
+        camera.position.z += 0.001;
+}
+
+function degInRad(deg) {
+    return deg * Math.PI / 180;
+}
+
 addStars();
 loadSpacecraft();
 checkForXRSupport();
 animate();
-
 /*
 
 *****THE FOLLOWING IS LEGACY CODE FROM WHEN THE SPACECRAFT ORBITED THE ASTEROID*****
