@@ -9,6 +9,62 @@ import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0
 import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
+checkForXRSupport();
+
+// check for XR support
+// displaying enter AR if XR is supported
+// if not it will display session not supported in the web dev browser
+async function checkForXRSupport() {
+    navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+        if (supported) {
+            console.log('xr supported.');
+            enterXRExperiencePrompt();
+        } else {
+            console.log("xr not supported.");
+            if(isUsingAndroidDevice()) {
+                window.alert("WebXR experience not supported. Try downloading the \"Google Play Services for Ar\" application on the Google Play Store, and rescanning this QR code.");
+            }
+            else if(isUsingAppleDevice()) {
+                window.alert("WebXR experience not supported. Try downloading the \"WebXR Viewer\" application on the Apple App Store, and rescanning this QR code.");
+            }
+            else {
+                window.alert("WebXR experience not supported on Desktop devices.");
+            }
+            // comment this line out if you are using on a PC.
+            window.history.back()
+        }
+    });
+}
+
+function isUsingAndroidDevice() {
+    var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf("android") > -1;
+}
+
+function isUsingAppleDevice() {
+    return [
+            'iPad Simulator',
+            'iPhone Simulator',
+            'iPod Simulator',
+            'iPad',
+            'iPhone',
+            'iPod'
+        ].includes(navigator.platform)
+        // iPad on iOS 13 detection
+        || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+function enterXRExperiencePrompt() {
+    // We should add additional information here about the mission, the application, etc.
+    let promptText = "This is a webXR experience based on the Psyche Asteroid Misson, 2022. To load the WebXR application, press OK. To exit, press cancel.";
+    if (confirm(promptText) == true) {
+        console.log("loading WebXR experience...");
+    } else {
+        // exit webXR experience by navigating "back" in the browser.
+        // If there are no pages in the history, this will exit the browser.
+        window.history.back();
+    }
+}
 
 
 var mesh,
@@ -46,6 +102,7 @@ var mesh,
 var orbit="init";
 var moveAway = true;
 var loaded=false;
+var instrumentView=false;
 
 const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 
@@ -130,7 +187,7 @@ function init() {
     document.getElementById('info').appendChild(css2Drenderer.domElement);
 
     // -- models: load object model resources
-    loadPsyche('A'); // load psyche in orbit A can be updated later
+    loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
     // document.getElementById("tip").style.visibility = 'hidden';
     document.getElementById("orbit-a").style.visibility = 'hidden';
     document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -589,26 +646,11 @@ function loadSpacecraftModel(material) {
     )
 }
 
-// check for XR support
-// displaying enter AR if XR is supported
-// if not it will display session not supported in the web dev browser
-async function checkForXRSupport() {
-    navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-        if (supported) {
-            var enterXrBtn = document.createElement("ar");
-            enterXrBtn.innerHTML = "ENTER AR";
-            enterXrBtn.addEventListener("click", beginXRSession);
-            document.body.appendChild(enterXrBtn);
-        } else {
-            console.log("Session not supported: ");
-        }
-    });
-}
-
 // update radius
 function changeOrbit(orbit = char){
     var psyche = scene.getObjectByName( "psyche" );
     var x, y, z;
+
     switch(orbit) {
         case "A":
             x = -125;
@@ -631,7 +673,17 @@ function changeOrbit(orbit = char){
             z = 0;
             break;
     }
-    psyche.position.set(x, y, z);
+    if (instrumentView==false) psyche.position.set(x, y, z);
+    else{
+        var yRotation = psyche.rotation.y;
+        if(instrumentView == true)
+        {
+            removePsyche();
+            loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+            instrumentView = false;
+            return;
+        }
+    }
 }
 
 // not working need to debug...
@@ -648,18 +700,20 @@ function beginXRSession() {
 }
 
 // Psyche object
-function loadPsyche(orbit=char) {
-
-    new MTLLoader().setPath('../src/res/Psyche/')
-        .load('Psyche_.mtl', (materials) => {
-            materials.preload()
+function loadPsyche(filePath=string, x=int, y=int, z=int, yRotation=int) {
+    new MTLLoader().load(filePath,
+            (material) => {
+            material.preload()
 
             // psyche loader
             new OBJLoader()
-                .setMaterials(materials)
+                .setMaterials(material)
                 .setPath('../src/res/Psyche/')
                 .load('Psyche_.obj', (psyche) => {
-                        psyche.position.set(-125, -10, 0);
+
+                        //psyche.position.set(-125, -10, 0);
+                        psyche.position.set(x, y, z);
+                        psyche.rotation.y = yRotation;
                         psyche.scale.setScalar(15);
                         psyche.name = "psyche";
                         scene.add(psyche);
@@ -672,6 +726,11 @@ function loadPsyche(orbit=char) {
                     }
                 );
         })
+}
+
+function removePsyche() {
+    var psyche = scene.getObjectByName( "psyche" );
+    scene.remove( psyche );
 }
 
 // ability to interact with obj on screen
@@ -724,26 +783,111 @@ function renderRaycaster() {
 
 function onPsycheClicked() {
     console.log("Psyche clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onSpacecraftClicked() {
     console.log("Spacecraft clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
 }
 
 function onMagnetometerClicked() {
     console.log("Magnetometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'C' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/magnetometer/magnetometer.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'C' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onImagerClicked() {
     console.log("Imager clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'A' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/imager/imager.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'A' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'B' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'B' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+    var psyche = scene.getObjectByName( "psyche" );
+    var x = psyche.position.x;
+    var y = psyche.position.y;
+    var z = psyche.position.z;
+    var yRotation = psyche.rotation.y;
+    if(orbit == 'B' && instrumentView == false)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
+        instrumentView = true;
+        return;
+    }
+    if(orbit == 'B' && instrumentView == true)
+    {
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
+    }
 }
 
 function animatePsyche(){
@@ -853,7 +997,6 @@ function degInRad(deg) {
 
 addStars();
 loadSpacecraft();
-checkForXRSupport();
 animate();
 /*
 
@@ -900,12 +1043,6 @@ THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
 // removes objects
 // is this still working or needed?
 // yes working, no longer needed - Odhran
-
-function removeEntity(object) {
-    var selectedObject = scene.getObjectByName(object.name);
-    scene.remove( selectedObject );
-    animate();
-}
 
     //this code used to live in changeOrbit()
     loadSpacecraft();

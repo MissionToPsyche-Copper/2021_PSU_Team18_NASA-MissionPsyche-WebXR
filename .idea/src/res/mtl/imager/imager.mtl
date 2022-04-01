@@ -1,0 +1,29 @@
+# Blender MTL File: '_Psyche_.blend'
+# Material Count: 1
+
+# Ka = ambient color
+# Kd = diffuse color -> base color
+# Ks = specular color
+# Ns = shininess
+# Ni = optical density
+
+newmtl Material.001
+Ns 10.000000
+Ka 0.550000 0.550000 0.550000
+Kd 0.355000 0.439000 0.525000
+Ks 0.500000 0.500000 0.500000
+Ke 0.300000 0.300000 0.350000
+Tf 1.000000 1.000000 1.000000
+sharpness 60
+Ni 1.19713
+d  1.500000
+illum 10
+map_d asteroid_material_Normal_OpenGL.png
+map_Ka asteroid_material_Normal.png
+map_Kd PMSI_material_BaseColor.png
+map_Kd asteroid_material_Height.png
+map_Kd asteroid_material_Mixed_AO.png
+map_Ks PMSI_material_BaseColor.png
+map_Ke PMSI_material_BaseColor.png
+disp asteroid_material_Coat_roughness.png
+map_Ns asteroid_material_Roughness.png
