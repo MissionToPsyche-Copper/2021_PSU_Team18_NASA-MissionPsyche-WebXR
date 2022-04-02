@@ -3,19 +3,35 @@
 -----------------------------
 ---------------------------*/
 body {
-    margin: 0;
-    line-height: 150%;
-    letter-spacing: 0;
-    font-weight: 300;
     overscroll-behavior: none;
     position: fixed;
     -webkit-text-size-adjust: none;
+    font-family: "Raleway", "Metropolis", serif;
     display: block;
+    line-height: 2em;
+    color: #fff;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
+/*p {*/
+/*    font-color: #ffffff;*/
+/*}*/
+
 * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     user-select: none;
+}
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+    /* Set your content font stack here: */
+    font-family: "Raleway", "Metropolis", serif;
+    font-color: #fff;
+    line-height: 1.9em;
 }
 
 .ui {
@@ -26,12 +42,13 @@ body {
 
 #menu {
     position: absolute;
-    top: 5vh;
+    top: 90vh;
     width: 100vw;
-    display: block;
+    display: -moz-inline-block;
     padding: 10px;
     /*box-sizing: border-box;*/
     text-align: center;
+    z-index: 1000;
 }
 
 .header {
@@ -175,21 +192,48 @@ h5.semi {
 }
 
 button:hover {
-    background-color: rgba(239,89,102, 0.8);
+    background-color: rgba(239,89,102, 0.9);
     color: white;
 }
 
-#canvas3 {
-    width: 30vw;
-    height: 20vh;
-    left: 75px;
-    position: absolute;
-    background: rgb(255,255,255,0.3);
-    overflow: hidden;
-    top: 70vh;
-    /*z-index: 1000;*/
+#OA{
     visibility: hidden;
-    padding: 3em 0 0 0;
+    overflow: hidden;
+}
+
+#OB{
+    visibility: hidden;
+    overflow: hidden;
+}
+
+#OC{
+    visibility: hidden;
+    overflow: hidden;
+}
+
+#OD{
+    visibility: hidden;
+    overflow: hidden;
+}
+
+#canvas3 {
+    position: absolute;
+    background: -moz-linear-gradient(left, rgba(0,0,0,0.65) 0%, rgba(255,255,255,0) 40%, rgba(2,2,2,1) 100%); /* FF3.6-15 */
+
+    background: -webkit-linear-gradient(left, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* Chrome10-25,Safari5.1-6 */
+
+    background: linear-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#020202',GradientType=1 ); /* IE6-9 */
+
+    opacity: 0.80;
+    visibility: visible;
+    overflow: hidden;
+    /* The following styles are required for the "scroll-over" effect */
+    width: 100%;
+    height: 50%;
+    top: 60vh;
+    padding: 20px;
+    position: fixed !important;
 }
 
 .icon {
@@ -212,8 +256,6 @@ button:hover {
     visibility: hidden;
     text-transform: uppercase;
     position: absolute;
-    z-index: 1000;
-    align-content: center;
 }
 
 /* Landscape. 480x320 phones and above */

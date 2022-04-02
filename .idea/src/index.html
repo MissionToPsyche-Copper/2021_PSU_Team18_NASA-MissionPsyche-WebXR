@@ -4,7 +4,7 @@
     <!-- META -->
     <meta charset="UTF-8">
     <meta name="description" content="WebXR">
-    <meta name="author" content="Mio">
+    <meta name="author" content="Team 18">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
 
@@ -16,10 +16,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/grids-responsive-min.css">
+
     <!---------->
     <!----CSS--->
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
 
     <link rel="stylesheet" href="./css/style.css">
 </head>
@@ -46,17 +48,6 @@
 <!-- Left Panel -->
 <!-- Mission Start Basic Info -->
 
-    <div id="tip">
-        For the first time ever, we are
-        exploring a world made not of rock or ice,
-        but of <b>metal</b>.
-
-        At the launch site the team conducts an entire re-check of the spacecraft before integrating into the launch vehicle.
-        The spacecraft launches in August of 2022.
-        Once in space, the spacecraft travels using solar-electric propulsion.
-        It arrives at the asteroid, located in the main asteroid belt between Mars and Jupiter, in early January of 2026.
-    </div>
-
 <!-- Orbit A Info -->
 <div id="info">
     <div id="orbit-a">
@@ -72,6 +63,7 @@
     <div id="orbit-b">
         <p>Orbit B: <b>Topography</b>.</p>
         <p>
+
             80 Days (169 Orbits)
         </p>
     </div>
@@ -96,12 +88,31 @@
         </p>
     </div>
 </div>
-<div id="canvas3"></div>
 
+<div class="pure-g">
+    <div id="canvas3">
+        <div id="OA">
+        <div class="pure-u-1 pure-u-1-3"> <p>56 days / 41 Orbits
+            Mission Focus: Characterization : Observe physical properties of the asteroid </p></div></div>
+        <div id="OB">
+        <div class="pure-u-1 pure-u-1-3"> <p>Next 80 days / 169 orbits
+            mission focus: Topography
+            study of the forms and features of land surfaces
+        </p></div></div>
+        <div id="OC">
+        <div class="pure-u-1 pure-u-1-3"> <p>Next 100 days / 362 orbits
+            Mission Focus: Gravity science
+            studying the strength of the gravitational field of the asteroid.
+        </p></div>
+        </div>
+<div id="OD">
+        <div class="pure-u-1 pure-u-1-3"> <p>Next 100 days / 684 orbits
+            Mission Focus: Elemental mapping
+            determining the chemical composition of the surface
+        </p></div></div>
+    </div>
+</div>
 
-
-<!-- Option 1: Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 </body>
 

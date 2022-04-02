@@ -1,6 +1,5 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.120.1/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/OrbitControls.js';
-// import { EventsControls } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/controls/EventsControls.js';
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js";
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/STLLoader.js';
 import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/loaders/OBJLoader.js';
@@ -109,7 +108,6 @@ const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 // This pointer is used for the raycaster
 const pointer = new THREE.Vector2();
 
-
 init();
 
 function init() {
@@ -138,7 +136,7 @@ function init() {
     // -- raycaster: intersect object models & register events based on mouse interactions
     raycaster = new THREE.Raycaster();
 
-    document.body.appendChild( VRButton.createButton( renderer ) );
+   // document.body.appendChild( VRButton.createButton( renderer ) );
     renderer.xr.enabled = true;
 
     // -- lighting
@@ -178,13 +176,13 @@ function init() {
     cssrenderer = new CSS3DRenderer();
     cssrenderer.setSize(window.innerWidth, window.innerHeight);
     cssrenderer.domElement.style.position = 'absolute';
-    cssrenderer.domElement.style.top = '0px';
     document.getElementById('info').appendChild(cssrenderer.domElement);
 
     css2Drenderer = new CSS2DRenderer();
     css2Drenderer.domElement.style.position = 'absolute';
     css2Drenderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('info').appendChild(css2Drenderer.domElement);
+
 
     // -- models: load object model resources
     loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
@@ -193,14 +191,6 @@ function init() {
     document.getElementById("orbit-b").style.visibility = 'hidden';
     document.getElementById("orbit-c").style.visibility = 'hidden';
     document.getElementById("orbit-d").style.visibility = 'hidden';
-    const tip = document.getElementById('tip');
-    tip.style.visibility = 'visible';
-    tip.style.marginTop = '-1em';
-    tip.style.fontSize = '12px';
-    // tip.style.color = 'white';
-    const tipLabel = new CSS2DObject(tip);
-    // tipLabel.position.set(10, 20, -200);
-    scene.add(tipLabel);
 
     spacecraftMesh = new THREE.Mesh(geometry, material)
     // -- tracers: add movement tracers behind spacecraft
@@ -215,24 +205,27 @@ function init() {
         if(orbit != "A") {
             orbit = "A";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
-            document.getElementById("orbit-a").style.visibility = 'hidden';
+           // document.getElementById("tip").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'visible';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
+            document.getElementById("canvas3").style.visibility = 'visible';
+            document.getElementById("OA").style.visibility = 'visible';
+            document.getElementById("OB").style.visibility = 'hidden';
+            document.getElementById("OC").style.visibility = 'hidden';
+            document.getElementById("OD").style.visibility = 'hidden';
         }
 
         // css renderer testing
         // displays that psyche label in the scene
         // using this for testing
         const OrbitA = document.getElementById('orbit-a');
-        OrbitA.style.visibility = 'visible';
-        // OrbitA.textContent = 'OrbitA';
         OrbitA.style.marginTop = '-1em';
         OrbitA.style.fontSize = '10px';
         OrbitA.style.color = 'white';
         const orbitALabel = new CSS3DObject(OrbitA);
-        orbitALabel.position.set(0, 10, -400);
+        orbitALabel.position.set(-20,-50,-500);
         scene.add(orbitALabel);
     });
 
@@ -241,11 +234,17 @@ function init() {
         if(orbit != "B") {
             orbit = "B";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
+          //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
-            document.getElementById("orbit-b").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'visible';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
+   
+            document.getElementById("OB").style.visibility = 'visible';
+            document.getElementById("OA").style.visibility = 'hidden';
+
+            document.getElementById("OC").style.visibility = 'hidden';
+            document.getElementById("OD").style.visibility = 'hidden';
         }
 
         const OrbitB = document.getElementById('orbit-b');
@@ -263,11 +262,17 @@ function init() {
         if(orbit != "C") {
             orbit = "C";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
+          //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'visible';
             document.getElementById("orbit-d").style.visibility = 'hidden';
+
+            document.getElementById("OC").style.visibility = 'visible';
+            document.getElementById("OA").style.visibility = 'hidden';
+            document.getElementById("OB").style.visibility = 'hidden';
+
+            document.getElementById("OD").style.visibility = 'hidden';
         }
         const OrbitC = document.getElementById('orbit-c');
         OrbitC.style.visibility = 'visible';
@@ -275,7 +280,7 @@ function init() {
         OrbitC.style.fontSize = '10px';
         OrbitC.style.color = 'white';
         const orbitCLabel = new CSS3DObject(OrbitC);
-        orbitCLabel.position.set(-400,10,-400);
+        orbitCLabel.position.set(-400,10,-300);
         scene.add(orbitCLabel);
     });
 
@@ -284,11 +289,17 @@ function init() {
         if(orbit != "D") {
             orbit = "D";
             changeOrbit(orbit);
-            document.getElementById("tip").style.visibility = 'hidden';
+          //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'visible';
+            document.getElementById("OD").style.visibility = 'visible';
+            document.getElementById("OB").style.visibility = 'hidden';
+            document.getElementById("OC").style.visibility = 'hidden';
+            document.getElementById("OA").style.visibility = 'hidden';
+
+   
         }
         const OrbitD = document.getElementById('orbit-d');
         OrbitD.style.visibility = 'visible';
@@ -296,11 +307,11 @@ function init() {
         OrbitD.style.fontSize = '10px';
         OrbitD.style.color = 'white';
         const orbitDLabel = new CSS3DObject(OrbitD);
-        orbitDLabel.position.set(-200,-100,-200);
+        orbitDLabel.position.set(-400,10,-300);
         scene.add(orbitDLabel);
     });
 
-    scene.fog = new THREE.FogExp2(0x141414, 0.002);
+    scene.fog = new THREE.FogExp2(0x141414, 0.0001);
     // window.addEventListener( 'resize', onWindowResize );
     document.addEventListener( 'mousemove', onMouseMove );
     document.addEventListener( 'pointerdown', onPointerDown );
@@ -345,14 +356,6 @@ function onMouseMove( event ) {
         const intersect = intersects[0];
         // console.log(intersect.object.name);
         // console.log(intersect.object.parent.name);
-
-        switch (intersect.object.parent.name) {
-            case "psyche":
-
-                break;
-            default:
-                break;
-        }
     }
 }
 
@@ -429,7 +432,6 @@ function addStars() {
     const radius = 200;
     // particles - called point sprinte or bill-board
     // create random filed of particle objects
-    // need more stars to fill space
     const geo = new THREE.BufferGeometry();
     const vertices = [];
     const sizes = [];
@@ -756,13 +758,10 @@ function renderRaycaster() {
                 material.emissive.setHex(Math.random() * 0xffffff);
                 material.emissive.needsUpdate = true;
                 console.log(INTERSECTED.object);
-                // INTERSECTED.rotation.x += 0.5;
-                // INTERSECTED.userData.scaleUp(INTERSECTED);
+
             }
             else{
                 INTERSECTED.currentHex = material.color;
-                // material.color.setHex(0xff0000);
-                // material.color.needsUpdate = true;
             }
             objectSelected = INTERSECTED;
         }
