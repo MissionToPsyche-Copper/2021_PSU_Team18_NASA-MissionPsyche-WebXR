@@ -196,6 +196,26 @@ button:hover {
     color: white;
 }
 
+#OA{
+    visibility: hidden;
+    overflow: hidden;
+}
+
+#OB{
+    visibility: hidden;
+    overflow: hidden;
+}
+
+#OC{
+    visibility: hidden;
+    overflow: hidden;
+}
+
+#OD{
+    visibility: hidden;
+    overflow: hidden;
+}
+
 #canvas3 {
     position: absolute;
     background: -moz-linear-gradient(left, rgba(0,0,0,0.65) 0%, rgba(255,255,255,0) 40%, rgba(2,2,2,1) 100%); /* FF3.6-15 */
@@ -206,7 +226,7 @@ button:hover {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#020202',GradientType=1 ); /* IE6-9 */
 
     opacity: 0.80;
-    visibility: hidden;
+    visibility: visible;
     overflow: hidden;
     /* The following styles are required for the "scroll-over" effect */
     width: 100%;
