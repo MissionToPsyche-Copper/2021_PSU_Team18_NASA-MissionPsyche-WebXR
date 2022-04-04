@@ -3,21 +3,14 @@
 -----------------------------
 ---------------------------*/
 body {
-    overscroll-behavior: none;
     position: fixed;
-    -webkit-text-size-adjust: none;
-    font-family: "Raleway", "Metropolis", serif;
-    display: block;
-    line-height: 2em;
+    font-family: "Metropolis", "Raleway", serif;
+    line-height: 1.1em;
     color: #fff;
     font-size: 0.9em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.2em;
 }
-
-/*p {*/
-/*    font-color: #ffffff;*/
-/*}*/
 
 * {
     -webkit-box-sizing: border-box;
@@ -26,29 +19,9 @@ body {
     user-select: none;
 }
 
-html, button, input, select, textarea,
-.pure-g [class *= "pure-u"] {
-    /* Set your content font stack here: */
-    font-family: "Raleway", "Metropolis", serif;
-    font-color: #fff;
-    line-height: 1.9em;
-}
-
 .ui {
     position: absolute;
-    top: 0;
     display:block;
-}
-
-#menu {
-    position: absolute;
-    top: 90vh;
-    width: 100vw;
-    display: -moz-inline-block;
-    padding: 10px;
-    /*box-sizing: border-box;*/
-    text-align: center;
-    z-index: 1000;
 }
 
 .header {
@@ -59,8 +32,9 @@ html, button, input, select, textarea,
 
 .header .title {
     line-height: 1.1;
-    opacity: 0.75;
+    opacity: 0.8;
     margin-right: 3px;
+    z-index: 9000;
 }
 
 .header .subtitle {
@@ -91,30 +65,12 @@ body .semi {
     font-weight: 600;
 }
 
-@media only screen and (min-width: 320px) {
-    .grid-layout .float-mid-bottom {
-        grid-column: main-start / side-end;
-        grid-row: extf-start / foot-end;
-        grid-template-columns: auto max-content;
-        grid-template-rows: auto auto auto;
-        align-self: end;
-        justify-self: center;
-        margin: 0 20px;
-        width: calc(100% - 40px);
-        display: grid;
-        justify-items: start;
-        gap: 10px 5px;
-    }
-}
-
 button {
-    color: rgba(255,255,255,0.75);
-    background: rgb(255,255,255,0.3);
+    color: rgba(0,0,0,0.9);
+    background: rgb(255,255,255,0.5);
     border: 0;
-    padding: 5px 10px;
+    padding: 10px 20px;
     text-transform: uppercase;
-    margin: 2px;
-    font-size: 15px;
     cursor: pointer;
 }
 
@@ -176,6 +132,7 @@ h5.semi {
     font-size: 14px;
     line-height: 150%;
     letter-spacing: 0;
+
     font-family: "Metropolis", sans-serif;
 }
 .x-small {
@@ -199,54 +156,54 @@ button:hover {
 #OA{
     visibility: hidden;
     overflow: hidden;
+    position: fixed !important;
 }
 
 #OB{
     visibility: hidden;
     overflow: hidden;
+    position: fixed !important;
 }
 
 #OC{
     visibility: hidden;
     overflow: hidden;
+    position: fixed !important;
 }
 
 #OD{
     visibility: hidden;
     overflow: hidden;
-}
-
-#canvas3 {
-    position: absolute;
-    background: -moz-linear-gradient(left, rgba(0,0,0,0.65) 0%, rgba(255,255,255,0) 40%, rgba(2,2,2,1) 100%); /* FF3.6-15 */
-
-    background: -webkit-linear-gradient(left, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* Chrome10-25,Safari5.1-6 */
-
-    background: linear-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#020202',GradientType=1 ); /* IE6-9 */
-
-    opacity: 0.80;
-    visibility: visible;
-    overflow: hidden;
-    /* The following styles are required for the "scroll-over" effect */
-    width: 100%;
-    height: 50%;
-    top: 60vh;
-    padding: 20px;
     position: fixed !important;
 }
 
+.gradient {
+    background: -moz-radial-gradient-gradient(left, rgba(0,0,0,0.65) 0%, rgba(255,255,255,0) 40%, rgba(2,2,2,1) 100%); /* FF3.6-15 */
+    background: -webkit-radial-gradient(left, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    height: 70vh;
+}
+.img-lg{
+    width: 20%;
+    height: 20%;
+}
+
+.img {
+    width: 30%;
+    height: 30%;
+}
 .icon {
     display: inline-block;
+    z-index: 5000; /* so the menu or its navicon stays above all content */
     background-repeat: no-repeat;
     background-image: url("/src/res/Psyche_Icon_BW-SVG.svg");
     width: 40px;
-    height: 40px;
+    height: 45px;
     user-select: none;
     margin-right: 15px;
     margin-left: 10px;
     margin-top: 10px;
-    opacity: 0.5;
+    opacity: 0.8;
 }
 .filter-white{
     filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(3deg) brightness(100%) contrast(104%);
@@ -258,19 +215,13 @@ button:hover {
     position: absolute;
 }
 
-/* Landscape. 480x320 phones and above */
-@media only screen and (min-width: 320px) and (orientation: landscape),
-    /* Portrait. Portrait tablets/iPad and above */
-only screen and (min-width: 641px) and (orientation: portrait) {
-    .simple-grid {
-        gap: 4px 4px;
-        padding: 0 20px;
-    }
+.header {
+    text-align: center;
+    padding: 2.5em 2em 0;
+    z-index: 9000;
 }
-/* Exclude panorama. Big landscape tablets, laptops/desktops, and above */
-@media only screen and (min-width: 1025px) and (min-height: 600px) {
-    .simple-grid {
-        gap: 20px 24px;
-        padding: 0 20px;
-    }
+
+#menu {
+    position: fixed;
+    left: 75vw;
 }

@@ -8,7 +8,7 @@ import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0
 import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
-checkForXRSupport();
+// checkForXRSupport();
 
 // check for XR support
 // displaying enter AR if XR is supported
@@ -126,7 +126,7 @@ function init() {
     // Far Clipping Plane: plane furtherst from camera - current val is max - anything bigger and nothing will be rendered
     // setting far clipping to be =< near clipping then nothing will be rendered
     camera = new THREE.PerspectiveCamera(
-        45, window.innerWidth / window.innerHeight, 0.1, 10000);
+        60, window.innerWidth / window.innerHeight, 1, 5000);
     camera.position.set(amount, amount, amount);
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
@@ -186,12 +186,7 @@ function init() {
 
     // -- models: load object model resources
     loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
-    // document.getElementById("tip").style.visibility = 'hidden';
-    document.getElementById("orbit-a").style.visibility = 'hidden';
-    document.getElementById("orbit-b").style.visibility = 'hidden';
-    document.getElementById("orbit-c").style.visibility = 'hidden';
-    document.getElementById("orbit-d").style.visibility = 'hidden';
-
+    
     spacecraftMesh = new THREE.Mesh(geometry, material)
     // -- tracers: add movement tracers behind spacecraft
     particleSystem1 = [];
@@ -289,7 +284,7 @@ function init() {
         if(orbit != "D") {
             orbit = "D";
             changeOrbit(orbit);
-          //  document.getElementById("tip").style.visibility = 'hidden';
+    
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
@@ -312,7 +307,6 @@ function init() {
     });
 
     scene.fog = new THREE.FogExp2(0x141414, 0.0001);
-    // window.addEventListener( 'resize', onWindowResize );
     document.addEventListener( 'mousemove', onMouseMove );
     document.addEventListener( 'pointerdown', onPointerDown );
 
@@ -345,17 +339,12 @@ function onMouseMove( event ) {
     event.preventDefault();
     pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
     // console.log("Mouse position: ", pointer.x, pointer.y)
-
     raycaster.setFromCamera( pointer, camera );
-
+    
     const intersects = raycaster.intersectObjects( scene.children, true );
-
     if ( intersects.length > 0 ) {
         const intersect = intersects[0];
-        // console.log(intersect.object.name);
-        // console.log(intersect.object.parent.name);
     }
 }
 
@@ -365,14 +354,11 @@ function onPointerDown(event) {
         ( event.clientY / window.innerHeight ) * 2 + 1 );
 
     raycaster.setFromCamera( pointer, camera );
-
     const intersects = raycaster.intersectObjects( scene.children, true );
 
     if ( intersects.length > 0 ) {
         const intersect = intersects[ 0 ];
-        // console.log(intersect.object.name);
-        // console.log(intersect.object.parent.name);
-
+        
         switch(intersect.object.parent.name) {
             case "gammaRaySpectrometer":
                 onGammaRaySpectrometerClicked();
@@ -463,18 +449,6 @@ function addStars() {
 function randomRange(min, max) {
     return Math.floor(Math.random() * (max-min + 1) + min);
 }
-
-// function animateStars() {
-//     for(var i = 0; i < particles.length; i++) {
-//         var particle = particles[i];
-//         // move particle forward based on mouse y position
-//         particle.position.z += mouseY * 0.00002;
-//
-//         // if particle is too close move it backwards
-//         if(particle.position.z > 1000) particle.position.z -=2000;
-//     }
-//     particle.rotation.y += 0.000001;
-// }
 
 function loadSpacecraft() {
     var spacecraftMaterial = loadModelMaterial(0x8c8c8c);
@@ -634,10 +608,10 @@ function loadSpacecraftModel(material) {
             //todo: fix camera zoom to be closer on load.
             spacecraftMesh.scale.set(0.025,0.025,0.025);
             scene.add(spacecraftMesh)
-            //camera.lookAt(spacecraftMesh);
+            // camera.lookAt(spacecraftMesh);
             camera.position.x = -80;
             camera.position.y = -20;
-            camera.position.z = 150;
+            camera.position.z = 50;
         },
         (xhr) => {
             console.log(`${( xhr.loaded / xhr.total ) * 100}% loaded`);
@@ -712,11 +686,10 @@ function loadPsyche(filePath=string, x=int, y=int, z=int, yRotation=int) {
                 .setMaterials(material)
                 .setPath('../src/res/Psyche/')
                 .load('Psyche_.obj', (psyche) => {
-
                         //psyche.position.set(-125, -10, 0);
                         psyche.position.set(x, y, z);
                         psyche.rotation.y = yRotation;
-                        psyche.scale.setScalar(15);
+                        psyche.scale.setScalar(25);
                         psyche.name = "psyche";
                         scene.add(psyche);
                     },
@@ -782,7 +755,7 @@ function renderRaycaster() {
 
 function onPsycheClicked() {
     console.log("Psyche clicked");
-    document.getElementById("canvas3").style.visibility = 'visible';
+    
 }
 
 function onSpacecraftClicked() {
@@ -819,7 +792,7 @@ function onImagerClicked() {
     console.log("Imager clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
 
-    var psyche = scene.getObjectByName( "psyche" );
+    var psyche = scene.getObjectByName( "psyche");
     var x = psyche.position.x;
     var y = psyche.position.y;
     var z = psyche.position.z;
@@ -867,7 +840,7 @@ function onNeutronSpectrometerClicked() {
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
-    document.getElementById("canvas3").style.visibility = 'visible';
+    
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
     var y = psyche.position.y;
@@ -941,7 +914,7 @@ function animate() {
 
     updateTracers();
     // camera.position.x += ( mouseX + camera.position.x ) * .05;
-    camera.lookAt( scene.position );
+    // camera.lookAt( scene.position );
     render();
     cssrenderer.render(scene, camera);
     renderRaycaster();
