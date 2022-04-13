@@ -79,16 +79,12 @@ var mesh,
     lineGeometry,
     material,
     line,
-    gtlfLoader,
     spacecraftMesh,
-    gammaRaySpectrometerMesh,
     neutronSpectrometerMesh,
     magnetometerMesh,
-    envTexture,
     raycaster,
     // raycaster "object intersected"
     INTERSECTED,
-    previousObjectSelected = "",
     objectSelected,
     // track mouse
     mouseX = 0, mouseY = 0,
@@ -96,12 +92,13 @@ var mesh,
     particleSystem1,
     particleSystem2,
     cameraAxis = true,
-    systemsHaveStarted = false;
+    systemsHaveStarted = false,
+    buttonOrbitA, buttonOrbitB, buttonOrbitC, buttonOrbitD;
 
 var orbit="init";
 var moveAway = true;
 var loaded=false;
-var instrumentView=false;
+var instrumentView = false;
 
 const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 
@@ -195,7 +192,7 @@ function init() {
     addTracers(particleSystem2);
 
     // Button listeners for the orbits
-    const buttonOrbitA = document.getElementById('orbitA');
+    buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
         if(orbit != "A") {
             orbit = "A";
@@ -224,7 +221,7 @@ function init() {
         scene.add(orbitALabel);
     });
 
-    const buttonOrbitB = document.getElementById('orbitB');
+    buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
         if(orbit != "B") {
             orbit = "B";
@@ -252,7 +249,7 @@ function init() {
         scene.add(orbitBLabel);
     });
 
-    const buttonOrbitC = document.getElementById('orbitC');
+    buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
         if(orbit != "C") {
             orbit = "C";
@@ -279,7 +276,7 @@ function init() {
         scene.add(orbitCLabel);
     });
 
-    const buttonOrbitD = document.getElementById('orbitD');
+    buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
         if(orbit != "D") {
             orbit = "D";
@@ -766,7 +763,7 @@ function onSpacecraftClicked() {
 function onMagnetometerClicked() {
     console.log("Magnetometer clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
-
+    buttonOrbitC.click();
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
     var y = psyche.position.y;
@@ -791,7 +788,7 @@ function onMagnetometerClicked() {
 function onImagerClicked() {
     console.log("Imager clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
-
+    buttonOrbitA.click();
     var psyche = scene.getObjectByName( "psyche");
     var x = psyche.position.x;
     var y = psyche.position.y;
@@ -816,7 +813,7 @@ function onImagerClicked() {
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
-
+    buttonOrbitD.click();
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
     var y = psyche.position.y;
@@ -840,7 +837,7 @@ function onNeutronSpectrometerClicked() {
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
-    
+    buttonOrbitB.click();
     var psyche = scene.getObjectByName( "psyche" );
     var x = psyche.position.x;
     var y = psyche.position.y;
