@@ -183,8 +183,12 @@ function init() {
 
     // -- models: load object model resources
     loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
-    
-    spacecraftMesh = new THREE.Mesh(geometry, material)
+
+    // -- HEY TAREN
+    // -- whatever x, y, z coords for now just so I can see it
+    loadSpacecraftTexturedModel('../src/res/mtl/spacecraft/spacecraftwithframe.mtl', 0, 0, 0, 100);
+
+    spacecraftMesh = new THREE.Mesh(geometry, material);
     // -- tracers: add movement tracers behind spacecraft
     particleSystem1 = [];
     particleSystem2 = [];
@@ -619,6 +623,36 @@ function loadSpacecraftModel(material) {
     )
 }
 
+// -- HEY TAREN!
+// loads the mtl file, along with the obj file
+function loadSpacecraftTexturedModel(filePath=string, x=int, y=int, z=int, yRotation=int) {
+    new MTLLoader().load(filePath,
+        (material) => {
+            material.preload()
+
+            // spacecraftwithframe loader
+            new OBJLoader()
+                .setMaterials(material)
+                .setPath('../src/res/')
+                .load('spacecraftwithframe.obj', (craft) => {
+                        craft.position.set(x, y, z);
+                        craft.scale.set(0.025,0.025,0.025);
+                        craft.name = "craft";
+                        scene.add(craft);
+                        camera.position.x = -80;
+                        camera.position.y = -20;
+                        camera.position.z = 50;
+                    },
+                    function(xhr) {
+                        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                    },
+                    function(error) {
+                        console.log('An error occurred');
+                    }
+                );
+        })
+}
+
 // update radius
 function changeOrbit(orbit = char){
     var psyche = scene.getObjectByName( "psyche" );
@@ -965,7 +999,7 @@ function degInRad(deg) {
 }
 
 addStars();
-loadSpacecraft();
+//loadSpacecraft();  // HEY TAREN!
 animate();
 /*
 
