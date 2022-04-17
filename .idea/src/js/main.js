@@ -95,7 +95,8 @@ var mesh,
     systemsHaveStarted = false,
     buttonOrbitA, buttonOrbitB, buttonOrbitC, buttonOrbitD;
 
-var orbit="init";
+var orbit="init",
+    tempOrbit="init";
 var moveAway = true;
 var loaded=false;
 var instrumentView = false;
@@ -200,9 +201,10 @@ function init() {
     buttonOrbitA.addEventListener('click', function(){
         //this is commented out to allow multiple presses on a single orbit
         //if(orbit != "A") {
+            tempOrbit = orbit;
             orbit = "A";
             changeOrbit(orbit);
-            changeTexture('../src/res/mtl/imager/imager.mtl');
+            if(tempOrbit==orbit) changeTexture('../src/res/mtl/imager/imager.mtl');
            // document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'visible';
             document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -231,9 +233,10 @@ function init() {
     buttonOrbitB.addEventListener('click', function(){
         //this is commented out to allow multiple presses on a single orbit
         //if(orbit != "B") {
+            tempOrbit = orbit;
             orbit = "B";
             changeOrbit(orbit);
-            changeTexture('../src/res/mtl/grns/grns.mtl');
+            if(tempOrbit==orbit) changeTexture('../src/res/mtl/grns/grns.mtl');
           //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'visible';
@@ -261,9 +264,10 @@ function init() {
     buttonOrbitC.addEventListener('click', function(){
         //this is commented out to allow multiple presses on a single orbit
         //if(orbit != "C") {
+            tempOrbit = orbit;
             orbit = "C";
             changeOrbit(orbit);
-            changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+            if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
 
             //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
@@ -291,6 +295,7 @@ function init() {
     buttonOrbitD.addEventListener('click', function(){
         //this is commented out to allow multiple presses on a single orbit
         //if(orbit != "D") {
+            tempOrbit = orbit;
             orbit = "D";
             changeOrbit(orbit);
 
@@ -835,19 +840,6 @@ function changeTexture(instrumentFilePath = string){
 
     if(instrumentView==false)
     {
-        switch(orbit){
-            case "A":
-                instrumentFilePath = '../src/res/mtl/imager/imager.mtl';
-                break;
-            case "B":
-                instrumentFilePath = '../src/res/mtl/grns/grns.mtl';
-                break;
-            case "C":
-                instrumentFilePath = '../src/res/mtl/magnetometer/magnetometer.mtl'
-                break;
-            default:
-                break;
-        }
         instrumentView = true;
     }
     else
