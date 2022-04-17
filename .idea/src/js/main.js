@@ -198,9 +198,11 @@ function init() {
     // Button listeners for the orbits
     buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
-        if(orbit != "A") {
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "A") {
             orbit = "A";
             changeOrbit(orbit);
+            changeTexture('../src/res/mtl/imager/imager.mtl');
            // document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'visible';
             document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -211,7 +213,7 @@ function init() {
             document.getElementById("OB").style.visibility = 'hidden';
             document.getElementById("OC").style.visibility = 'hidden';
             document.getElementById("OD").style.visibility = 'hidden';
-        }
+        //}
 
         // css renderer testing
         // displays that psyche label in the scene
@@ -227,9 +229,11 @@ function init() {
 
     buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
-        if(orbit != "B") {
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "B") {
             orbit = "B";
             changeOrbit(orbit);
+            changeTexture('../src/res/mtl/grns/grns.mtl');
           //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'visible';
@@ -241,7 +245,7 @@ function init() {
 
             document.getElementById("OC").style.visibility = 'hidden';
             document.getElementById("OD").style.visibility = 'hidden';
-        }
+        //}
 
         const OrbitB = document.getElementById('orbit-b');
         OrbitB.style.visibility = 'visible';
@@ -255,10 +259,13 @@ function init() {
 
     buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
-        if(orbit != "C") {
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "C") {
             orbit = "C";
             changeOrbit(orbit);
-          //  document.getElementById("tip").style.visibility = 'hidden';
+            changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+
+            //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'visible';
@@ -269,7 +276,7 @@ function init() {
             document.getElementById("OB").style.visibility = 'hidden';
 
             document.getElementById("OD").style.visibility = 'hidden';
-        }
+        //}
         const OrbitC = document.getElementById('orbit-c');
         OrbitC.style.visibility = 'visible';
         OrbitC.style.marginTop = '-1em';
@@ -282,10 +289,11 @@ function init() {
 
     buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
-        if(orbit != "D") {
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "D") {
             orbit = "D";
             changeOrbit(orbit);
-    
+
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
@@ -296,7 +304,7 @@ function init() {
             document.getElementById("OA").style.visibility = 'hidden';
 
    
-        }
+        //}
         const OrbitD = document.getElementById('orbit-d');
         OrbitD.style.visibility = 'visible';
         OrbitD.style.marginTop = '-1em';
@@ -684,13 +692,10 @@ function changeOrbit(orbit = char){
     if (instrumentView==false) psyche.position.set(x, y, z);
     else{
         var yRotation = psyche.rotation.y;
-        if(instrumentView == true)
-        {
-            removePsyche();
-            loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
-            instrumentView = false;
-            return;
-        }
+        removePsyche();
+        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentView = false;
+        return;
     }
 }
 
@@ -787,7 +792,6 @@ function renderRaycaster() {
 
 function onPsycheClicked() {
     console.log("Psyche clicked");
-    
 }
 
 function onSpacecraftClicked() {
@@ -795,103 +799,65 @@ function onSpacecraftClicked() {
     document.getElementById("canvas3").style.visibility = 'visible';
 }
 
-function onMagnetometerClicked() {
-    console.log("Magnetometer clicked");
-    document.getElementById("canvas3").style.visibility = 'visible';
-    buttonOrbitC.click();
-    var psyche = scene.getObjectByName( "psyche" );
-    var x = psyche.position.x;
-    var y = psyche.position.y;
-    var z = psyche.position.z;
-    var yRotation = psyche.rotation.y;
-    if(orbit == 'C' && instrumentView == false)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/magnetometer/magnetometer.mtl',x,y,z,yRotation);
-        instrumentView = true;
-        return;
-    }
-    if(orbit == 'C' && instrumentView == true)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
-        instrumentView = false;
-        return;
-    }
-}
-
 function onImagerClicked() {
     console.log("Imager clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
     buttonOrbitA.click();
-    var psyche = scene.getObjectByName( "psyche");
-    var x = psyche.position.x;
-    var y = psyche.position.y;
-    var z = psyche.position.z;
-    var yRotation = psyche.rotation.y;
-    if(orbit == 'A' && instrumentView == false)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/imager/imager.mtl',x,y,z,yRotation);
-        instrumentView = true;
-        return;
-    }
-    if(orbit == 'A' && instrumentView == true)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
-        instrumentView = false;
-        return;
-    }
+    if(orbit == 'A') changeTexture('../src/res/mtl/imager/imager.mtl');
 }
 
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
-    buttonOrbitD.click();
-    var psyche = scene.getObjectByName( "psyche" );
-    var x = psyche.position.x;
-    var y = psyche.position.y;
-    var z = psyche.position.z;
-    var yRotation = psyche.rotation.y;
-    if(orbit == 'B' && instrumentView == false)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
-        instrumentView = true;
-        return;
-    }
-    if(orbit == 'B' && instrumentView == true)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
-        instrumentView = false;
-        return;
-    }
+    buttonOrbitB.click();
+    if(orbit == 'B') changeTexture('../src/res/mtl/grns/grns.mtl');
 }
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
     buttonOrbitB.click();
-    var psyche = scene.getObjectByName( "psyche" );
+    if(orbit == 'B') changeTexture('../src/res/mtl/grns/grns.mtl');
+}
+
+function onMagnetometerClicked() {
+    console.log("Magnetometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+    buttonOrbitC.click();
+    if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+}
+
+function changeTexture(instrumentFilePath = string){
+    var psyche = scene.getObjectByName( "psyche");
     var x = psyche.position.x;
     var y = psyche.position.y;
     var z = psyche.position.z;
     var yRotation = psyche.rotation.y;
-    if(orbit == 'B' && instrumentView == false)
+
+    if(instrumentView==false)
     {
-        removePsyche();
-        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
+        switch(orbit){
+            case "A":
+                instrumentFilePath = '../src/res/mtl/imager/imager.mtl';
+                break;
+            case "B":
+                instrumentFilePath = '../src/res/mtl/grns/grns.mtl';
+                break;
+            case "C":
+                instrumentFilePath = '../src/res/mtl/magnetometer/magnetometer.mtl'
+                break;
+            default:
+                break;
+        }
         instrumentView = true;
-        return;
     }
-    if(orbit == 'B' && instrumentView == true)
+    else
     {
-        removePsyche();
-        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentFilePath = '../src/res/mtl/base psyche/Psyche_.mtl';
         instrumentView = false;
-        return;
     }
+    removePsyche();
+    loadPsyche(instrumentFilePath,x,y,z,yRotation);
+    return;
 }
 
 function animatePsyche(){
