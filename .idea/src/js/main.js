@@ -963,7 +963,7 @@ function render() {
 }
 
 function addTracers(system) {
-    var texture = new THREE.TextureLoader().load("./res/spikey.png");
+    var texture = new THREE.TextureLoader().load("./res/smoketexture.png");
     let particleSystemCount = 32;
     for (var i = 0; i < particleSystemCount; i++) {
         var geometry = new THREE.Geometry();
