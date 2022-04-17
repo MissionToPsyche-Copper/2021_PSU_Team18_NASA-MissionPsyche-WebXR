@@ -1,0 +1,21 @@
+# Blender MTL File: 'spacecraftwithframe.blend'
+# Material Count: 2
+
+# Ka = ambient color
+# Kd = diffuse color -> base color
+# Ks = specular color
+# Ns = shininess
+# Ni = optical density
+
+newmtl base
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1 1 1
+Ks 1 1 1
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+map_Kd base_Base_color.png
+map_Ka base_Metallic.png
