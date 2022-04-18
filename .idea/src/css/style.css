@@ -7,7 +7,7 @@ body {
     font-family: "Metropolis", "Raleway", serif;
     line-height: 1.1em;
     color: #fff;
-    font-size: 0.9em;
+    /*font-size: 0.9em;*/
     text-transform: uppercase;
     letter-spacing: 0.2em;
 }
@@ -66,28 +66,20 @@ body .semi {
 }
 
 button {
+    /* 245R 125G 50B*/
+    /*250R 160G 0B*/
     color: rgba(0,0,0,0.9);
-    background: rgb(255,255,255,0.5);
+    background: rgb(250,160,0,0.6);
     border: 0;
+    font-weight: 300;
+    font-size: 14px;
+    font-family: "Metropolis", sans-serif;
     padding: 10px 20px;
     text-transform: uppercase;
     cursor: pointer;
-}
-
-ar {
-    position: absolute;
-    bottom: 20px;
-    padding: 5px 10px;
-    font-size: 13px;
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.1);
-    color: rgb(255, 255, 255);
-    text-align: center;
-    opacity: 0.5;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
     z-index: 999;
-    left: calc(50% - 75px);
-    width: 100px;
 }
 
 h1 {
@@ -99,27 +91,33 @@ h2 {
     font-size: 36px;
     line-height: 120%;
     font-weight: 100;
+    color: #a53f5b;
 }
 h3 {
     font-size: 29px;
     line-height: 95%;
     font-weight: 300;
+    color: #ef5966;
 }
 h3.semi {
     line-height: 100%;
+    color: #592651;
 }
 h4 {
     font-size: 22px;
     line-height: 120%;
     font-weight: 300;
+    color: #a53f5b;
 }
 h5 {
     font-size: 18px;
     line-height: 180%;
     font-weight: 300;
+    color: #ef5966;
 }
 h5.semi {
     line-height: 150%;
+    color: #f9a000;
 }
 
 .hidden {
@@ -132,7 +130,6 @@ h5.semi {
     font-size: 14px;
     line-height: 150%;
     letter-spacing: 0;
-
     font-family: "Metropolis", sans-serif;
 }
 .x-small {
@@ -148,6 +145,12 @@ h5.semi {
     font-family: "Metropolis", sans-serif;
 }
 
+.panel-tiny {
+    font-size: 10px;
+    line-height: 140%;
+    font-family: "Metropolis", sans-serif;
+}
+
 button:hover {
     background-color: rgba(239,89,102, 0.9);
     color: white;
@@ -157,31 +160,41 @@ button:hover {
     visibility: hidden;
     overflow: hidden;
     position: fixed !important;
+    height: 90vh;
 }
 
 #OB{
     visibility: hidden;
     overflow: hidden;
     position: fixed !important;
+    height: 90vh;
 }
 
 #OC{
     visibility: hidden;
     overflow: hidden;
     position: fixed !important;
+    height: 90vh;
 }
 
 #OD{
     visibility: hidden;
     overflow: hidden;
     position: fixed !important;
+    height: 90vh;
+}
+
+.darkpurple-blk_gradient {
+    background: rgb(48,33,68);
+    background: linear-gradient(0deg, rgba(48,33,68,1) 0%, rgba(18,3,29,0.7054054054054054) 100%);
+    height: 90vh;
 }
 
 .gradient {
     background: -moz-radial-gradient-gradient(left, rgba(0,0,0,0.65) 0%, rgba(255,255,255,0) 40%, rgba(2,2,2,1) 100%); /* FF3.6-15 */
     background: -webkit-radial-gradient(left, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* Chrome10-25,Safari5.1-6 */
     background: radial-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(255,255,255,0) 48%,rgba(2,2,2,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    height: 70vh;
+    height: 80vh;
 }
 .img-lg{
     width: 20%;
@@ -223,5 +236,5 @@ button:hover {
 
 #menu {
     position: fixed;
-    left: 75vw;
+    left: 70vw;
 }
