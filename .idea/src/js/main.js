@@ -760,7 +760,7 @@ function renderRaycaster() {
             material = INTERSECTED.material;
             if(material.emissive){
                 INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-                material.emissive.setHex(Math.random() * 0xffffff);
+                // material.emissive.setHex(Math.random() * 0xffffff);
                 material.emissive.needsUpdate = true;
                 console.log(INTERSECTED.object);
 
@@ -804,6 +804,18 @@ function onMagnetometerClicked() {
     var y = psyche.position.y;
     var z = psyche.position.z;
     var yRotation = psyche.rotation.y;
+    
+    buttonMag = document.getElementById("magnetometer");
+    buttonMag.addEventListener('click', function() {
+        if(orbit == 'C' && instrumentView == false)
+        {
+            removePsyche();
+            loadPsyche('../src/res/mtl/magnetometer/magnetometer.mtl',x,y,z,yRotation);
+            instrumentView = true;
+            return;
+        }
+    })
+    
     if(orbit == 'C' && instrumentView == false)
     {
         removePsyche();

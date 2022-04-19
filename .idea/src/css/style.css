@@ -94,7 +94,7 @@ h2 {
     color: #a53f5b;
 }
 h3 {
-    font-size: 29px;
+    font-size: 24px;
     line-height: 95%;
     font-weight: 300;
     color: #ef5966;
@@ -151,6 +151,11 @@ h5.semi {
     font-family: "Metropolis", sans-serif;
 }
 
+.card-tiny {
+    font-family: "Metropolis", sans-serif;
+    font-color: #ffffff;
+}
+
 button:hover {
     background-color: rgba(239,89,102, 0.9);
     color: white;
@@ -158,36 +163,37 @@ button:hover {
 
 #OA{
     visibility: hidden;
-    overflow: hidden;
+    overflow: scroll;
     position: fixed !important;
-    height: 90vh;
+    height: 70vh;
 }
 
 #OB{
     visibility: hidden;
-    overflow: hidden;
+    overflow: scroll;
     position: fixed !important;
-    height: 90vh;
+    height: 70vh;
 }
 
 #OC{
     visibility: hidden;
-    overflow: hidden;
+    overflow: scroll;
     position: fixed !important;
-    height: 90vh;
+    height: 70vh;
 }
 
 #OD{
     visibility: hidden;
-    overflow: hidden;
+    overflow: scroll;
     position: fixed !important;
-    height: 90vh;
+    height: 70vh;
 }
 
 .darkpurple-blk_gradient {
     background: rgb(48,33,68);
     background: linear-gradient(0deg, rgba(48,33,68,1) 0%, rgba(18,3,29,0.7054054054054054) 100%);
-    height: 90vh;
+    height: 85vh;
+    z-index: 9000;
 }
 
 .gradient {
@@ -197,17 +203,16 @@ button:hover {
     height: 80vh;
 }
 .img-lg{
-    width: 20%;
-    height: 20%;
+    width: 10%;
+    height: 10%;
 }
 
 .img {
-    width: 30%;
-    height: 30%;
+    width: 20%;
+    height: 20%;
 }
 .icon {
     display: inline-block;
-    z-index: 5000; /* so the menu or its navicon stays above all content */
     background-repeat: no-repeat;
     background-image: url("/src/res/Psyche_Icon_BW-SVG.svg");
     width: 40px;
@@ -236,5 +241,79 @@ button:hover {
 
 #menu {
     position: fixed;
-    left: 70vw;
+    left: 60vw;
+}
+
+@media screen and (orientation:landscape) and
+(min-device-width: 320px) and (max-device-width: 450px) {
+    /* Input Styles */
+    .img-lg{
+        width: 10%;
+        height: 10%;
+    }
+
+    .img {
+        width: 15%;
+        height: 15%;
+    }
+
+    .semi {
+        font-weight: 600;
+    }
+
+    button {
+        /* 245R 125G 50B*/
+        /*250R 160G 0B*/
+        color: rgba(0,0,0,0.9);
+        background: rgb(250,160,0,0.6);
+        border: 0;
+        font-weight: 300;
+        font-size: 14px;
+        font-family: "Metropolis", sans-serif;
+        padding: 10px 20px;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 10px;
+        letter-spacing: 0.05em;
+        z-index: 800;
+    }
+
+    h1 {
+        font-size: 36px;
+        line-height: 80%;
+        font-weight: 100;
+    }
+    h2 {
+        font-size: 24px;
+        line-height: 80%;
+        font-weight: 100;
+        color: #a53f5b;
+    }
+    h3 {
+        font-size: 22px;
+        line-height: 95%;
+        font-weight: 300;
+        color: #ef5966;
+    }
+    h3.semi {
+        line-height: 95%;
+        color: #592651;
+    }
+    h4 {
+        font-size: 18px;
+        line-height: 100%;
+        font-weight: 300;
+        color: #a53f5b;
+    }
+    h5 {
+        font-size: 16px;
+        line-height: 150%;
+        font-weight: 300;
+        color: #ef5966;
+    }
+    h5.semi {
+        line-height: 150%;
+        color: #f9a000;
+    }
+
 }
