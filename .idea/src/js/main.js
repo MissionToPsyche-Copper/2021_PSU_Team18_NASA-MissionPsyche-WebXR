@@ -187,7 +187,7 @@ function init() {
 
     // -- HEY TAREN
     // -- whatever x, y, z coords for now just so I can see it
-    loadSpacecraftTexturedModel('../src/res/mtl/spacecraft/spacecraftwithframe.mtl', 0, 0, 0, 100);
+    loadSpacecraftTexturedModel('../src/res/mtl/spacecraft/spacecraftwithframe.mtl', -4, 0, 0, Math.PI/2);
 
     spacecraftMesh = new THREE.Mesh(geometry, material)
     // -- tracers: add movement tracers behind spacecraft
@@ -467,7 +467,9 @@ function randomRange(min, max) {
 function loadSpacecraft() {
     var spacecraftMaterial = loadModelMaterial(0x8c8c8c);
     loadSpacecraftModel(spacecraftMaterial);
+}
 
+function loadInstruments() {
     var neutronSpectrometerMaterial = loadModelMaterial(0xFFFFFF);
     loadNeutronSpectrometer(neutronSpectrometerMaterial);
 
@@ -652,6 +654,7 @@ function loadSpacecraftTexturedModel(filePath=string, x=int, y=int, z=int, yRota
                         craft.position.set(x, y, z);
                         craft.scale.set(0.025,0.025,0.025);
                         craft.name = "craft";
+                        craft.rotation.y = yRotation;
                         scene.add(craft);
                         camera.position.x = -80;
                         camera.position.y = -20;
@@ -772,7 +775,7 @@ function renderRaycaster() {
             material = INTERSECTED.material;
             if(material.emissive){
                 INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-                material.emissive.setHex(Math.random() * 0xffffff);
+                // material.emissive.setHex(Math.random() * 0xffffff);
                 material.emissive.needsUpdate = true;
                 console.log(INTERSECTED.object);
 
@@ -957,7 +960,8 @@ function degInRad(deg) {
 }
 
 addStars();
-//loadSpacecraft();
+// loadSpacecraft();
+loadInstruments();
 animate();
 /*
 
