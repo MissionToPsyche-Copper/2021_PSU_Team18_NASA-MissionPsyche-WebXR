@@ -95,7 +95,8 @@ var mesh,
     systemsHaveStarted = false,
     buttonOrbitA, buttonOrbitB, buttonOrbitC, buttonOrbitD;
 
-var orbit="init";
+var orbit="init",
+    tempOrbit="init";
 var moveAway = true;
 var loaded=false;
 var instrumentView = false;
@@ -186,7 +187,7 @@ function init() {
 
     // -- HEY TAREN
     // -- whatever x, y, z coords for now just so I can see it
-    loadSpacecraftTexturedModel('../src/res/mtl/spacecraft/spacecraftwithframe.mtl', 0, 0, 0, 100);
+    loadSpacecraftTexturedModel('../src/res/mtl/spacecraft/spacecraftwithframe.mtl', -4, 0, 0, Math.PI/2);
 
     spacecraftMesh = new THREE.Mesh(geometry, material)
     // -- tracers: add movement tracers behind spacecraft
@@ -198,9 +199,12 @@ function init() {
     // Button listeners for the orbits
     buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
-        if(orbit != "A") {
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "A") {
+            tempOrbit = orbit;
             orbit = "A";
             changeOrbit(orbit);
+            if(tempOrbit==orbit) changeTexture('../src/res/mtl/imager/imager.mtl');
            // document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'visible';
             document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -211,7 +215,7 @@ function init() {
             document.getElementById("OB").style.visibility = 'hidden';
             document.getElementById("OC").style.visibility = 'hidden';
             document.getElementById("OD").style.visibility = 'hidden';
-        }
+        //}
 
         // css renderer testing
         // displays that psyche label in the scene
@@ -227,21 +231,24 @@ function init() {
 
     buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
-        if(orbit != "B") {
-            orbit = "B";
-            changeOrbit(orbit);
-          //  document.getElementById("tip").style.visibility = 'hidden';
-            document.getElementById("orbit-a").style.visibility = 'hidden';
-            document.getElementById("orbit-b").style.visibility = 'visible';
-            document.getElementById("orbit-c").style.visibility = 'hidden';
-            document.getElementById("orbit-d").style.visibility = 'hidden';
-   
-            document.getElementById("OB").style.visibility = 'visible';
-            document.getElementById("OA").style.visibility = 'hidden';
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "B") {
+        tempOrbit = orbit;
+        orbit = "B";
+        changeOrbit(orbit);
+        if(tempOrbit==orbit) changeTexture('../src/res/mtl/grns/grns.mtl');
+        //  document.getElementById("tip").style.visibility = 'hidden';
+        document.getElementById("orbit-a").style.visibility = 'hidden';
+        document.getElementById("orbit-b").style.visibility = 'visible';
+        document.getElementById("orbit-c").style.visibility = 'hidden';
+        document.getElementById("orbit-d").style.visibility = 'hidden';
 
-            document.getElementById("OC").style.visibility = 'hidden';
-            document.getElementById("OD").style.visibility = 'hidden';
-        }
+        document.getElementById("OB").style.visibility = 'visible';
+        document.getElementById("OA").style.visibility = 'hidden';
+
+        document.getElementById("OC").style.visibility = 'hidden';
+        document.getElementById("OD").style.visibility = 'hidden';
+        //}
 
         const OrbitB = document.getElementById('orbit-b');
         OrbitB.style.visibility = 'visible';
@@ -255,21 +262,25 @@ function init() {
 
     buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
-        if(orbit != "C") {
-            orbit = "C";
-            changeOrbit(orbit);
-          //  document.getElementById("tip").style.visibility = 'hidden';
-            document.getElementById("orbit-a").style.visibility = 'hidden';
-            document.getElementById("orbit-b").style.visibility = 'hidden';
-            document.getElementById("orbit-c").style.visibility = 'visible';
-            document.getElementById("orbit-d").style.visibility = 'hidden';
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "C") {
+        tempOrbit = orbit;
+        orbit = "C";
+        changeOrbit(orbit);
+        if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
 
-            document.getElementById("OC").style.visibility = 'visible';
-            document.getElementById("OA").style.visibility = 'hidden';
-            document.getElementById("OB").style.visibility = 'hidden';
+        //  document.getElementById("tip").style.visibility = 'hidden';
+        document.getElementById("orbit-a").style.visibility = 'hidden';
+        document.getElementById("orbit-b").style.visibility = 'hidden';
+        document.getElementById("orbit-c").style.visibility = 'visible';
+        document.getElementById("orbit-d").style.visibility = 'hidden';
 
-            document.getElementById("OD").style.visibility = 'hidden';
-        }
+        document.getElementById("OC").style.visibility = 'visible';
+        document.getElementById("OA").style.visibility = 'hidden';
+        document.getElementById("OB").style.visibility = 'hidden';
+
+        document.getElementById("OD").style.visibility = 'hidden';
+        //}
         const OrbitC = document.getElementById('orbit-c');
         OrbitC.style.visibility = 'visible';
         OrbitC.style.marginTop = '-1em';
@@ -282,21 +293,23 @@ function init() {
 
     buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
-        if(orbit != "D") {
-            orbit = "D";
-            changeOrbit(orbit);
-    
-            document.getElementById("orbit-a").style.visibility = 'hidden';
-            document.getElementById("orbit-b").style.visibility = 'hidden';
-            document.getElementById("orbit-c").style.visibility = 'hidden';
-            document.getElementById("orbit-d").style.visibility = 'visible';
-            document.getElementById("OD").style.visibility = 'visible';
-            document.getElementById("OB").style.visibility = 'hidden';
-            document.getElementById("OC").style.visibility = 'hidden';
-            document.getElementById("OA").style.visibility = 'hidden';
+        //this is commented out to allow multiple presses on a single orbit
+        //if(orbit != "D") {
+        tempOrbit = orbit;
+        orbit = "D";
+        changeOrbit(orbit);
 
-   
-        }
+        document.getElementById("orbit-a").style.visibility = 'hidden';
+        document.getElementById("orbit-b").style.visibility = 'hidden';
+        document.getElementById("orbit-c").style.visibility = 'hidden';
+        document.getElementById("orbit-d").style.visibility = 'visible';
+        document.getElementById("OD").style.visibility = 'visible';
+        document.getElementById("OB").style.visibility = 'hidden';
+        document.getElementById("OC").style.visibility = 'hidden';
+        document.getElementById("OA").style.visibility = 'hidden';
+
+
+        //}
         const OrbitD = document.getElementById('orbit-d');
         OrbitD.style.visibility = 'visible';
         OrbitD.style.marginTop = '-1em';
@@ -454,7 +467,9 @@ function randomRange(min, max) {
 function loadSpacecraft() {
     var spacecraftMaterial = loadModelMaterial(0x8c8c8c);
     loadSpacecraftModel(spacecraftMaterial);
+}
 
+function loadInstruments() {
     var neutronSpectrometerMaterial = loadModelMaterial(0xFFFFFF);
     loadNeutronSpectrometer(neutronSpectrometerMaterial);
 
@@ -639,6 +654,7 @@ function loadSpacecraftTexturedModel(filePath=string, x=int, y=int, z=int, yRota
                         craft.position.set(x, y, z);
                         craft.scale.set(0.025,0.025,0.025);
                         craft.name = "craft";
+                        craft.rotation.y = yRotation;
                         scene.add(craft);
                         camera.position.x = -80;
                         camera.position.y = -20;
@@ -718,7 +734,6 @@ function loadPsyche(filePath=string, x=int, y=int, z=int, yRotation=int) {
                 .setMaterials(material)
                 .setPath('../src/res/Psyche/')
                 .load('Psyche_.obj', (psyche) => {
-                        //psyche.position.set(-125, -10, 0);
                         psyche.position.set(x, y, z);
                         psyche.rotation.y = yRotation;
                         psyche.scale.setScalar(25);
@@ -804,7 +819,7 @@ function onMagnetometerClicked() {
     var y = psyche.position.y;
     var z = psyche.position.z;
     var yRotation = psyche.rotation.y;
-    
+
     buttonMag = document.getElementById("magnetometer");
     buttonMag.addEventListener('click', function() {
         if(orbit == 'C' && instrumentView == false)
@@ -815,7 +830,7 @@ function onMagnetometerClicked() {
             return;
         }
     })
-    
+
     if(orbit == 'C' && instrumentView == false)
     {
         removePsyche();
@@ -835,75 +850,45 @@ function onMagnetometerClicked() {
 function onImagerClicked() {
     console.log("Imager clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
-    buttonOrbitA.click();
-    var psyche = scene.getObjectByName( "psyche");
-    var x = psyche.position.x;
-    var y = psyche.position.y;
-    var z = psyche.position.z;
-    var yRotation = psyche.rotation.y;
-    if(orbit == 'A' && instrumentView == false)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/imager/imager.mtl',x,y,z,yRotation);
-        instrumentView = true;
-        return;
-    }
-    if(orbit == 'A' && instrumentView == true)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
-        instrumentView = false;
-        return;
-    }
+    if(orbit == 'A') changeTexture('../src/res/mtl/imager/imager.mtl');
 }
 
 function onNeutronSpectrometerClicked() {
     console.log("Neutron Spectrometer clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
-    buttonOrbitD.click();
-    var psyche = scene.getObjectByName( "psyche" );
-    var x = psyche.position.x;
-    var y = psyche.position.y;
-    var z = psyche.position.z;
-    var yRotation = psyche.rotation.y;
-    if(orbit == 'B' && instrumentView == false)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
-        instrumentView = true;
-        return;
-    }
-    if(orbit == 'B' && instrumentView == true)
-    {
-        removePsyche();
-        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
-        instrumentView = false;
-        return;
-    }
+    if(orbit == 'B') changeTexture('../src/res/mtl/grns/grns.mtl');
 }
 
 function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
-    buttonOrbitB.click();
-    var psyche = scene.getObjectByName( "psyche" );
+    if(orbit == 'B') changeTexture('../src/res/mtl/grns/grns.mtl');
+}
+
+function onMagnetometerClicked() {
+    console.log("Magnetometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+    if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+}
+
+function changeTexture(instrumentFilePath = string){
+    var psyche = scene.getObjectByName( "psyche");
     var x = psyche.position.x;
     var y = psyche.position.y;
     var z = psyche.position.z;
     var yRotation = psyche.rotation.y;
-    if(orbit == 'B' && instrumentView == false)
+
+    if(instrumentView==false)
     {
-        removePsyche();
-        loadPsyche('../src/res/mtl/grns/grns.mtl',x,y,z,yRotation);
         instrumentView = true;
-        return;
     }
-    if(orbit == 'B' && instrumentView == true)
+    else
     {
-        removePsyche();
-        loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+        instrumentFilePath = '../src/res/mtl/base psyche/Psyche_.mtl';
         instrumentView = false;
-        return;
     }
+    removePsyche();
+    loadPsyche(instrumentFilePath,x,y,z,yRotation);
+    return;
 }
 
 function animatePsyche(){
@@ -1012,7 +997,8 @@ function degInRad(deg) {
 }
 
 addStars();
-//loadSpacecraft();
+// loadSpacecraft();
+loadInstruments();
 animate();
 /*
 
