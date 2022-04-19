@@ -943,7 +943,7 @@ function addTracers(system) {
         });
         var px = -2.1 + i / 10;
         var py = 0.6
-        var pz = -5 - Math.random() * (5 - 1) + 1;
+        var pz = -7 - Math.random() * 4 + 1;
 
         if (i > 8 && i < 24) {
             pz += -1.5;
