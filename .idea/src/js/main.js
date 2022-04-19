@@ -656,9 +656,10 @@ function loadSpacecraftTexturedModel(filePath=string, x=int, y=int, z=int, yRota
                         craft.name = "craft";
                         craft.rotation.y = yRotation;
                         scene.add(craft);
-                        camera.position.x = -80;
-                        camera.position.y = -20;
-                        camera.position.z = 50;
+                        camera.position.x = 10;
+                        camera.position.y = 5;
+                        camera.position.z = -5;
+                        camera.lookAt(craft);
                     },
                     function(xhr) {
                         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
