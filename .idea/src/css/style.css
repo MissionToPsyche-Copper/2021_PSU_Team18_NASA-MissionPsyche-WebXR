@@ -7,7 +7,6 @@ body {
     font-family: "Metropolis", "Raleway", serif;
     line-height: 1.1em;
     color: #fff;
-    /*font-size: 0.9em;*/
     text-transform: uppercase;
     letter-spacing: 0.2em;
 }
@@ -91,7 +90,7 @@ h2 {
     font-size: 36px;
     line-height: 120%;
     font-weight: 100;
-    color: #a53f5b;
+    color: #f9a000;
 }
 h3 {
     font-size: 24px;
@@ -101,7 +100,7 @@ h3 {
 }
 h3.semi {
     line-height: 100%;
-    color: #592651;
+    color: #f9a000;
 }
 h4 {
     font-size: 22px;
@@ -192,7 +191,7 @@ button:hover {
 .darkpurple-blk_gradient {
     background: rgb(48,33,68);
     background: linear-gradient(0deg, rgba(48,33,68,1) 0%, rgba(18,3,29,0.7054054054054054) 100%);
-    height: 85vh;
+    height: 80vh;
     z-index: 9000;
 }
 
@@ -275,7 +274,7 @@ button:hover {
         cursor: pointer;
         border-radius: 10px;
         letter-spacing: 0.05em;
-        z-index: 800;
+
     }
 
     h1 {

@@ -325,15 +325,21 @@ function init() {
         orbitDLabel.position.set(-400,10,-300);
         scene.add(orbitDLabel);
     });
-
-    // panel button listener not working
-    // would like to update texture on click and dismiss panel
-    // buttonMag = document.getElementById("magnetometer");
-    // buttonMag.addEventListener('click', function() {
-    //     console.log("button clicked for magnetometer!");
-    //     if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
-    //
-    // });
+    
+    let buttonA = document.getElementById('imager');
+    buttonA.addEventListener('click', function() {
+        if(orbit == 'A') changeTexture('../src/res/mtl/imager/imager.mtl');
+    });
+    
+    let buttonB = document.getElementById('GRNS');
+    buttonB.addEventListener('click', function() {
+        if(orbit == 'B') changeTexture('../src/res/mtl/grns/grns.mtl');
+    });
+    
+    let buttonC = document.getElementById('magnetometer');
+    buttonC.addEventListener('click', function() {
+        if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+    });
 
     scene.fog = new THREE.FogExp2(0x141414, 0.0001);
     document.addEventListener( 'mousemove', onMouseMove );
@@ -834,12 +840,6 @@ function onImagerClicked() {
     console.log("Imager clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
     if(orbit == 'A') changeTexture('../src/res/mtl/imager/imager.mtl');
-
-    buttonImg = document.getElementById("imager");
-    buttonImg.addEventListener('click', function() {
-        console.log("button clicked for imager!");
-
-    });
 }
 
 function onNeutronSpectrometerClicked() {
@@ -852,12 +852,6 @@ function onGammaRaySpectrometerClicked() {
     console.log("Gamma Ray Spectrometer clicked");
     if(orbit == 'B') changeTexture('../src/res/mtl/grns/grns.mtl');
 }
-
-// function onMagnetometerClicked() {
-//     console.log("Magnetometer clicked");
-//     document.getElementById("canvas3").style.visibility = 'visible';
-//     if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
-// }
 
 function changeTexture(instrumentFilePath = string){
     var psyche = scene.getObjectByName( "psyche");
