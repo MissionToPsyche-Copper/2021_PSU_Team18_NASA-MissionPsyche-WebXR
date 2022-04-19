@@ -26,7 +26,7 @@
 <body>
 
 <div id="menu">
-    <div id="menu">
+    <div id="menu fixed-top">
         <div class="btn-group-vertical">
         <button id="orbitA" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" >Orbit A</button>
         <button id="orbitB" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" >Orbit B</button>
@@ -95,10 +95,11 @@
             <h5 class="offcanvas-title" id="offcanvasBottomLabel">Orbit Details</h5>
             <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body" data-bs-dismiss="offcanvas">
+        <div class="offcanvas-body overflow-auto" data-bs-dismiss="offcanvas">
             <div id="OA">
-                <div class="container-fluid">
+                <div class="container-fluid overflow-auto">
                     <vstack>
+                        <br>
                         <p id="tiny">orbit A</p>
                     <h3 class="title">Duration: <br> 56 days / 41 Orbits</h3>
                         <p>Mission Focus: Characterization </p>
@@ -107,21 +108,21 @@
 
                     <vstack>
                         <hstack>
-                            <img src="../src/res/imager-schematic.png" class="img-fluid img-lg">
-                            <img src="../src/res/imager-schematic.png" class="img-fluid img-lg">
+                            <img src="../src/res/imager-schematic.png" class="img-fluid img">
+                            <img src="../src/res/imager-schematic.png" class="img-fluid img">
                         </hstack>
                         <p> <br> <h5 class="semi">Instruments Used:</h5> Psyche Multispectral Imager
                         <p> <h5 class="semi">How It Will Be Used:</h5>  <p class="panel-tiny">To Provide high-resolution images using filters to discriminate between Psyche’s metallic and silicate constituents</p>
-                        <p><h5 class="semi">Where You Can Find It On The Craft:</h5> <p class="panel-tiny">consists of a pair of identical cameras designed to acquire geologic, compositional, and topographic data. Located at the front of the craft </p>
-
-
+                        <button id="imager" type="button" class="shadow p-3 mb-5">Use Psyche Multispectral Imager</button>
                     </vstack>
+                    <br>
                 </div>
             </div>
 
             <div id="OB">
-                <div class="container-fluid">
+                <div class="container-fluid overflow-auto">
                     <vstack>
+                        <br>
                         <p id="tiny">orbit B</p>
                     <h3 class="title">Duration: <br> 80 days / 169 orbits</h3>
                     <p>Mission Focus: Topography</p>
@@ -135,14 +136,16 @@
                             <p> <br> <h5 class="semi">Instruments Used:</h5> Gamma-Ray and Neutron Spectrometer
                             <p> <h5 class="semi">How It Will Be Used:</h5> <p class="panel-tiny">Detect, Measure, and Map Psyche’s Elemental Composition</p>
 
-                            <p><h5 class="semi">Where You Can Find It On The Craft:</h5>
+                            <button id="GRNS" type="button" class="shadow p-3 mb-5">Use Gamma-Ray and Neutron Spectrometer</button>
                         </vstack>
+                    <br>
                 </div>
             </div>
 
             <div id="OC">
-                <div class="container-fluid">
+                <div class="container-fluid overflow-auto">
                     <vstack>
+                        <br>
                         <p id="tiny">orbit C</p>
                     <h3 class="title">Duration: <br> 100 days / 362 orbits</h3>
                     <p>Mission Focus: Gravity science</p>
@@ -154,22 +157,22 @@
                         <p> <br> <h5 class="semi">Instruments Used:</h5> Psyche Magnetometer
                         <p> <h5 class="semi">How It Will Be Used:</h5> <p class="panel-tiny">Detect and Measure the Remanent Magnetic Field of the Asteroid</p>
 
-                        <p><h5 class="semi">Where You Can Find It On The Craft:</h5> <p class="panel-tiny">Composed of two identical high-sensitivity magnetic field sensors located at the middle and outer end of a 6-foot (2-meter) boom</p>
+                        <button id="magnetometer" type="button" class="shadow p-3 mb-5">Use Psyche Magnetometer</button>
 
                     </vstack>
+                    <br>
                 </div>
             </div>
 
             <div id="OD">
-                <div class="container-fluid">
-
+                <div class="container-fluid overflow-auto">
+                    <br>
                     <vstack>
                         <p id="tiny">orbit D</p>
                     <h3 class="title">Duration: <br> 100 days / 684 orbits </h3>
                     <p> Mission Focus: Elemental Mapping</p>
                     <p class="panel-tiny">Determine the chemical composition of the surface</p>
                     </vstack>
-<!--                    <img src="../src/res/neutronspec-schematic.png" class="img-fluid img-lg">-->
 
                     <vstack>
                         <p> <br><h5 class="semi">Instruments Used:</h5>
@@ -179,9 +182,8 @@
                         <p><h5 class="semi">How It Will Be Used:</h5>
                         <p class="panel-tiny">Sophisticated new laser communication technology that will encodes data in photons (rather than radio waves) to communicate between a probe in deep space and Earth.</p>
 
-                        <p class="panel-tiny">Using light instead of radio allows the spacecraft to communicate more data in a given amount of time. </p>
                     </vstack>
-
+                    <br>
                 </div>
             </div>
 

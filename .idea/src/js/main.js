@@ -227,7 +227,7 @@ function init() {
         OrbitA.style.fontSize = '10px';
         OrbitA.style.color = 'white';
         const orbitALabel = new CSS3DObject(OrbitA);
-        orbitALabel.position.set(-20,-50,-500);
+        orbitALabel.position.set(-400,10,-300);
         scene.add(orbitALabel);
     });
 
@@ -274,8 +274,7 @@ function init() {
 
         //this is testing code to allow texture to change on orbit click in case instruments are not working / available
         //if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
-
-        //  document.getElementById("tip").style.visibility = 'hidden';
+            
         document.getElementById("orbit-a").style.visibility = 'hidden';
         document.getElementById("orbit-b").style.visibility = 'hidden';
         document.getElementById("orbit-c").style.visibility = 'visible';
@@ -295,6 +294,7 @@ function init() {
         const orbitCLabel = new CSS3DObject(OrbitC);
         orbitCLabel.position.set(-400,10,-300);
         scene.add(orbitCLabel);
+        
     });
 
     buttonOrbitD = document.getElementById('orbitD');
@@ -325,6 +325,15 @@ function init() {
         orbitDLabel.position.set(-400,10,-300);
         scene.add(orbitDLabel);
     });
+
+    // panel button listener not working
+    // would like to update texture on click and dismiss panel
+    // buttonMag = document.getElementById("magnetometer");
+    // buttonMag.addEventListener('click', function() {
+    //     console.log("button clicked for magnetometer!");
+    //     if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+    //
+    // });
 
     scene.fog = new THREE.FogExp2(0x141414, 0.0001);
     document.addEventListener( 'mousemove', onMouseMove );
@@ -630,7 +639,6 @@ function loadSpacecraftModel(material) {
             //todo: fix camera zoom to be closer on load.
             spacecraftMesh.scale.set(0.025,0.025,0.025);
             scene.add(spacecraftMesh)
-            // camera.lookAt(spacecraftMesh);
             camera.position.x = -80;
             camera.position.y = -20;
             camera.position.z = 50;
@@ -651,7 +659,6 @@ function loadSpacecraftTexturedModel(filePath=string, x=int, y=int, z=int, yRota
     new MTLLoader().load(filePath,
         (material) => {
             material.preload()
-
             // spacecraftwithframe loader
             new OBJLoader()
                 .setMaterials(material)
@@ -817,10 +824,22 @@ function onSpacecraftClicked() {
     document.getElementById("canvas3").style.visibility = 'visible';
 }
 
+function onMagnetometerClicked() {
+    console.log("Magnetometer clicked");
+    document.getElementById("canvas3").style.visibility = 'visible';
+    if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+}
+
 function onImagerClicked() {
     console.log("Imager clicked");
     document.getElementById("canvas3").style.visibility = 'visible';
     if(orbit == 'A') changeTexture('../src/res/mtl/imager/imager.mtl');
+
+    buttonImg = document.getElementById("imager");
+    buttonImg.addEventListener('click', function() {
+        console.log("button clicked for imager!");
+
+    });
 }
 
 function onNeutronSpectrometerClicked() {
@@ -834,11 +853,11 @@ function onGammaRaySpectrometerClicked() {
     if(orbit == 'B') changeTexture('../src/res/mtl/grns/grns.mtl');
 }
 
-function onMagnetometerClicked() {
-    console.log("Magnetometer clicked");
-    document.getElementById("canvas3").style.visibility = 'visible';
-    if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
-}
+// function onMagnetometerClicked() {
+//     console.log("Magnetometer clicked");
+//     document.getElementById("canvas3").style.visibility = 'visible';
+//     if(orbit == 'C') changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+// }
 
 function changeTexture(instrumentFilePath = string){
     var psyche = scene.getObjectByName( "psyche");
