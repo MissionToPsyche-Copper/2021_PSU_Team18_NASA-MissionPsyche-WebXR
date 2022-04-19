@@ -199,13 +199,15 @@ function init() {
     // Button listeners for the orbits
     buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
-        //this is commented out to allow multiple presses on a single orbit
-        //if(orbit != "A") {
+        //if commented out this allows multiple presses on a single orbit
+        if(orbit != "A") {
             tempOrbit = orbit;
             orbit = "A";
             changeOrbit(orbit);
-            if(tempOrbit==orbit) changeTexture('../src/res/mtl/imager/imager.mtl');
-           // document.getElementById("tip").style.visibility = 'hidden';
+
+            //this is testing code to allow texture to change on orbit click in case instruments are not working / available
+            //if(tempOrbit==orbit) changeTexture('../src/res/mtl/imager/imager.mtl');
+            //document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("orbit-a").style.visibility = 'visible';
             document.getElementById("orbit-b").style.visibility = 'hidden';
             document.getElementById("orbit-c").style.visibility = 'hidden';
@@ -215,7 +217,7 @@ function init() {
             document.getElementById("OB").style.visibility = 'hidden';
             document.getElementById("OC").style.visibility = 'hidden';
             document.getElementById("OD").style.visibility = 'hidden';
-        //}
+        }
 
         // css renderer testing
         // displays that psyche label in the scene
@@ -231,12 +233,14 @@ function init() {
 
     buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
-        //this is commented out to allow multiple presses on a single orbit
-        //if(orbit != "B") {
+        //if commented out this allows multiple presses on a single orbit
+        if(orbit != "B") {
         tempOrbit = orbit;
         orbit = "B";
         changeOrbit(orbit);
-        if(tempOrbit==orbit) changeTexture('../src/res/mtl/grns/grns.mtl');
+
+        //this is testing code to allow texture to change on orbit click in case instruments are not working / available
+        //if(tempOrbit==orbit) changeTexture('../src/res/mtl/grns/grns.mtl');
         //  document.getElementById("tip").style.visibility = 'hidden';
         document.getElementById("orbit-a").style.visibility = 'hidden';
         document.getElementById("orbit-b").style.visibility = 'visible';
@@ -248,7 +252,7 @@ function init() {
 
         document.getElementById("OC").style.visibility = 'hidden';
         document.getElementById("OD").style.visibility = 'hidden';
-        //}
+        }
 
         const OrbitB = document.getElementById('orbit-b');
         OrbitB.style.visibility = 'visible';
@@ -262,12 +266,14 @@ function init() {
 
     buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
-        //this is commented out to allow multiple presses on a single orbit
-        //if(orbit != "C") {
-        tempOrbit = orbit;
-        orbit = "C";
-        changeOrbit(orbit);
-        if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
+        //if commented out this allows multiple presses on a single orbit
+        if(orbit != "C") {
+            tempOrbit = orbit;
+            orbit = "C";
+            changeOrbit(orbit);
+
+        //this is testing code to allow texture to change on orbit click in case instruments are not working / available
+        //if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
 
         //  document.getElementById("tip").style.visibility = 'hidden';
         document.getElementById("orbit-a").style.visibility = 'hidden';
@@ -280,7 +286,7 @@ function init() {
         document.getElementById("OB").style.visibility = 'hidden';
 
         document.getElementById("OD").style.visibility = 'hidden';
-        //}
+        }
         const OrbitC = document.getElementById('orbit-c');
         OrbitC.style.visibility = 'visible';
         OrbitC.style.marginTop = '-1em';
@@ -293,11 +299,11 @@ function init() {
 
     buttonOrbitD = document.getElementById('orbitD');
     buttonOrbitD.addEventListener('click', function(){
-        //this is commented out to allow multiple presses on a single orbit
-        //if(orbit != "D") {
-        tempOrbit = orbit;
-        orbit = "D";
-        changeOrbit(orbit);
+        //if commented out this allows multiple presses on a single orbit
+        if(orbit != "D") {
+            tempOrbit = orbit;
+            orbit = "D";
+            changeOrbit(orbit);
 
         document.getElementById("orbit-a").style.visibility = 'hidden';
         document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -309,7 +315,7 @@ function init() {
         document.getElementById("OA").style.visibility = 'hidden';
 
 
-        //}
+        }
         const OrbitD = document.getElementById('orbit-d');
         OrbitD.style.visibility = 'visible';
         OrbitD.style.marginTop = '-1em';
