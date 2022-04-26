@@ -222,11 +222,11 @@ function init() {
             document.getElementById("orbit-c").style.visibility = 'hidden';
             document.getElementById("orbit-d").style.visibility = 'hidden';
             document.getElementById("canvas3").style.visibility = 'visible';
-            document.getElementById("OA").style.visibility = 'visible';
+            document.getElementById("OA").style.visibility = 'hidden';
             document.getElementById("OB").style.visibility = 'hidden';
             document.getElementById("OC").style.visibility = 'hidden';
             document.getElementById("OD").style.visibility = 'hidden';
-            document.getElementById("INIT").style.visibility = 'hidden';
+            document.getElementById("INIT").style.visibility = 'visible';
         }
 
         // css renderer testing
