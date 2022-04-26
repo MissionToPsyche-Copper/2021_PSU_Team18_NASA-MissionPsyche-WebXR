@@ -169,7 +169,6 @@ function init() {
     orbitControls.maxDistance = 100;
     orbitControls.maxPolarAngle = Math.PI / 2;
     orbitControls.enableDamping = true;
-
     // allows me to display the css elements in our scene
     cssrenderer = new CSS3DRenderer();
     cssrenderer.setSize(window.innerWidth, window.innerHeight);
@@ -180,7 +179,6 @@ function init() {
     css2Drenderer.domElement.style.position = 'absolute';
     css2Drenderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('info').appendChild(css2Drenderer.domElement);
-
 
     // -- models: load object model resources
     loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
@@ -195,6 +193,17 @@ function init() {
     particleSystem2 = [];
     addTracers(particleSystem1);
     addTracers(particleSystem2);
+
+    if(orbit=="init")
+    {
+        document.getElementById("canvas3").style.visibility = 'visible';
+        document.getElementById("INIT").style.visibility = 'visible';
+
+        document.getElementById("OA").style.visibility = 'hidden';
+        document.getElementById("OB").style.visibility = 'hidden';
+        document.getElementById("OC").style.visibility = 'hidden';
+        document.getElementById("OD").style.visibility = 'hidden';
+    }
 
     // Button listeners for the orbits
     buttonOrbitA = document.getElementById('orbitA');
@@ -217,6 +226,7 @@ function init() {
             document.getElementById("OB").style.visibility = 'hidden';
             document.getElementById("OC").style.visibility = 'hidden';
             document.getElementById("OD").style.visibility = 'hidden';
+            document.getElementById("INIT").style.visibility = 'hidden';
         }
 
         // css renderer testing
@@ -235,23 +245,24 @@ function init() {
     buttonOrbitB.addEventListener('click', function(){
         //if commented out this allows multiple presses on a single orbit
         if(orbit != "B") {
-        tempOrbit = orbit;
-        orbit = "B";
-        changeOrbit(orbit);
+            tempOrbit = orbit;
+            orbit = "B";
+            changeOrbit(orbit);
 
-        //this is testing code to allow texture to change on orbit click in case instruments are not working / available
-        //if(tempOrbit==orbit) changeTexture('../src/res/mtl/grns/grns.mtl');
-        //  document.getElementById("tip").style.visibility = 'hidden';
-        document.getElementById("orbit-a").style.visibility = 'hidden';
-        document.getElementById("orbit-b").style.visibility = 'visible';
-        document.getElementById("orbit-c").style.visibility = 'hidden';
-        document.getElementById("orbit-d").style.visibility = 'hidden';
+            //this is testing code to allow texture to change on orbit click in case instruments are not working / available
+            //if(tempOrbit==orbit) changeTexture('../src/res/mtl/grns/grns.mtl');
+            //  document.getElementById("tip").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'visible';
+            document.getElementById("orbit-c").style.visibility = 'hidden';
+            document.getElementById("orbit-d").style.visibility = 'hidden';
 
-        document.getElementById("OB").style.visibility = 'visible';
-        document.getElementById("OA").style.visibility = 'hidden';
+            document.getElementById("OB").style.visibility = 'visible';
+            document.getElementById("OA").style.visibility = 'hidden';
 
-        document.getElementById("OC").style.visibility = 'hidden';
-        document.getElementById("OD").style.visibility = 'hidden';
+            document.getElementById("OC").style.visibility = 'hidden';
+            document.getElementById("OD").style.visibility = 'hidden';
+            document.getElementById("INIT").style.visibility = 'hidden';
         }
 
         const OrbitB = document.getElementById('orbit-b');
@@ -272,19 +283,20 @@ function init() {
             orbit = "C";
             changeOrbit(orbit);
 
-        //this is testing code to allow texture to change on orbit click in case instruments are not working / available
-        //if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
-            
-        document.getElementById("orbit-a").style.visibility = 'hidden';
-        document.getElementById("orbit-b").style.visibility = 'hidden';
-        document.getElementById("orbit-c").style.visibility = 'visible';
-        document.getElementById("orbit-d").style.visibility = 'hidden';
+            //this is testing code to allow texture to change on orbit click in case instruments are not working / available
+            //if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
 
-        document.getElementById("OC").style.visibility = 'visible';
-        document.getElementById("OA").style.visibility = 'hidden';
-        document.getElementById("OB").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'hidden';
+            document.getElementById("orbit-c").style.visibility = 'visible';
+            document.getElementById("orbit-d").style.visibility = 'hidden';
 
-        document.getElementById("OD").style.visibility = 'hidden';
+            document.getElementById("OC").style.visibility = 'visible';
+            document.getElementById("OA").style.visibility = 'hidden';
+            document.getElementById("OB").style.visibility = 'hidden';
+
+            document.getElementById("OD").style.visibility = 'hidden';
+            document.getElementById("INIT").style.visibility = 'hidden';
         }
         const OrbitC = document.getElementById('orbit-c');
         OrbitC.style.visibility = 'visible';
@@ -294,7 +306,6 @@ function init() {
         const orbitCLabel = new CSS3DObject(OrbitC);
         orbitCLabel.position.set(-400,10,-300);
         scene.add(orbitCLabel);
-        
     });
 
     buttonOrbitD = document.getElementById('orbitD');
@@ -305,16 +316,16 @@ function init() {
             orbit = "D";
             changeOrbit(orbit);
 
-        document.getElementById("orbit-a").style.visibility = 'hidden';
-        document.getElementById("orbit-b").style.visibility = 'hidden';
-        document.getElementById("orbit-c").style.visibility = 'hidden';
-        document.getElementById("orbit-d").style.visibility = 'visible';
-        document.getElementById("OD").style.visibility = 'visible';
-        document.getElementById("OB").style.visibility = 'hidden';
-        document.getElementById("OC").style.visibility = 'hidden';
-        document.getElementById("OA").style.visibility = 'hidden';
+            document.getElementById("orbit-a").style.visibility = 'hidden';
+            document.getElementById("orbit-b").style.visibility = 'hidden';
+            document.getElementById("orbit-c").style.visibility = 'hidden';
+            document.getElementById("orbit-d").style.visibility = 'visible';
+            document.getElementById("OD").style.visibility = 'visible';
+            document.getElementById("OA").style.visibility = 'hidden';
+            document.getElementById("OB").style.visibility = 'hidden';
+            document.getElementById("OC").style.visibility = 'hidden';
 
-
+            document.getElementById("INIT").style.visibility = 'hidden';
         }
         const OrbitD = document.getElementById('orbit-d');
         OrbitD.style.visibility = 'visible';
