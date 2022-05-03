@@ -9,27 +9,29 @@ If the user does not have the required WebXR software installed, they may be pro
 Once the user has successfully loaded into the experience, they will be prompted to select an orbit (A-D) for viewing (Fig. 37).
 
 After choosing an orbit, the user will be presented with educational information about the selected orbit and the corresponding instrument (Fig. 38). From here, they can click on the instrument on the spacecraft to see that instrument’s “view” overlaid on the asteroid (Fig. 39).
-
+![code](/Resources/orbit-panel.png)
 
 
 ### How to set up the development environment 
 Installing JetBrains’s WebStorm IDE is required to build, view, and run the code. To install WebStorm follow these steps:
-Go to https://www.jetbrains.com/webstorm/download (Fig. 25)
+Go to https://www.jetbrains.com/webstorm/download
 Select your operating system if it wasn’t already automatically selected
 Click ‘Download’
+
 <!-- image will go here --> 
+![webstorm downloads page](/Resources/orbits-btn.png "Webstorm Downloads Page")
 
 Once you have WebStorm installed the next step would be to clone the repository. Our repo is currently set to private so you would need to be added as a collaborator to actually see the project, but these steps assume that the repository settings are set to public.
 
 ### Getting the Code
 
 **Option 1:** Cloning this Repository from GitHub Directly
-Go to https://github.com/Miablo/PSU_Team18-SWENG480 (Fig. 26)
-On the main page click the green button that says “Code”
+On the main page of this repo click the green button that says “Code”
 <!-- add images -->
-![webstorm downloads page](/Resources/orbits-btn.png "Webstorm Downloads Page")
+![code](/Resources/git_repo.png)
 
-In the dropdown select whatever clone or download option preferred (Fig. 27)
+In the dropdown select whatever clone or download option preferred
+![code](/Resources/git_code.png)
 
 Once finished, open WebStorm
 
