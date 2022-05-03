@@ -27,6 +27,7 @@ Once you have WebStorm installed the next step would be to clone the repository.
 Go to https://github.com/Miablo/PSU_Team18-SWENG480 (Fig. 26)
 On the main page click the green button that says “Code”
 <!-- add images -->
+![webstorm downloads page](/Resources/orbits-btn.png "Webstorm Downloads Page")
 
 In the dropdown select whatever clone or download option preferred (Fig. 27)
 
