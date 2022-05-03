@@ -3,14 +3,21 @@ NASA WebXR
 
 ## Instructions for System End Users 
 
-While visiting a location participating in NASA’s Museum & Informal Education Alliance, users will be able to scan a QR code on their phone to allow them to open our experience. The QR code will direct them to the website provided to us by NASA, where they will enter the experience.
-If the user does not have the required WebXR software installed, they may be prompted by their browser to install additional software from their respective app store as shown below.
+1. While visiting a location participating in NASA’s Museum & Informal Education Alliance, users will be able to scan a QR code on their phone to allow them to open our experience. The QR code will direct them to the website provided to us by NASA, where they will enter the experience.
+    a. If the user does not have the required WebXR software installed, they may be prompted by their browser to install additional software from their respective app store as shown below.
+    
+![code](/Resources/ARCore-install.png)
 
-Once the user has successfully loaded into the experience, they will be prompted to select an orbit (A-D) for viewing (Fig. 37).
+Once the user has successfully loaded into the experience, they will be prompted to select an orbit (A-D) for viewing.
 
-After choosing an orbit, the user will be presented with educational information about the selected orbit and the corresponding instrument (Fig. 38). From here, they can click on the instrument on the spacecraft to see that instrument’s “view” overlaid on the asteroid (Fig. 39).
+![code](/Resources/Screen Shot 2022-05-03 at 4.10.33 PM.png)
+
+After choosing an orbit, the user will be presented with educational information about the selected orbit and the corresponding instrument. From here, they can click on the instrument on the spacecraft to see that instrument’s “view” overlaid on the asteroid.
+
 ![code](/Resources/orbit-panel.png)
 
+
+![code](/Resources/texture-overlay.png)
 
 ### How to set up the development environment 
 Installing JetBrains’s WebStorm IDE is required to build, view, and run the code. To install WebStorm follow these steps:
