@@ -8,8 +8,6 @@ import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0
 import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/renderers/CSS3DRenderer.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.120.1/examples/jsm/webxr/VRButton.js';
 
-// checkForXRSupport();
-
 // check for XR support
 // displaying enter AR if XR is supported
 // if not it will display session not supported in the web dev browser
@@ -54,7 +52,6 @@ function isUsingAppleDevice() {
 }
 
 function enterXRExperiencePrompt() {
-    // We should add additional information here about the mission, the application, etc.
     let promptText = "This is a webXR experience based on the Psyche Asteroid Misson, 2022. To load the WebXR application, press OK. To exit, press cancel.";
     if (confirm(promptText) == true) {
         console.log("loading WebXR experience...");
@@ -83,7 +80,6 @@ var mesh,
     neutronSpectrometerMesh,
     magnetometerMesh,
     raycaster,
-    // raycaster "object intersected"
     INTERSECTED,
     objectSelected,
     // track mouse
@@ -95,11 +91,11 @@ var mesh,
     systemsHaveStarted = false,
     buttonOrbitA, buttonOrbitB, buttonOrbitC, buttonOrbitD;
 
-var orbit="init",
-    tempOrbit="init";
-var moveAway = true;
-var loaded=false;
-var instrumentView = false;
+var orbit           = "init",
+    tempOrbit       = "init";
+var moveAway        = true;
+var loaded          = false;
+var instrumentView  = false;
 
 const amount = parseInt( window.location.search.substr( 1 ) ) || 10;
 
@@ -126,6 +122,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(
         60, window.innerWidth / window.innerHeight, 1, 5000);
     camera.position.set(amount, amount, amount);
+
     // -- renderer: obj renders scene using WebGL
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -158,17 +155,20 @@ function init() {
 
     // sets size of app
     renderer.setSize(window.innerWidth, window.innerHeight);
+
     // appends renderer to html doc as canvas to draw in browser
     document.body.appendChild(renderer.domElement);
 
     // -- controls: allows mouse controls such as click+drag, zoom, etc.
     // Add mouse controls
     orbitControls = new OrbitControls(camera, renderer.domElement);
+
     // limiting zoom determine how far zoom in and zoom out
     orbitControls.minDistance = 4;
     orbitControls.maxDistance = 100;
     orbitControls.maxPolarAngle = Math.PI / 2;
     orbitControls.enableDamping = true;
+
     // allows me to display the css elements in our scene
     cssrenderer = new CSS3DRenderer();
     cssrenderer.setSize(window.innerWidth, window.innerHeight);
@@ -183,8 +183,7 @@ function init() {
     // -- models: load object model resources
     loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',-125,-25,0,0);
 
-    // -- HEY TAREN
-    // -- whatever x, y, z coords for now just so I can see it
+    // -- HEY TAREN -- Hello again Marissa :)
     loadSpacecraftTexturedModel('../src/res/mtl/spacecraft/spacecraftwithframe.mtl', -4, 0, 0, Math.PI/2);
 
     spacecraftMesh = new THREE.Mesh(geometry, material)
@@ -197,8 +196,8 @@ function init() {
     if(orbit=="init")
     {
         const initButton = document.getElementById("initialize");
-            initButton.style.visibility = "hidden"
-            initButton.click();
+        initButton.style.visibility = "hidden"
+        initButton.click();
 
         document.getElementById("offcanvasBottomLabel").style.visibility = 'hidden';
 
@@ -214,15 +213,11 @@ function init() {
     // Button listeners for the orbits
     buttonOrbitA = document.getElementById('orbitA');
     buttonOrbitA.addEventListener('click', function(){
-        //if commented out this allows multiple presses on a single orbit
         if(orbit != "A") {
             tempOrbit = orbit;
             orbit = "A";
             changeOrbit(orbit);
 
-            //this is testing code to allow texture to change on orbit click in case instruments are not working / available
-            //if(tempOrbit==orbit) changeTexture('../src/res/mtl/imager/imager.mtl');
-            //document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("offcanvasBottomLabel").style.visibility = 'visible';
             document.getElementById("orbit-a").style.visibility = 'visible';
             document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -236,9 +231,6 @@ function init() {
             document.getElementById("INIT").style.visibility = 'hidden';
         }
 
-        // css renderer testing
-        // displays that psyche label in the scene
-        // using this for testing
         const OrbitA = document.getElementById('orbit-a');
         OrbitA.style.marginTop = '-1em';
         OrbitA.style.fontSize = '10px';
@@ -250,15 +242,11 @@ function init() {
 
     buttonOrbitB = document.getElementById('orbitB');
     buttonOrbitB.addEventListener('click', function(){
-        //if commented out this allows multiple presses on a single orbit
         if(orbit != "B") {
             tempOrbit = orbit;
             orbit = "B";
             changeOrbit(orbit);
 
-            //this is testing code to allow texture to change on orbit click in case instruments are not working / available
-            //if(tempOrbit==orbit) changeTexture('../src/res/mtl/grns/grns.mtl');
-            //  document.getElementById("tip").style.visibility = 'hidden';
             document.getElementById("offcanvasBottomLabel").style.visibility = 'visible';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'visible';
@@ -285,14 +273,11 @@ function init() {
 
     buttonOrbitC = document.getElementById('orbitC');
     buttonOrbitC.addEventListener('click', function(){
-        //if commented out this allows multiple presses on a single orbit
         if(orbit != "C") {
             tempOrbit = orbit;
             orbit = "C";
             changeOrbit(orbit);
 
-            //this is testing code to allow texture to change on orbit click in case instruments are not working / available
-            //if(tempOrbit==orbit) changeTexture('../src/res/mtl/magnetometer/magnetometer.mtl');
             document.getElementById("offcanvasBottomLabel").style.visibility = 'visible';
             document.getElementById("orbit-a").style.visibility = 'hidden';
             document.getElementById("orbit-b").style.visibility = 'hidden';
@@ -374,6 +359,7 @@ function init() {
         camera.updateProjectionMatrix(); // apply new changes to new win size
     });
 }
+
 // for stars random color generator helper
 var rgbToHex = function (rgb) {
     var hex = Number(rgb).toString(16);
@@ -382,6 +368,7 @@ var rgbToHex = function (rgb) {
     }
     return hex;
 };
+
 // for stars random color generator
 var fullColorHex = function(r,g,b) {
     var red = rgbToHex(r);
@@ -391,11 +378,9 @@ var fullColorHex = function(r,g,b) {
 };
 
 function onMouseMove( event ) {
-
     event.preventDefault();
     pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    // console.log("Mouse position: ", pointer.x, pointer.y)
     raycaster.setFromCamera( pointer, camera );
     
     const intersects = raycaster.intersectObjects( scene.children, true );
@@ -446,8 +431,6 @@ function onPointerDown(event) {
                 break;
         }
     }
-
-
 }
 
 // for stars
@@ -501,14 +484,9 @@ function addStars() {
         scene.add(BGparticles);
     }
 
-/// create a random between any two values
+// create a random between any two values
 function randomRange(min, max) {
     return Math.floor(Math.random() * (max-min + 1) + min);
-}
-
-function loadSpacecraft() {
-    var spacecraftMaterial = loadModelMaterial(0x8c8c8c);
-    loadSpacecraftModel(spacecraftMaterial);
 }
 
 function loadInstruments() {
@@ -630,10 +608,8 @@ function loadMagnetometer(x, y, z, material) {
 function loadModelMaterial(color) {
     const material = new THREE.MeshPhysicalMaterial({
         color: color,
-        // envMap: envTexture,
         metalness: 0.25,
         roughness: 0.1,
-        //opacity: 2,
         transparent: false,
         transmission: 0.99,
         clearcoat: 1.0,
@@ -643,28 +619,17 @@ function loadModelMaterial(color) {
 }
 
 function loadSpacecraftModel(material) {
-    // Spacecraft Loader
     const stlLoader = new STLLoader();
     stlLoader.load(
         '../src/res/stl/spacecraft/spacecraft_with_frame.stl',
         function (geometry) {
             spacecraftMesh = new THREE.Mesh(geometry, material)
-            // change these values to modify the x,y,z plane that this model sits on when it is loaded.
-
-            // orbiting setup (DO NOT DELETE. Use this for final realistic orbiting view.)
-            // spacecraftMesh.rotation.set(-Math.PI / 1.8, 0.3,  Math.PI / 2);
-            // spacecraftMesh.rotation.z = Math.PI / 1.8;
-            // spacecraftMesh.position.set(0,0,0.5);
-
-            // DO NOT DELETE.
-            // flat setup is used for loading & aligning other 3d objects.
             spacecraftMesh.rotation.set(-Math.PI / 2, 0,  Math.PI / 2);
             spacecraftMesh.rotation.z = Math.PI / 2;
             spacecraftMesh.position.set(-4,0,0);
             spacecraftMesh.name = 'spacecraft';
-
-            //todo: fix camera zoom to be closer on load.
             spacecraftMesh.scale.set(0.025,0.025,0.025);
+
             scene.add(spacecraftMesh)
             camera.position.x = -80;
             camera.position.y = -20;
@@ -680,7 +645,7 @@ function loadSpacecraftModel(material) {
 }
 
 
-// -- HEY TAREN!
+// -- HEY TAREN! -- Hey Marissa :)
 // loads the mtl file, along with the obj file
 function loadSpacecraftTexturedModel(filePath=string, x=int, y=int, z=int, yRotation=int) {
     new MTLLoader().load(filePath,
@@ -744,24 +709,11 @@ function changeOrbit(orbit = char){
         if(instrumentView == true)
         {
             removePsyche();
-            loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl',x,y,z,yRotation);
+            loadPsyche('../src/res/mtl/base psyche/Psyche_.mtl', x, y, z, yRotation);
             instrumentView = false;
             return;
         }
     }
-}
-
-// not working need to debug...
-function beginXRSession() {
-    // requestSession must be called within a user gesture event
-    // like click or touch when requesting an immersive session.
-    navigator.xr.requestSession('immersive-vr')
-        .then(onSessionStarted)
-        .catch(err => {
-            // May fail for a variety of reasons. Probably just want to
-            // render the scene normally without any tracking at this point.
-            window.requestAnimationFrame(onDrawFrame);
-        });
 }
 
 // Psyche object
@@ -816,7 +768,6 @@ function renderRaycaster() {
             material = INTERSECTED.material;
             if(material.emissive){
                 INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-                // material.emissive.setHex(Math.random() * 0xffffff);
                 material.emissive.needsUpdate = true;
                 console.log(INTERSECTED.object);
 
@@ -843,7 +794,6 @@ function renderRaycaster() {
 
 function onPsycheClicked() {
     console.log("Psyche clicked");
-    
 }
 
 function onSpacecraftClicked() {
@@ -898,7 +848,6 @@ function changeTexture(instrumentFilePath = string){
 function animatePsyche(){
     var psyche = scene.getObjectByName( "psyche" );
     if(psyche != null && orbit != "init") {
-        //rotation
         psyche.rotation.y += 0.0006;
     }
 }
@@ -930,7 +879,6 @@ function updateSystem(system) {
             points.position.x = 0;
             material.size = 2;
         }
-
         if (material.size < 40) {
             material.size -= 0.005;
         }
@@ -946,8 +894,6 @@ function animate() {
     // Rotate scene constantly
 
     updateTracers();
-    // camera.position.x += ( mouseX + camera.position.x ) * .05;
-    // camera.lookAt( scene.position );
     render();
     cssrenderer.render(scene, camera);
     renderRaycaster();
@@ -956,7 +902,6 @@ function animate() {
     requestAnimationFrame(animate); // recursive call to animate function
     animatePsyche();
     setTimeout(() => {  agitateSpacecraft(); }, 500);
-    // animateStars();
 }
 
 function render() {
@@ -1001,79 +946,5 @@ function degInRad(deg) {
 }
 
 addStars();
-// loadSpacecraft();
 loadInstruments();
 animate();
-/*
-
-*****THE FOLLOWING IS LEGACY CODE FROM WHEN THE SPACECRAFT ORBITED THE ASTEROID*****
-
-// radius changes the orbit distance, but this must also be modified with
-// spacecraft placement because as the radius changes, the "starting point"
-// must also change.
-//not sure why calling multiple times speeds up the orbit, must investigate
-
-function startSpacecraftOrbit(radius) {
-    var r = 0, t = -1, a = 1;
-    var p = new THREE.Vector3(0, 0, 0);
-    var ax = new THREE.Vector3(0, 1, 0);
-    var frames = 1000;
-
-    setInterval(function(){
-        t ++;
-        if (t % frames == 0) {
-            a++;
-            p.x = (a == 1 ? 1 : -1) * radius;
-            r = a == 1 ? -1 : 1;
-        }
-        spacecraftMesh.rotateAroundWorldAxis(p, ax, r * Math.PI * 2 / frames);
-    }, 20);
-}
-
-THREE.Object3D.prototype.rotateAroundWorldAxis = function() {
-
-    var q = new THREE.Quaternion();
-
-    return function rotateAroundWorldAxis(point, axis, angle) {
-        q.setFromAxisAngle(axis, angle);
-        this.applyQuaternion(q);
-        this.position.sub(point);
-        this.position.applyQuaternion(q);
-        this.position.add(point);
-        return this;
-    }
-}();
-
-*****LEGACY CODE FOR REMOVING ENTITIES - STILL WORKS*****
-
-// removes objects
-// is this still working or needed?
-// yes working, no longer needed - Odhran
-
-    //this code used to live in changeOrbit()
-    loadSpacecraft();
-    var radius = 0;
-    switch(orbit){
-        case "A":
-            radius = 125;
-            break;
-        case "B":
-            radius = 100;
-            break;
-        case "C":
-            radius = 75;
-            break;
-        case "D":
-            radius = 50;
-            break;
-     }
-
-     startSpacecraftOrbit(radius);
-
-
-// If the spacecraft is not orbiting, we do not need this code.
-// It could be good to keep around in case we need it for similar stuff later.
-
-*****END OF LEGACY CODE*****
-
-*/
